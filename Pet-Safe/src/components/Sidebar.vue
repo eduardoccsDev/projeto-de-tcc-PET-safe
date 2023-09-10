@@ -20,19 +20,27 @@
                     Home
                 </span>
             </router-link>
+            <router-link to="/sobre" class="buttonLink">
+                <span class="icons">
+                    <i class="fa-solid fa-users"></i>
+                </span>
+                <span class="text">
+                    Sobre
+                </span>
+            </router-link>
             <!-- DEMAIS LINKS SEGUEM O MESMO PADRÃO -->
         </div>
         <div class="flex"></div>
         <div class="menu">
             <!-- APENAS SE PRECISAR -->
-            <router-link to="/configurações" class="buttonLink">
+            <!-- <router-link to="/configurações" class="buttonLink">
                 <span class="icons">
                     <i class="fa-solid fa-gear"></i>
                 </span>
                 <span class="text">
                     Configurações
                 </span>
-            </router-link>
+            </router-link> -->
         </div>
     </aside>
 </template>
@@ -54,14 +62,12 @@ const ToggleMenu = () => {
 aside {
     display: flex;
     flex-direction: column;
-    width: calc(2rem + 50px);
+    width: calc(2rem + 32px);
     min-height: 100vh;
     overflow: hidden;
     padding: 1rem;
-
     background-color: var(--dark);
     color: var(--light);
-
     transition: 0.2s ease-out;
 
     .flex {
@@ -69,11 +75,11 @@ aside {
     }
 
     .logo {
-
         margin-bottom: 1rem;
+        margin-left: -5px;
 
         img {
-            width: 3rem;
+            width: 2.5rem;
             background-color: var(--light);
             border-radius: 100%;
         }
@@ -91,13 +97,13 @@ aside {
         position: relative;
         top: 0;
         transition: 0.2s ease-out;
-        right: 10px;
+        right: 5px;
 
         .menu-toggle {
             transition: 0.2s ease-out;
 
             .icons i {
-                font-size: 1.5rem;
+                font-size: 1.1rem;
                 background-color: var(--gray);
                 padding: .1em .3em;
                 border-radius: 100%;
@@ -134,12 +140,11 @@ aside {
             display: flex;
             align-items: center;
             text-decoration: none;
-
             padding: 0.5rem 1rem;
             transition: 0.2s ease-out;
 
             .icons i {
-                font-size: 2rem;
+                font-size: 1rem;
                 color: var(--light);
                 transition: 0.2s ease-out;
             }
@@ -147,6 +152,7 @@ aside {
             .text {
                 color: var(--light);
                 transition: 0.2s ease-out;
+                font-size: 14px;
             }
 
             &:hover,
@@ -187,7 +193,7 @@ aside {
 
         .buttonLink {
             .icons i {
-                margin-right: 1rem;
+                margin-right: .3rem;
             }
         }
     }
