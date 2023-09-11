@@ -2,7 +2,7 @@
     <div :class="teamCardClasses">
         <p class="member-name">
             <i class="fa-solid fa-user-large"></i> - {{ memberName }}
-            <button @click="handleExpanded" v-show="isMobile"></button>
+            <button @click="handleExpanded" v-if="isMobile"></button>
         </p>
         <hr>
         <p class="member-description">
@@ -33,7 +33,7 @@ const updateIsMobile = (mediaQuery) => {
     isMobile.value = mediaQuery.matches;
 };
 
-const mobileMediaQuery = window.matchMedia("(max-width: 468px)");
+const mobileMediaQuery = window.matchMedia("(max-width: 668px)");
 mobileMediaQuery.addEventListener('change', updateIsMobile);
 updateIsMobile(mobileMediaQuery);
 

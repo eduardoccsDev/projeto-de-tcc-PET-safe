@@ -12,6 +12,10 @@
            :member-description="teamMember.description"
            />
         </section>
+        <h3 class="page__subTittle">Descrição do projeto</h3>
+        <section class="page__content">
+            <p>Lorem ipsum dolor.</p>
+        </section>
     </div>
 </template>
 
