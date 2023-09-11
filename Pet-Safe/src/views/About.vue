@@ -4,7 +4,7 @@
             <h1>Sobre</h1>
         </section>
         <h3 class="page__subTittle">Criadores</h3>  
-        <section class="page__content">
+        <section class="page__content cards">
            <TeamCard 
            v-for="teamMember in teamMembersArray"
            :key="teamMember.id"
@@ -28,7 +28,13 @@ const teamMembersArray = [
 
 <style scoped lang="scss">
 .page__content{
-    display: flex;
-    gap: 16px;
+    &.cards{
+        display: flex;
+        gap: 16px;
+        @media(max-width:668px){
+            flex-direction: column;
+        }
+    }
+
 }
 </style>

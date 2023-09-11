@@ -30,7 +30,7 @@
         padding-block: 2.5em;
         padding-inline: 1em;
 
-        @media(max-width:468px) {
+        @media(max-width:668px) {
             padding-inline-start: 5em;
         }
 
@@ -46,13 +46,19 @@
                     }
                 }
             }
+            &__subTittle{
+                    margin-block:1em;
+                    &::before{
+                        content:'- ';
+                    }
+            }
 
             &__content {
                 p {
                     margin-bottom: 1em;
                 }
 
-                @media(max-width:468px) {
+                @media(max-width:668px) {
                     text-align: justify;
                     font-size: 14px;
                 }
@@ -66,9 +72,10 @@
         width: 100%;
         height: 5rem;
 
-        @media(max-width:468px) {
-            bottom: inherit;
+        @media(max-width:668px) {
             padding-inline: 5em 1em;
+            position: absolute;
+            bottom: 0;
 
             .content {
                 &__footer {
@@ -91,7 +98,7 @@
     margin: 0 auto;
 }
 
-@media(max-width:468px) {
+@media(max-width:668px) {
     .container {
         width: 100%;
     }
