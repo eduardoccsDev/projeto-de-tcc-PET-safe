@@ -1,6 +1,7 @@
 /*VARIAVEIS DO CSS*/
 :root {
     --primary: #2be5a7;
+    --primary-opacity: #2be5a72f;
     --primary-alt: #1fa478;
     --gray: #737373;
     --dark: #222;
@@ -62,6 +63,11 @@
                     font-size: 14px;
                 }
             }
+
+            &__destaque{
+                color: var(--primary-alt);
+                font-weight: bold;
+            }
         }
     }
 
@@ -110,6 +116,7 @@ body {
 button {
     background-color: transparent;
     border: none;
+    cursor: pointer;
 }
 hr {
     margin-block: 1em;

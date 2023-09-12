@@ -4,10 +4,9 @@
             <h1>Sobre</h1>
         </section>
         <hr>
-        <h3 class="page__subTittle">Descrição do projeto</h3>
+        <h3 class="page__subTittle">Descrição da aplicação</h3>
         <section class="page__content">
-            <p>Lorem ipsum dolor Lorem ipsum dolor Lorem ipsum dolor Lorem ipsum dolor Lorem ipsum dolor Lorem ipsum dolor
-                Lorem ipsum dolor Lorem ipsum dolor Lorem ipsum dolor.</p>
+            <p>O <span class="page__destaque">Pet Safe</span> tem como objetivo...</p>
         </section>
         <h3 class="page__subTittle">Criadores</h3>
         <section class="page__content cards">

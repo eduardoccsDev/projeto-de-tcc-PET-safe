@@ -69,6 +69,7 @@ aside {
     background-color: var(--dark);
     color: var(--light);
     transition: 0.2s ease-out;
+    z-index: 1;
 
     .flex {
         flex: 1 1 0;
