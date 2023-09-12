@@ -6,7 +6,7 @@
         </p>
         <hr>
         <p class="member-description">
-            <i class="fa-solid fa-message"></i> - {{ memberDescription }}
+            {{ memberDescription }}
         </p>
     </div>
 </template>
@@ -63,11 +63,18 @@ const teamCardClasses = computed(() => {
     width: 100%;
     height: 200px;
     box-shadow: 0px 0px 10px 0px #00000036;
+    transition: .5s;
+    &:hover{
+        transform: scale(1.05);
+    }
 
     &.mobile-card {
         height: 55px;
         overflow: hidden;
         transition: .5s;
+        &:hover{
+            transform: scale(1);
+        }
 
         &.card-expanded {
             height: 200px;
@@ -75,7 +82,8 @@ const teamCardClasses = computed(() => {
             .member-name {
                 button {
                     &::after {
-                        content: "-"
+                        content: "Exibir -";
+                        padding-inline-end:1px;
                     }
                 }
             }
@@ -84,7 +92,7 @@ const teamCardClasses = computed(() => {
         .member-name {
             button {
                 &::after {
-                    content: "+";
+                    content: "Exibir +";
                 }
 
                 display: block;
@@ -92,7 +100,7 @@ const teamCardClasses = computed(() => {
                 background-color: var(--dark);
                 color: #fff;
                 padding: .1em .5em;
-                border-radius: 100%;
+                border-radius: 10px;
                 cursor: pointer;
             }
         }
@@ -105,11 +113,6 @@ const teamCardClasses = computed(() => {
         text-align: center;
         border-radius: 100%;
 
-    }
-
-    hr {
-        margin-block: 1em;
-        border: solid 1px #00000024;
     }
 }
 </style>

@@ -32,6 +32,7 @@
 
         @media(max-width:668px) {
             padding-inline-start: 5em;
+            padding-bottom: 8em;
         }
 
         .page {
@@ -39,8 +40,6 @@
                 margin-bottom: 1em;
 
                 h1 {
-                    border-bottom: solid 1px var(--gray);
-
                     &::before {
                         content: '- ';
                     }
@@ -49,7 +48,7 @@
             &__subTittle{
                     margin-block:1em;
                     &::before{
-                        content:'- ';
+                        content:'• ';
                     }
             }
 
@@ -111,4 +110,8 @@ body {
 button {
     background-color: transparent;
     border: none;
+}
+hr {
+    margin-block: 1em;
+    border: solid 1px #0000000e;
 }

@@ -101,6 +101,7 @@ aside {
 
         .menu-toggle {
             transition: 0.2s ease-out;
+            cursor: pointer;
 
             .icons i {
                 font-size: 1.1rem;
