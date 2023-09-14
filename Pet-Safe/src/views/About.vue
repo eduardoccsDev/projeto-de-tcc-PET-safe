@@ -13,11 +13,18 @@
             <TeamCard v-for="teamMember in teamMembersArray" :key="teamMember.id" :member-name="teamMember.name"
                 :member-description="teamMember.description" />
         </section>
+        <FixedAlert 
+        :have-icon="true" 
+        icon="fa-solid fa-user-nurse"
+        alert-tittle="Alerta fixo de teste" 
+        alert-text="Lorem ipsum dolor lorem, lorem ipsum dolor lorem ipsum dolor lorem ipsum dolor"
+        />
     </div>
 </template>
 
 <script setup>
 import TeamCard from '../components/TeamCard.vue';
+import FixedAlert from '../components/FixedAlert.vue';
 
 const teamMembersArray = [
     { id: 1, name: 'Eduardo Castro', description: 'Lorem ipsum dolor lorem Lorem ipsum dolor lorem Lorem ipsum dolor lorem' },

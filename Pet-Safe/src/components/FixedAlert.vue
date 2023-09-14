@@ -11,8 +11,6 @@
     </section>
 </template>
 <script setup>
-import { defineProps } from 'vue';
-
 defineProps({
     alertText: {
         type: String,
@@ -36,8 +34,8 @@ defineProps({
     background-color: var(--primary-opacity);
     border-radius: 10px;
     border: solid 2px var(--primary);
-    padding: 1em;
-    margin-block: 2em;
+    padding: 20px;
+    margin-block: 20px;
     &__text{
         @media(max-width:668px){
             font-size: 14px;
@@ -55,7 +53,7 @@ defineProps({
                 color: #fff;
                 font-size: 20px;
                 width: 32px;
-                padding: .3em;
+                padding: 5px;
                 border-radius: 100%;
             }
         }

@@ -13,7 +13,6 @@
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
-import { defineProps } from 'vue';
 
 defineProps({
     memberName: {
@@ -109,7 +108,7 @@ const teamCardClasses = computed(() => {
     i {
         background-color: var(--dark);
         color: #fff;
-        padding: .3em;
+        padding: 5px;
         text-align: center;
         border-radius: 100%;
 
