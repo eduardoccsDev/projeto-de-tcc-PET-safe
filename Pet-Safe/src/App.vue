@@ -18,7 +18,7 @@ function closeMessage() {
   <div id="side-content">
     <Sidebar />
     <div id="page-container">
-      <Message msg-text="Apenas um testeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee." :is-action="true" action-link="#teste" @close="closeMessage" />
+      <Message msg-text="Apenas um teste." :is-action="true" action-link="#teste" @close="closeMessage" />
       <div id="content-wrap">
         <!-- all other page content -->
         <RouterView />
