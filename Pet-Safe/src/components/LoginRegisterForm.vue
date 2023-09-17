@@ -1,5 +1,6 @@
 <template>
     <section class="forms">
+        <!-- FORMULÁRIO DE LOGIN -->
         <div v-if="!isRegister" class="forms__login">
             <p>LOGIN</p>
             <form @submit-prevent="" class="login">
@@ -9,6 +10,7 @@
             </form>
             <p>Não possui uma conta? Crie uma clicando <button @click="handleChangeForm">aqui</button></p>
         </div>
+        <!-- FORMULÁRIO DE REGISTRO -->
         <div v-else class="forms__register">
             <div class="forms__header">
                 <img src="../assets/images/logo.png" alt="logo-pet-safe" class="forms__headerImg">
@@ -73,6 +75,9 @@ async function handleRegistration() {
 .forms {
     width: 450px;
     margin: auto;
+    @media(max-width:668px){
+        width: 100%;
+    }
 
     &__ask {
         margin-top: 5px;
@@ -132,6 +137,11 @@ async function handleRegistration() {
         display: flex;
         flex-wrap: wrap;
         gap: 8px;
+        @media(max-width:668px){
+            input{
+                flex-basis: 100% !important;
+            }
+        }
 
         .nomeuser {
             flex-basis: calc(50% - 4px);
