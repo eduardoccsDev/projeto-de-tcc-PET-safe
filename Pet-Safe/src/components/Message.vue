@@ -13,7 +13,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, ref, onMounted } from 'vue';
+import { defineEmits, ref, onMounted } from 'vue';
 import { onBeforeUnmount, computed } from 'vue';
 
 defineProps({
