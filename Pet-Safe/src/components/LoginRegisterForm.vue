@@ -2,13 +2,18 @@
     <section class="forms">
         <!-- FORMULÁRIO DE LOGIN -->
         <div v-if="!isRegister" class="forms__login">
-            <p>LOGIN</p>
-            <form @submit-prevent="" class="login">
-                <input type="email" name="emailuser" class="emailuser" placeholder="Insira seu e-mail">
-                <input type="password" name="passworduser" class="passworduser" placeholder="Insira sua senha">
+            <div class="forms__header">
+                <img src="../assets/images/logo.png" alt="logo-pet-safe" class="forms__headerImg">
+                <p class="forms__headerTittle"><i class="fa-solid fa-right-to-bracket"></i> LOGIN</p>
+                <p class="forms__headerDescription">Lorem ipsum dolor, lorem ipsum dolor lorem ipsim dolor.</p>
+            </div>
+            <form @submit.prevent="handleLogin" class="login">
+                <input v-model="formData.emailuser" type="email" name="emailuser" class="emailuser" placeholder="Insira seu e-mail">
+                <input v-model="formData.passworduser" type="password" name="passworduser" class="passworduser"
+                    placeholder="Insira sua senha">
                 <button type="submit" class="submitform">Entrar</button>
             </form>
-            <p>Não possui uma conta? Crie uma clicando <button @click="handleChangeForm">aqui</button></p>
+            <p class="forms__ask">Não possui uma conta? Crie uma <button @click="handleChangeForm">Clicando aqui</button></p>
         </div>
         <!-- FORMULÁRIO DE REGISTRO -->
         <div v-else class="forms__register">
@@ -22,6 +27,8 @@
                     placeholder="Insira seu nome">
                 <input v-model="formData.emailuser" required type="email" name="emailuser" class="emailuser"
                     placeholder="Insira seu e-mail">
+                <input v-model="formData.addressuser" required type="text" name="addressuser" class="addressuser"
+                    placeholder="Digite seu endereço (inclua o CEP)">
                 <input v-model="formData.passworduser" required type="password" name="passworduser" class="passworduser"
                     placeholder="Insira sua senha">
                 <input v-model="formData.passworduserrepeat" required type="password" name="passworduserrepeat"
@@ -37,6 +44,7 @@
 <script setup>
 import { ref } from 'vue';
 import axios from 'axios';
+import { useRouter } from 'vue-router'; 
 
 const isRegister = ref(false);
 const formData = {
@@ -44,38 +52,63 @@ const formData = {
     emailuser: '',
     passworduser: '',
     passworduserrepeat: '',
+    addressuser:'',
 };
 
 function handleChangeForm() {
     isRegister.value = !isRegister.value
 }
 
+const router = useRouter();
+
 async function handleRegistration() {
     if (formData.passworduser !== formData.passworduserrepeat) {
         alert('As senhas não coincidem');
         return;
     }
-    console.log(formData);
     try {
-        const response = await axios.post('http://localhost:3000/register', formData, {
+        const response = await axios.post('http://localhost:3001/register', formData, {
             headers: {
                 'Content-Type': 'application/json',
             },
         });
         console.log('Usuário registrado:', response.data);
-        // Limpar o formulário ou redirecionar para a página de login
+        window.location.reload();
     } catch (error) {
         console.error('Erro ao registrar usuário:', error);
         // Lidar com erros, por exemplo, exibindo uma mensagem de erro para o usuário
     }
 }
 
+async function handleLogin() {
+    try {
+        const response = await axios.post('http://localhost:3001/login', {
+            emailuser: formData.emailuser,
+            passworduser: formData.passworduser,
+        });
+
+        // Verificar a resposta do servidor
+        if (response.status === 200) {
+            // O login foi bem-sucedido, você pode redirecionar o usuário para a página desejada
+            router.push('/');
+            // Ou realizar outras ações, como atualizar o estado da aplicação
+            console.log('Login bem-sucedido');
+        } else {
+            // Tratar erros de login aqui, como exibir uma mensagem de erro para o usuário
+            console.error('Erro de login:', response.data.error);
+        }
+    } catch (error) {
+        console.error('Erro ao fazer login:', error);
+        // Tratar outros erros, como problemas de rede
+    }
+}
 </script>
 <style scoped lang="scss">
 .forms {
     width: 450px;
     margin: auto;
-    @media(max-width:668px){
+
+    @media(max-width:668px) {
         width: 100%;
     }
 
@@ -115,7 +148,7 @@ async function handleRegistration() {
         border-radius: 100%;
     }
 
-    &__headerDescription{
+    &__headerDescription {
         font-size: 14px;
     }
 
@@ -133,12 +166,48 @@ async function handleRegistration() {
         }
     }
 
+    .login{
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+
+        @media(max-width:668px) {
+            input {
+                flex-basis: 100% !important;
+            }
+        }
+        .emailuser {
+            flex-basis: calc(50% - 4px);
+            order: 2;
+            width: 100%;
+        }
+
+        .passworduser {
+            order: 3;
+            flex-basis: calc(50% - 4px);
+            width: 100%;
+        }
+        .submitform {
+            order: 5;
+            width: 100%;
+            background-color: var(--primary);
+            color: var(--dark);
+            transition: .5s;
+            padding: 5px;
+            border-radius: 5px;
+
+            &:hover {
+                transform: scale(1.05);
+            }
+        }
+    }
     .register {
         display: flex;
         flex-wrap: wrap;
         gap: 8px;
-        @media(max-width:668px){
-            input{
+
+        @media(max-width:668px) {
+            input {
                 flex-basis: 100% !important;
             }
         }
@@ -161,8 +230,14 @@ async function handleRegistration() {
             width: 100%;
         }
 
-        .submitform {
+        .addressuser{
             order: 4;
+            flex-basis: 100%;
+            width: 100%;
+        }
+
+        .submitform {
+            order: 5;
             width: 100%;
             background-color: var(--primary);
             color: var(--dark);
