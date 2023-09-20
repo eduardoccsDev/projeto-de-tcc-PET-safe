@@ -14,7 +14,6 @@
                     placeholder="Insira sua senha">
                 <button type="submit" class="submitform">Entrar</button>
             </form>
-            <p v-if="error" class="error">{{ error }}</p>
             <p class="forms__ask">Não possui uma conta? Crie uma <button @click="handleChangeForm">Clicando aqui</button>
             </p>
         </div>
@@ -38,6 +37,7 @@
                     class="passworduser" placeholder="Repita sua senha">
                 <button type="submit" class="submitform">Registrar</button>
             </form>
+            <p v-if="registrationError" class="error">{{ registrationError }}</p>
             <p class="forms__ask">Já possui uma conta? faça login <button @click="handleChangeForm">Clicando aqui</button>
             </p>
         </div>
@@ -46,13 +46,11 @@
   
 <script setup>
 import { ref } from 'vue';
-import axios from 'axios';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
-import Cookies from 'js-cookie';
 
-const store = useStore(); // Crie uma instância do Vuex store
-const router = useRouter();
+const registrationError = ref(null);
+
 const isRegister = ref(false);
 const formData = {
     nomeuser: '',
@@ -66,51 +64,39 @@ function handleChangeForm() {
     isRegister.value = !isRegister.value
 }
 
+const handleRegistration = async () => {
+  // Limpe os erros anteriores
+  registrationError.value = null;
 
-async function handleRegistration() {
+  try {
+    // Realize a validação dos campos do formulário aqui
+    if (!formData.nomeuser || !formData.emailuser || !formData.passworduser || !formData.addressuser || !formData.passworduserrepeat) {
+      throw new Error('Por favor, preencha todos os campos.');
+    }
+
     if (formData.passworduser !== formData.passworduserrepeat) {
-        alert('As senhas não coincidem');
-        return;
+      throw new Error('As senhas não coincidem.');
     }
-    try {
-        const response = await axios.post('http://localhost:3002/register', formData, {
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-        console.log('Usuário registrado:', response.data);
-        window.location.reload();
-    } catch (error) {
-        console.error('Erro ao registrar usuário:', error);
-        // Lidar com erros, por exemplo, exibindo uma mensagem de erro para o usuário
+
+    // Envie os dados do formulário para o servidor ou a API usando uma solicitação POST
+    const response = await fetch('http://localhost:3000/api/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    });
+
+    if (!response.ok) {
+      throw new Error('Erro ao registrar. Verifique os dados inseridos.');
     }
-}
 
-let error = '';
-
-const handleLogin = async () => {
-    try {
-        const response = await axios.post('http://localhost:3002/login', formData, {
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-
-        if (response.data && response.data.token) {
-            // Login bem-sucedido, você recebeu os dados do usuário
-            const userData = response.data.user; // Suponhamos que o objeto contenha o nome do usuário e outras informações
-            // Depois de salvar os dados do usuário, você pode redirecionar para a página de home
-            store.dispatch('setUser', userData); // Isso é um exemplo, você precisa ajustá-lo à sua estrutura de estado
-            console.log(response.data.token);
-            const token = response.data.token;
-            // Armazene o token em um cookie com uma data de expiração
-            Cookies.set('token', token, { expires: 1 }); // O cookie expirará em 1 dia, você pode ajustar o valor conforme necessário
-            router.push('/');
-        }
-    } catch (err) {
-        error = 'Credenciais inválidas. Verifique seu email e senha.';
-        console.error('Erro ao efetuar login:', err);
-    }
+    // Redirecione o usuário após o registro bem-sucedido (você pode escolher a rota apropriada)
+    router.push('/login-registro');
+  } catch (error) {
+    // Trate os erros de validação ou da API aqui
+    registrationError.value = error.message;
+  }
 };
 </script>
 <style scoped lang="scss">

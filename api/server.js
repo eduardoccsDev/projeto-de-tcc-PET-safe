@@ -1,29 +1,23 @@
-const userRouter = require('./routers/userRouter');
 const express = require('express');
 const cors = require('cors');
-const cookieParser = require('cookie-parser');
+const routes = require('./routes'); // Importe suas rotas
 
 const app = express();
 
-// Configurar o middleware para analisar JSON
+// Middleware para analisar JSON
 app.use(express.json());
 
-// Configurar o middleware para analisar dados de formulário
+// Middleware para analisar dados de formulário
 app.use(express.urlencoded({ extended: true }));
 
-// Habilitar o CORS para todas as origens
+// Habilitar o CORS (configurar para suas necessidades)
 app.use(cors());
 
-app.use(cookieParser());
-
-// Importe o módulo do banco de dados
-const db = require('./db');
-
-// Use os routers definidos
-app.use('/', userRouter);
+// Use suas rotas
+app.use('/api', routes); // Prefixo '/api' para suas rotas
 
 // Iniciar o servidor
-const port = process.env.PORT || 3002;
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Servidor rodando na porta ${port}`);
 });
