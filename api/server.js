@@ -1,12 +1,13 @@
 const express = require('express');
 const cors = require('cors');
 const routes = require('./routes'); // Importe suas rotas
+const cookieParser = require('cookie-parser'); // Importe o cookie-parser
 
 const app = express();
 
 // Middleware para analisar JSON
 app.use(express.json());
-
+app.use(cookieParser());
 // Middleware para analisar dados de formulário
 app.use(express.urlencoded({ extended: true }));
 
