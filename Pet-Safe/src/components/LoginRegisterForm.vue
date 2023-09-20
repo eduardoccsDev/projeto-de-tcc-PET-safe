@@ -8,12 +8,15 @@
                 <p class="forms__headerDescription">Lorem ipsum dolor, lorem ipsum dolor lorem ipsim dolor.</p>
             </div>
             <form @submit.prevent="handleLogin" class="login">
-                <input v-model="formData.emailuser" type="email" name="emailuser" class="emailuser" placeholder="Insira seu e-mail">
+                <input v-model="formData.emailuser" type="email" name="emailuser" class="emailuser"
+                    placeholder="Insira seu e-mail">
                 <input v-model="formData.passworduser" type="password" name="passworduser" class="passworduser"
                     placeholder="Insira sua senha">
                 <button type="submit" class="submitform">Entrar</button>
             </form>
-            <p class="forms__ask">Não possui uma conta? Crie uma <button @click="handleChangeForm">Clicando aqui</button></p>
+            <p v-if="error" class="error">{{ error }}</p>
+            <p class="forms__ask">Não possui uma conta? Crie uma <button @click="handleChangeForm">Clicando aqui</button>
+            </p>
         </div>
         <!-- FORMULÁRIO DE REGISTRO -->
         <div v-else class="forms__register">
@@ -44,22 +47,25 @@
 <script setup>
 import { ref } from 'vue';
 import axios from 'axios';
-import { useRouter } from 'vue-router'; 
+import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
+import Cookies from 'js-cookie';
 
+const store = useStore(); // Crie uma instância do Vuex store
+const router = useRouter();
 const isRegister = ref(false);
 const formData = {
     nomeuser: '',
     emailuser: '',
     passworduser: '',
     passworduserrepeat: '',
-    addressuser:'',
+    addressuser: '',
 };
 
 function handleChangeForm() {
     isRegister.value = !isRegister.value
 }
 
-const router = useRouter();
 
 async function handleRegistration() {
     if (formData.passworduser !== formData.passworduserrepeat) {
@@ -67,7 +73,7 @@ async function handleRegistration() {
         return;
     }
     try {
-        const response = await axios.post('http://localhost:3001/register', formData, {
+        const response = await axios.post('http://localhost:3002/register', formData, {
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -80,28 +86,32 @@ async function handleRegistration() {
     }
 }
 
-async function handleLogin() {
+let error = '';
+
+const handleLogin = async () => {
     try {
-        const response = await axios.post('http://localhost:3001/login', {
-            emailuser: formData.emailuser,
-            passworduser: formData.passworduser,
+        const response = await axios.post('http://localhost:3002/login', formData, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
         });
 
-        // Verificar a resposta do servidor
-        if (response.status === 200) {
-            // O login foi bem-sucedido, você pode redirecionar o usuário para a página desejada
+        if (response.data && response.data.token) {
+            // Login bem-sucedido, você recebeu os dados do usuário
+            const userData = response.data.user; // Suponhamos que o objeto contenha o nome do usuário e outras informações
+            // Depois de salvar os dados do usuário, você pode redirecionar para a página de home
+            store.dispatch('setUser', userData); // Isso é um exemplo, você precisa ajustá-lo à sua estrutura de estado
+            console.log(response.data.token);
+            const token = response.data.token;
+            // Armazene o token em um cookie com uma data de expiração
+            Cookies.set('token', token, { expires: 1 }); // O cookie expirará em 1 dia, você pode ajustar o valor conforme necessário
             router.push('/');
-            // Ou realizar outras ações, como atualizar o estado da aplicação
-            console.log('Login bem-sucedido');
-        } else {
-            // Tratar erros de login aqui, como exibir uma mensagem de erro para o usuário
-            console.error('Erro de login:', response.data.error);
         }
-    } catch (error) {
-        console.error('Erro ao fazer login:', error);
-        // Tratar outros erros, como problemas de rede
+    } catch (err) {
+        error = 'Credenciais inválidas. Verifique seu email e senha.';
+        console.error('Erro ao efetuar login:', err);
     }
-}
+};
 </script>
 <style scoped lang="scss">
 .forms {
@@ -166,7 +176,7 @@ async function handleLogin() {
         }
     }
 
-    .login{
+    .login {
         display: flex;
         flex-wrap: wrap;
         gap: 8px;
@@ -176,6 +186,7 @@ async function handleLogin() {
                 flex-basis: 100% !important;
             }
         }
+
         .emailuser {
             flex-basis: calc(50% - 4px);
             order: 2;
@@ -187,6 +198,7 @@ async function handleLogin() {
             flex-basis: calc(50% - 4px);
             width: 100%;
         }
+
         .submitform {
             order: 5;
             width: 100%;
@@ -201,6 +213,7 @@ async function handleLogin() {
             }
         }
     }
+
     .register {
         display: flex;
         flex-wrap: wrap;
@@ -230,7 +243,7 @@ async function handleLogin() {
             width: 100%;
         }
 
-        .addressuser{
+        .addressuser {
             order: 4;
             flex-basis: 100%;
             width: 100%;

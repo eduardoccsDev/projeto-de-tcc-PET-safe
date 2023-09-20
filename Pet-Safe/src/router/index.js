@@ -1,5 +1,22 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
+import { createStore } from 'vuex';
+
+const store = createStore({
+  state: {
+    user: null,
+  },
+  mutations: {
+    setUser(state, userData) {
+      state.user = userData;
+    },
+  },
+  actions: {
+    setUser({ commit }, user) {
+      commit('setUser', user);
+    },
+  },
+});
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -20,6 +37,6 @@ const router = createRouter({
       component: () => import('../views/About.vue')
     }
   ]
-})
+});
 
-export default router
+export { store, router }; // Exporta o store e o router para serem usados em outros lugares

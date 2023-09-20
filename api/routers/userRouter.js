@@ -2,19 +2,23 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db'); // Importe o módulo do banco de dados
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken'); // Adicione esta linha para importar o módulo jsonwebtoken
+const verifyToken = require('../auth'); // Importe a função verifyToken
+const { getUserById } = require('../userController');
+require('dotenv').config();
 
 // Rota para listar todos os usuários
-router.get('/users', (req, res) => {
-    // Use o módulo do banco de dados para fazer a consulta
-    db.query('SELECT * FROM users', (err, results) => {
-        if (err) {
-            console.error('Erro na consulta SQL:', err);
-            res.status(500).json({ error: 'Erro interno do servidor' });
-        } else {
-            res.json(results);
-        }
-    });
+router.get('/users', async (req, res) => {
+  try {
+      // Use o módulo do banco de dados para fazer a consulta
+      const results = await db.query('SELECT * FROM users');
+      res.json(results);
+  } catch (err) {
+      console.error('Erro na consulta SQL:', err);
+      res.status(500).json({ error: 'Erro interno do servidor' });
+  }
 });
+
 // Rota para registrar novos usuários
 router.post('/register', async (req, res) => {
     const { nomeuser, emailuser, passworduser, addressuser } = req.body;
@@ -39,48 +43,49 @@ router.post('/register', async (req, res) => {
   });
 //Rota de login de um usuário
 router.post('/login', async (req, res) => {
-  console.log('Rota de login chamada');
   const { emailuser, passworduser } = req.body;
-  // Verifique se o email existe no banco de dados
-  const user = await getUserByEmail(emailuser);
-  if (!user) {
-    // Usuário não encontrado
-    return res.status(401).json({ error: 'Email ou senha incorretos' });
+
+  try {
+    const [rows] = await db.execute('SELECT * FROM users WHERE emailuser = ?', [emailuser]);
+
+    if (rows.length === 0) {
+      return res.status(404).json({ error: 'Usuário não encontrado' });
+    }
+
+    const user = rows[0];
+    const idusers = user.idusers;
+    console.log(idusers);
+    const isPasswordValid = await bcrypt.compare(passworduser, user.passworduser);
+
+    if (!isPasswordValid) {
+      return res.status(401).json({ error: 'Senha incorreta' });
+    }
+    const token = jwt.sign({ userId: user.idusers },process.env.SECRET_KEY, { expiresIn: '1h' });
+
+   return res.json({ auth: true, token });
+  } catch (error) {
+    console.error('Erro ao efetuar login:', error);
+    res.status(500).json({ error: 'Erro interno do servidor' });
   }
-  // Verifique a senha
-  const passwordMatch = await bcrypt.compare(passworduser, user.passworduser);
-  if (!passwordMatch) {
-    // Senha incorreta
-    return res.status(401).json({ error: 'Email ou senha incorretos' });
-  }
-  // Se as credenciais estiverem corretas, crie uma sessão
-  req.session.user = {
-    id: user.idusers,
-    nomeuser: user.nomeuser,
-    emailuser: user.emailuser,
-    // Outras informações do usuário que você deseja armazenar na sessão
-  };
-  console.log('Sessão criada:', req.session.user);
-  res.json({
-    message: 'Login bem-sucedido',
-    user: {
-      id: user.id,
-      nomeuser: user.nomeuser,
-      emailuser: user.emailuser,
-      // Outras informações do usuário que você deseja retornar
-    },
-  });
 });
-// Função para obter um usuário pelo email
-async function getUserByEmail(email) {
-  return new Promise((resolve, reject) => {
-    db.query('SELECT * FROM users WHERE emailuser = ?', [email], (err, results) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(results[0]); // Assumindo que o email é único
-      }
-    });
-  });
-}
+router.get('/user', verifyToken, async (req, res) => {
+  try {
+    // Obtenha o ID do usuário a partir do token
+    const userId = req.user.userId; // Use userId em vez de idusers
+
+    // Chame a função para buscar os dados do usuário
+    const user = await getUserById(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: 'Usuário não encontrado' });
+    }
+
+    // Envie os dados do usuário como resposta
+    res.json(user);
+  } catch (error) {
+    console.error('Erro ao buscar dados do usuário:', error);
+    res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+});
+
 module.exports = router;
