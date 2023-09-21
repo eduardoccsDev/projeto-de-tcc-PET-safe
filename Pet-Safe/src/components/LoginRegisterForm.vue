@@ -39,6 +39,7 @@
                 <button type="submit" class="submitform">Registrar</button>
             </form>
             <p v-if="registrationError" class="error">{{ registrationError }}</p>
+            <p v-if="registrationSuccess" class="success">{{ registrationSuccess }}</p>
             <p class="forms__ask">Já possui uma conta? faça login <button @click="handleChangeForm">Clicando aqui</button>
             </p>
         </div>
@@ -47,13 +48,14 @@
   
 <script setup>
 import { ref } from 'vue';
-import Cookies from 'js-cookie'
 import axios from 'axios'
-import { useRouter } from 'vue-router'; // Importe o useRouter do Vue Router
+import { useRouter } from 'vue-router';
+
 const registrationError = ref(null);
+const registrationSuccess = ref(null);
 const loginError = ref(null);
 
-const router = useRouter(); // Crie uma instância do router
+const router = useRouter(); 
 const isRegister = ref(false);
 const formData = {
     nomeuser: '',
@@ -68,58 +70,59 @@ function handleChangeForm() {
 }
 
 const handleRegistration = async () => {
-  // Limpe os erros anteriores
-  registrationError.value = null;
-  try {
-    // Realize a validação dos campos do formulário aqui
-    if (!formData.nomeuser || !formData.emailuser || !formData.passworduser || !formData.addressuser || !formData.passworduserrepeat) {
-      throw new Error('Por favor, preencha todos os campos.');
+    // Limpe mensagens anteriores
+    registrationError.value = null;
+    registrationSuccess.value = null;
+    try {
+        // Realize a validação dos campos do formulário aqui
+        if (!formData.nomeuser || !formData.emailuser || !formData.passworduser || !formData.addressuser || !formData.passworduserrepeat) {
+            throw new Error('Por favor, preencha todos os campos.');
+        }
+        if (formData.passworduser !== formData.passworduserrepeat) {
+            throw new Error('As senhas não coincidem.');
+        }
+        // Envie os dados do formulário para o servidor ou a API usando uma solicitação POST
+        const response = await fetch('http://localhost:3000/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+        });
+        if (!response.ok) {
+            throw new Error('Erro ao registrar. Verifique os dados inseridos.');
+        }
+        // Redirecione o usuário após o registro bem-sucedido (você pode escolher a rota apropriada)
+        registrationSuccess.value = "Usuário criado com sucesso!";
+        setTimeout(window.location.reload(), 5000);
+    } catch (error) {
+        // Trate os erros de validação ou da API aqui
+        registrationError.value = error.message;
     }
-    if (formData.passworduser !== formData.passworduserrepeat) {
-      throw new Error('As senhas não coincidem.');
-    }
-    // Envie os dados do formulário para o servidor ou a API usando uma solicitação POST
-    const response = await fetch('http://localhost:3000/api/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData),
-    });
-    if (!response.ok) {
-      throw new Error('Erro ao registrar. Verifique os dados inseridos.');
-    }
-    // Redirecione o usuário após o registro bem-sucedido (você pode escolher a rota apropriada)
-    router.push('/login-registro');
-  } catch (error) {
-    // Trate os erros de validação ou da API aqui
-    registrationError.value = error.message;
-  }
 };
 
 const handleLogin = async () => {
-  // Limpe os erros anteriores
-  loginError.value = null;
-  try {
-    // Realize a validação dos campos do formulário aqui
-    if (!formData.emailuser || !formData.passworduser) {
-      throw new Error('Por favor, preencha todos os campos.');
+    // Limpe os erros anteriores
+    loginError.value = null;
+    try {
+        if (!formData.emailuser || !formData.passworduser) {
+            throw new Error('Por favor, preencha todos os campos.');
+        }
+        const response = await axios.post('http://localhost:3000/login', formData);
+
+        if (!response.data.token) {
+            throw new Error('Erro ao fazer login. Verifique os dados inseridos.');
+        }
+
+        // Armazene o token JWT no localStorage
+        localStorage.setItem('token', response.data.token);
+
+        // Redirecione o usuário após o login bem-sucedido (você pode escolher a rota apropriada)
+        router.push('/');
+    } catch (error) {
+        loginError.value = error.message;
+        console.error(error);
     }
-    // Envie os dados do formulário para o servidor ou a API usando o Axios
-    const response = await axios.post('http://localhost:3000/api/login', formData);
-    
-    if (!response.data.token) {
-      throw new Error('Erro ao fazer login. Verifique os dados inseridos.');
-    }
-    // Armazene o token JWT em um cookie seguro
-    Cookies.set('token', response.data.token, { expires: 7, domain: 'localhost', path: '/' });
-    // Redirecione o usuário após o login bem-sucedido (você pode escolher a rota apropriada)
-    router.push('/');
-  } catch (error) {
-    // Trate os erros de validação ou da API aqui
-    loginError.value = error.message;
-    console.error(error); // Adicione esta linha para depurar erros no console
-  }
 };
 
 </script>
@@ -273,4 +276,24 @@ const handleLogin = async () => {
             }
         }
     }
-}</style>
+}
+
+.error {
+    background-color: #ff00005c;
+    color: #ff1f1f;
+    text-align: center;
+    padding: 5px;
+    margin-top: 8px;
+    border-radius: 5px;
+    border: solid 2px;
+}
+.success{
+    background-color: #00ff625c;
+    color: var(--dark);
+    text-align: center;
+    padding: 5px;
+    margin-top: 8px;
+    border-radius: 5px;
+    border: solid 2px;
+}
+</style>
