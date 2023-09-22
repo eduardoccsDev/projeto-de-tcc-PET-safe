@@ -7,10 +7,17 @@
         <section class="page__content">
             <div class="sideContainer">
                 <div class="sideLeft">
-                    <img v-if="userData" :src="getUserImageSrc()" alt="foto-de-perfil" class="cardUser__img">
-                    <img v-else src="../assets/images/logo.png" alt="foto-de-perfil" class="cardUser__img">
-                    <input type="file" @change="handleFileChange">
-                    <button @click="uploadImage">Enviar Imagem</button>
+                    <div class="userImgContainer">
+                        <img v-if="userData" :src="getUserImageSrc()" alt="foto-de-perfil" class="cardUser__img">
+                        <img v-else src="../assets/images/logo.png" alt="foto-de-perfil" class="cardUser__img">
+                    </div>
+                    <div class="inputContainer">
+                        <button @click="handleEditUserImage" class="editUserImage"><i class="fa-solid fa-pen-to-square"></i> Editar imagem</button>
+                        <label v-if="isEditImage" for="userimg"><i class="fa-solid fa-image"></i> Selecionar imagem</label>
+                        <input id="userimg" ref="fileInput" type="file" @change="handleFileChange">
+                        <p class="msgUserImg" v-if="msgUserImg">{{msgUserImg}}</p>
+                        <button class="sendUserImage" v-if="isEditImage" @click="uploadImage"><i class="fa-solid fa-upload"></i> Enviar Imagem</button>
+                    </div>
                 </div>
                 <div class="sideRight">
                     <h3>- Informações de usuário</h3>
@@ -51,9 +58,11 @@
 
 <script setup>
 import axios from 'axios';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 
 const userData = ref(null);
+const msgUserImg = ref(null);
+const isEditImage = ref(false);
 const isDisabled = ref(true);
 const userImageSrc = ref('');
 // Recupere o token do localStorage
@@ -61,6 +70,10 @@ const token = localStorage.getItem('token');
 
 function handleIsDisabled() {
     isDisabled.value = !isDisabled.value;
+}
+function handleEditUserImage() {
+    isEditImage.value = !isEditImage.value;
+    msgUserImg.value = null;
 }
 
 if (!token) {
@@ -82,32 +95,41 @@ if (!token) {
 
 const selectedFile = ref(null);
 
+const hasSelectedFiles = computed(() => selectedFile.value !== null);
+
 const handleFileChange = (event) => {
   selectedFile.value = event.target.files[0];
 };
 
 const uploadImage = () => {
-  const formData = new FormData();
-  formData.append('image', selectedFile.value);
+  if (hasSelectedFiles.value) {
+    const formData = new FormData();
+    formData.append('image', selectedFile.value);
 
-  // Enviar a imagem para a rota de upload no servidor
-  axios
-    .post('http://localhost:3000/upload-image', formData)
-    .then((response) => {
-      const imagePath = response.data.imagePath;
-      // Atualize a imagem de perfil imediatamente após o upload
-      userData.value.imguser = imagePath;
+    // Enviar a imagem para a rota de upload no servidor
+    axios
+      .post('http://localhost:3000/upload-image', formData)
+      .then((response) => {
+        const imagePath = response.data.imagePath;
 
-      // Atualize o token JWT armazenado no local storage com o novo token
-      const newToken = response.data.token;
-      localStorage.setItem('token', newToken);
-      
-      // Faça algo com o imagePath, se necessário
-      // Você pode até mesmo exibir uma mensagem de sucesso
-    })
-    .catch((error) => {
-      console.error('Erro ao fazer upload da imagem:', error);
-    });
+        // Atualize a imagem de perfil imediatamente após o upload
+        userData.value.imguser = imagePath;
+
+        // Atualize o token JWT armazenado no local storage com o novo token
+        const newToken = response.data.token;
+        localStorage.setItem('token', newToken);
+        
+        // Faça algo com o imagePath, se necessário
+        // Você pode até mesmo exibir uma mensagem de sucesso
+        msgUserImg.value = null;
+      })
+      .catch((error) => {
+        console.error('Erro ao fazer upload da imagem:', error);
+      });
+  } else {
+    console.error('Nenhum arquivo selecionado para upload.');
+    msgUserImg.value = "Selecione um arquivo."
+  }
 };
 
 const getUserImageSrc = () => {
@@ -117,6 +139,7 @@ const getUserImageSrc = () => {
   return ''; // Retorne uma imagem padrão ou uma string vazia, dependendo do que desejar
 };
 </script>
+
 <style scoped lang="scss">
 .sideContainer {
     display: flex;
@@ -125,17 +148,58 @@ const getUserImageSrc = () => {
         margin-bottom: 10px;
     }
     .sideLeft {
-        flex-basis: calc(10% - 15px);
+        flex-basis: calc(15% - 15px);
         width: 100%;
+        text-align: center;
 
         img {
             width: 150px;
             border-radius: 100%;
         }
+        .msgUserImg{
+            background-color: rgb(255, 106, 106);
+            color: rgb(144, 15, 15);
+            margin-top: 10px;
+            margin-bottom: 0px !important;
+            padding: 5px 10px;
+            border-radius: 5px;
+            border: solid 2px;
+            font-size: 16px;
+        }
+        .inputContainer{
+            label{
+                background-color: var(--dark);
+                color: var(--primary);
+                font-size: 14px;
+                padding:5px 10px;
+                border-radius: 5px;
+                cursor: pointer;
+                width: 100%;
+
+            }
+            input{
+                display:none;
+            }
+            .sendUserImage{
+                margin-top: 10px;
+            }
+            .editUserImage, .sendUserImage{
+                background-color: var(--primary);
+                color: var(--dark);
+                padding: 5px 10px;
+                transition: .5s;
+                border-radius: 5px;
+                margin-bottom: 10px;
+                width: 100%;
+                &:hover{
+                    transform: scale(1.05);
+                }
+            }
+        }
     }
     .sideRight{
         background-color: #fff;
-        flex-basis: calc(90% - 10px);
+        flex-basis: calc(85% - 10px);
         padding: 20px;
         border-radius: 10px;
         .infoUser{
