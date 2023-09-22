@@ -13,18 +13,27 @@
                     <button @click="uploadImage">Enviar Imagem</button>
                 </div>
                 <div class="sideRight">
-                    <h3>Informações de usuário</h3>
+                    <h3>- Informações de usuário</h3>
                     <form class="infoUser">
-                        <input v-if="userData" :disabled="isDisabled" type="text" :value="userData.nomeuser"
-                            name="nomeuser">
-                        <input v-if="userData" :disabled="isDisabled" type="email" :value="userData.emailuser"
-                            name="emailuser">
-                        <input v-if="userData" :disabled="isDisabled" type="text" :value="userData.addressuser"
-                            name="addressuser">
-                        <button :disabled="isDisabled" type="submit">Salvar</button>
+                        <div class="inputContainer half">
+                            <label for="nomeuser">Nome:</label>
+                            <input id="nomeuser" v-if="userData" :disabled="isDisabled" type="text" :value="userData.nomeuser"
+                                name="nomeuser">
+                        </div>
+                        <div class="inputContainer half">
+                            <label for="emailuser">Email:</label>
+                            <input id="emailuser" v-if="userData" :disabled="isDisabled" type="email" :value="userData.emailuser"
+                                name="emailuser">
+                        </div>
+                        <div class="inputContainer">
+                            <label for="addressuser">Endereço:</label>
+                            <input id="addressuser" v-if="userData" :disabled="isDisabled" type="text" :value="userData.addressuser"
+                                name="addressuser">
+                        </div>
+                        <button :disabled="isDisabled" class="saveUserInfo" type="submit"><i class="fa-solid fa-floppy-disk"></i> Salvar</button>
                     </form>
-                    <button @click="handleIsDisabled">Editar informações</button>
-                    <br>
+                    <button class="editUserInfo" @click="handleIsDisabled"><i class="fa-solid fa-pen-to-square"></i> Editar informações</button>
+                    <h3>- Informações do pet</h3>
                     <p v-if="userData" class="cardUser__name">
                         <i class="fa-solid fa-dog"></i>
                         Pitoco - Macho
@@ -112,7 +121,9 @@ const getUserImageSrc = () => {
 .sideContainer {
     display: flex;
     gap: 30px;
-
+    h3{
+        margin-bottom: 10px;
+    }
     .sideLeft {
         flex-basis: calc(10% - 15px);
         width: 100%;
@@ -122,4 +133,65 @@ const getUserImageSrc = () => {
             border-radius: 100%;
         }
     }
+    .sideRight{
+        background-color: #fff;
+        flex-basis: calc(90% - 10px);
+        padding: 20px;
+        border-radius: 10px;
+        .infoUser{
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .editUserInfo{
+            background-color: var(--primary);
+            margin-top: 10px;
+            color: var(--dark);
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: .5s;
+            margin-bottom: 20px;
+            &:hover{
+                transform: scale(1.05);
+            }
+        }
+        .saveUserInfo{
+            background-color: var(--primary);
+            color: var(--dark);
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: .5s;
+            &:hover{
+                transform: scale(1.05);
+            }
+            &:disabled {
+                background-color: #f1f1f1;
+                cursor: initial;
+                &:hover{
+                    transform: scale(1);
+                }
+            }
+        }
+        .inputContainer{
+            flex-basis: 100%;
+            &.half{
+                flex-basis: calc(50% - 5px);
+            }
+            input {
+            background-color: #f1f1f1;
+            padding: 5px;
+            border-radius: 5px;
+            border: solid 2px #fff;
+            width: 100%;
+    
+            &::placeholder {
+                color: #1a1a1a8f;
+            }
+    
+            &:focus-visible {
+                outline: 2px solid var(--primary);
+            }
+        }
+    }
+}
 }</style>
