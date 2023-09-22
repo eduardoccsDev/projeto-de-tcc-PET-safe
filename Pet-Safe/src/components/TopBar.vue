@@ -1,0 +1,77 @@
+<template>
+    <section class="topbar">
+        <div class="info">
+            <p v-if="userData">
+                Olá, {{userData.nomeuser }}
+            </p>
+            <p v-else>Olá visitante</p>
+        </div>
+        <div class="btns">
+            <router-link v-if="isUserLoggedIn" to="/perfil" class="buttonLink">
+                <span class="icons">
+                    <i class="fa-regular fa-address-card"></i>
+                </span>
+                <span class="text">
+                    Perfil
+                </span>
+            </router-link>
+            <LoginLogoutBtns />
+        </div>
+    </section>
+</template>
+<script setup>
+import axios from 'axios';
+import { ref } from 'vue';
+import LoginLogoutBtns from './LoginLogoutBtns.vue';
+const isUserLoggedIn = localStorage.getItem("token") !== null;
+const userData = ref(null);
+
+// Recupere o token do localStorage
+const token = localStorage.getItem('token');
+
+if (!token) {
+    console.log("SEM TOKEN");
+} else {
+    axios.get('http://localhost:3000/protegido', {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+        .then((response) => {
+            userData.value = response.data.user;
+            // console.log('Dados do usuário:', response.data.user);
+        })
+        .catch((error) => {
+            console.error('Erro ao acessar o endpoint protegido:', error);
+        });
+}
+</script>
+<style scoped lang="scss">
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--dark-alt);
+    padding:10px;
+    .btns{
+        display: flex;
+        gap: 8px;
+    }
+    .info{
+        p{
+            color: #fff;
+        }
+    }
+    a{
+        text-decoration: none;
+        background-color: var(--primary);
+        color: var(--dark);
+        padding: 5px 10px;
+        border-radius: 5px;
+        transition: .5s;
+        &:hover{
+            transform: scale(1.05);
+        }
+    }
+}
+</style>

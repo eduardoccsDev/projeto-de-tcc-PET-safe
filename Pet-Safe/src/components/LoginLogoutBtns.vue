@@ -1,6 +1,7 @@
 <template>
     <div class="btnsContainer">
-        <router-link to="/login-registro" class="buttonLink">
+        <button v-if="isUserLoggedIn" @click="handleLogout" class="logout"><i class="fa-solid fa-arrow-right-to-bracket fa-rotate-180"></i> Sair</button>
+        <router-link v-else to="/login-registro" class="buttonLink">
             <span class="icons">
                 <i class="fa-solid fa-arrow-right-to-bracket"></i>
             </span>
@@ -10,15 +11,36 @@
         </router-link>
     </div>
 </template>
-<script setup></script>
+<script setup>
+import { useRouter } from 'vue-router';
+import { computed, defineEmits } from 'vue';
+
+const emit = defineEmits();
+const isUserLoggedIn = computed(() => {
+  return localStorage.getItem('token') !== null;
+});
+
+const router = useRouter();
+const handleLogout = () => {
+  localStorage.removeItem('token');
+  window.location.reload();
+};
+</script>
 <style scoped lang="scss">
 .btnsContainer {
     display: flex;
-    position: absolute;
-    right: 0;
-    top: 0;
-    padding: 25px;
-    z-index: 1;
+    .logout{
+        background-color: rgb(253, 89, 89);
+        color: var(--dark);
+        padding: 5px 10px;
+        border-radius: 5px;
+        transition: .5s;
+        font-size: 16px;
+        cursor: pointer;
+        &:hover{
+            transform: scale(1.05);
+        }
+    }
 
     a {
         background-color: var(--primary);

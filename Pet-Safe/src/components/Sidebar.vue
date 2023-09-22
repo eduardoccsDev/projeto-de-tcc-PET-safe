@@ -28,7 +28,7 @@
                     Sobre
                 </span>
             </router-link>
-            <router-link to="/perfil" class="buttonLink">
+            <router-link v-if="isUserLoggedIn" to="/perfil" class="buttonLink">
                 <span class="icons">
                     <i class="fa-regular fa-address-card"></i>
                 </span>
@@ -58,7 +58,8 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
-
+// Verifique se o usuário está logado com base na presença do token no localStorage
+const isUserLoggedIn = localStorage.getItem("token") !== null;
 const is_expanded = ref(localStorage.getItem("is_expanded") === "true")
 const ToggleMenu = () => {
     is_expanded.value = !is_expanded.value

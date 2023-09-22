@@ -107,7 +107,7 @@ router.post('/login', (req, res) => {
               addressuser: user.addressuser,
             },
             process.env.JWT_SECRET,
-            { expiresIn: '1h' }
+            { expiresIn: '365d' }
           );
           // Envie o token como resposta
           res.json({ token });

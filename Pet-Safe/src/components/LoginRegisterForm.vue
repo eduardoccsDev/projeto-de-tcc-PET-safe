@@ -47,7 +47,7 @@
 </template>
   
 <script setup>
-import { ref } from 'vue';
+import { ref, defineProps, defineEmits } from 'vue';
 import axios from 'axios'
 import { useRouter } from 'vue-router';
 
@@ -100,7 +100,7 @@ const handleRegistration = async () => {
         registrationError.value = error.message;
     }
 };
-
+const emit = defineEmits();
 const handleLogin = async () => {
     // Limpe os erros anteriores
     loginError.value = null;
@@ -118,7 +118,9 @@ const handleLogin = async () => {
         localStorage.setItem('token', response.data.token);
 
         // Redirecione o usuário após o login bem-sucedido (você pode escolher a rota apropriada)
-        router.push('/');
+        emit('user-logged-in');
+        // router.push('/');
+        window.location.href = '/';
     } catch (error) {
         loginError.value = error.message;
         console.error(error);

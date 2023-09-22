@@ -5,6 +5,7 @@ import Message from './components/Message.vue';
 import Sidebar from './components/Sidebar.vue';
 
 import { ref } from 'vue';
+import TopBar from './components/TopBar.vue';
 const showMessage = ref(true);
 
 function closeMessage() {
@@ -17,6 +18,7 @@ function closeMessage() {
   <div id="side-content">
     <Sidebar />
     <div id="page-container">
+      <TopBar/>
       <Message msg-text="Apenas um teste." :is-action="true" action-link="#teste" @close="closeMessage" />
       <div id="content-wrap">
         <!-- all other page content -->

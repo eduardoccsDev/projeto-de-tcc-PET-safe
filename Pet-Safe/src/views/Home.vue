@@ -1,5 +1,4 @@
 <template>
-    <LoginLogoutBtns/>
     <div class="container">
         <section class="page__title">
             <h1>Home</h1>
@@ -33,29 +32,4 @@
 <script setup>
 import FixedAlert from '../components/FixedAlert.vue';
 import HeroSection from '../components/HeroSection.vue';
-import LoginLogoutBtns from '../components/LoginLogoutBtns.vue';
-import axios from 'axios';
-import { ref } from 'vue';
-
-// const userData = ref(null);
-
-// // Recupere o token do localStorage
-// const token = localStorage.getItem('token');
-
-// if (!token) {
-//     console.log("SEM TOKEN");
-// } else {
-//     axios.get('http://localhost:3000/protegido', {
-//         headers: {
-//             Authorization: `Bearer ${token}`
-//         }
-//     })
-//     .then((response) => {
-//         userData.value = response.data.user;
-//         // console.log('Dados do usuário:', response.data.user);
-//     })
-//     .catch((error) => {
-//         console.error('Erro ao acessar o endpoint protegido:', error);
-//     });
-// }
 </script>

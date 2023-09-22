@@ -59,7 +59,6 @@
 </template>
 
 <script setup>
-import FixedAlert from '../components/FixedAlert.vue';
 import axios from 'axios';
 import { ref } from 'vue';
 
