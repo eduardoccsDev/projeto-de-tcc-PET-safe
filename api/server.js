@@ -21,7 +21,8 @@ app.use(express.urlencoded({ extended: true }));
 
 // Habilitar o CORS (configurar para suas necessidades)
 app.use(cors());
-
+// Configuração para servir arquivos estáticos da pasta de uploads
+app.use('/api/public/uploads', express.static(__dirname + '/public/uploads'));
 // Use suas rotas
 app.use('/', routes);
 

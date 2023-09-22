@@ -4,8 +4,9 @@ const db = require('./db');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
-const cookieParser = require('cookie-parser'); 
-router.use(cookieParser());
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 dotenv.config();
 
 // Middleware para verificar e decodificar o token JWT
@@ -87,7 +88,7 @@ router.post('/login', (req, res) => {
       res.status(401).json({ error: 'Credenciais inválidas' });
     } else {
       const user = results[0];
-      
+
       // Compare a senha fornecida com a senha hash do banco de dados
       bcrypt.compare(passworduser, user.passworduser, (err, passwordMatch) => {
         if (err) {
@@ -105,6 +106,7 @@ router.post('/login', (req, res) => {
               nomeuser: user.nomeuser,
               emailuser: user.emailuser,
               addressuser: user.addressuser,
+              imguser: user.imguser
             },
             process.env.JWT_SECRET,
             { expiresIn: '365d' }
@@ -122,5 +124,67 @@ router.get('/protegido', verifyToken, (req, res) => {
   // Os dados do usuário estão disponíveis em req.user
   res.json({ user: req.user });
 });
+
+// Configurar o armazenamento para o upload de imagens
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/uploads'); // Diretório onde as imagens serão armazenadas
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    const fileExtension = path.extname(file.originalname);
+    cb(null, file.fieldname + '-' + uniqueSuffix + fileExtension);
+  },
+});
+
+const upload = multer({ storage });
+
+// Rota para upload de imagem
+router.post('/upload-image', verifyToken, upload.single('image'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: 'Nenhuma imagem foi enviada' });
+  }
+
+  const imagePath = '/uploads/' + req.file.filename;
+
+  // Antes de atualizar a imagem, você pode excluir a imagem anterior, se houver
+  if (req.user.imguser) {
+    const previousImagePath = path.join(__dirname, 'public', req.user.imguser);
+    fs.unlink(previousImagePath, (unlinkErr) => {
+      if (unlinkErr) {
+        console.error('Erro ao excluir imagem anterior:', unlinkErr);
+      }
+    });
+  }
+  // Atualizar o campo imguser no banco de dados
+  const updateQuery = 'UPDATE users SET imguser = ? WHERE idusers = ?';
+
+  db.query(updateQuery, [imagePath, req.user.userId], (updateErr, updateResults) => {
+    if (updateErr) {
+      console.error('Erro ao atualizar o caminho da imagem no banco de dados:', updateErr);
+      res.status(500).json({ error: 'Erro interno do servidor' });
+    } else {
+      console.log('Caminho da imagem atualizado com sucesso no banco de dados');
+
+      // Gere um novo token JWT com o caminho da imagem atualizado
+      const newToken = jwt.sign(
+        {
+          userId: req.user.userId,
+          role: "user",
+          nomeuser: req.user.nomeuser,
+          emailuser: req.user.emailuser,
+          addressuser: req.user.addressuser,
+          imguser: imagePath // Use o novo caminho da imagem aqui
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: '365d' }
+      );
+
+      // Envie o novo token como parte da resposta, juntamente com o caminho da imagem
+      res.json({ imagePath, token: newToken });
+    }
+  });
+});
+
 
 module.exports = router;
