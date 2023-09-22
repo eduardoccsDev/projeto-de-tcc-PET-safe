@@ -35,8 +35,13 @@ const router = createRouter({
       path: '/sobre',
       name: 'about',
       component: () => import('../views/About.vue')
+    },
+    {
+      path: '/perfil',
+      name: 'profile',
+      component: () => import('../views/Profile.vue')
     }
   ]
 });
 
-export { store, router }; // Exporta o store e o router para serem usados em outros lugares
+export { store, router };

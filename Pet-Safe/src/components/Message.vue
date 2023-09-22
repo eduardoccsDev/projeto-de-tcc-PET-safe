@@ -86,6 +86,7 @@ onMounted(() => {
         padding: 1em;
         align-items: center;
         border-bottom: solid 3px var(--primary);
+        z-index: 2;
 
         @media(max-width:668px) {
             padding-inline-start: 5em;

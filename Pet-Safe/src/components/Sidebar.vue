@@ -28,6 +28,14 @@
                     Sobre
                 </span>
             </router-link>
+            <router-link to="/perfil" class="buttonLink">
+                <span class="icons">
+                    <i class="fa-regular fa-address-card"></i>
+                </span>
+                <span class="text">
+                    Perfil
+                </span>
+            </router-link>
             <!-- DEMAIS LINKS SEGUEM O MESMO PADRÃO -->
         </div>
         <div class="flex"></div>

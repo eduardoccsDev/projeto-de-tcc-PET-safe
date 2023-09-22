@@ -5,7 +5,6 @@ import Message from './components/Message.vue';
 import Sidebar from './components/Sidebar.vue';
 
 import { ref } from 'vue';
-
 const showMessage = ref(true);
 
 function closeMessage() {
