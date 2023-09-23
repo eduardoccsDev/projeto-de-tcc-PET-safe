@@ -189,13 +189,13 @@ router.post('/upload-image', verifyToken, upload.single('image'), (req, res) => 
 
 // Rota para atualizar as informações do usuário
 router.post('/atualizar-usuario', verifyToken, (req, res) => {
-  const { nomeuser, emailuser, addressuser } = req.body;
+  const { nomeuser, emailuser, addressuser, residenciauser } = req.body;
   const userId = req.user.userId; // ID do usuário a ser atualizado
 
   // Atualize as informações do usuário no banco de dados
-  const updateQuery = 'UPDATE users SET nomeuser = ?, emailuser = ?, addressuser = ? WHERE idusers = ?';
+  const updateQuery = 'UPDATE users SET nomeuser = ?, emailuser = ?, residenciauser = ?, addressuser = ? WHERE idusers = ?';
 
-  db.query(updateQuery, [nomeuser, emailuser, addressuser, userId], (updateErr, updateResults) => {
+  db.query(updateQuery, [nomeuser, emailuser, residenciauser, addressuser, userId], (updateErr, updateResults) => {
     if (updateErr) {
       console.error('Erro ao atualizar informações do usuário:', updateErr);
       res.status(500).json({ error: 'Erro interno do servidor' });
@@ -217,7 +217,8 @@ router.post('/atualizar-usuario', verifyToken, (req, res) => {
               nomeuser: updatedUser.nomeuser,
               emailuser: updatedUser.emailuser,
               addressuser: updatedUser.addressuser,
-              imguser: updatedUser.imguser
+              imguser: updatedUser.imguser, 
+              residenciauser: updatedUser.residenciauser
             },
             process.env.JWT_SECRET,
             { expiresIn: '365d' }

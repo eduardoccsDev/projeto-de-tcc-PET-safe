@@ -44,7 +44,7 @@
                                 :disabled="isDisabled" type="text" name="addressuser">
                         </div>
                         <div class="inputContainer half">
-                            <label for="residenciauser">Residência:</label>
+                            <label for="residenciauser"><i class="fa-solid fa-house"></i> Residência:</label>
                             <select :disabled="isDisabled" v-if="userData" required v-model="editedUserInfo.residenciauser" name="residenciauser" id="residenciauser">
                                 <option value="" disabled>Selecione o tipo de residência</option>
                                 <option value="Casa">Casa</option>
@@ -232,8 +232,11 @@ onMounted(() => {
     display: flex;
     align-items: center;
     gap: 10px;
+    @media(max-width:668px){
+        flex-direction: column;
+        gap: 0px;
+    }
 }
-
 .msgUserInfo {
     background-color: var(--primary-opacity);
     padding: 5px 10px;
@@ -246,6 +249,9 @@ onMounted(() => {
 .sideContainer {
     display: flex;
     gap: 30px;
+    @media(max-width:668px){
+        flex-direction: column;
+    }
 
     h3 {
         margin-bottom: 10px;
@@ -282,6 +288,7 @@ onMounted(() => {
                 border-radius: 5px;
                 cursor: pointer;
                 width: 100%;
+                display: block;
 
             }
 
@@ -361,8 +368,17 @@ onMounted(() => {
         .inputContainer {
             flex-basis: 100%;
 
+            @media(max-width:668px){
+                flex-basis: 100%;
+                text-align: initial;
+            }
+
             &.half {
                 flex-basis: calc(50% - 5px);
+                @media(max-width:668px){
+                flex-basis: 100%;
+                text-align: initial;
+            }
             }
 
             input, select {
