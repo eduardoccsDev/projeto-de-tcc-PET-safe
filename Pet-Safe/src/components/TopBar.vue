@@ -1,11 +1,5 @@
 <template>
     <section class="topbar">
-        <div class="info">
-            <p v-if="userData">
-                Olá, {{userData.nomeuser }}
-            </p>
-            <p v-else>Olá visitante</p>
-        </div>
         <div class="btns">
             <router-link v-if="isUserLoggedIn" to="/perfil" class="buttonLink">
                 <span class="icons">
@@ -50,7 +44,7 @@ if (!token) {
 .topbar {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
     background-color: var(--dark-alt);
     padding:10px;
     .btns{

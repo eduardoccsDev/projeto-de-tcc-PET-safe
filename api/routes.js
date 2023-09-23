@@ -39,7 +39,7 @@ router.get('/users', (req, res) => {
 });
 
 router.post('/register', (req, res) => {
-  const { nomeuser, emailuser, passworduser, addressuser } = req.body;
+  const { nomeuser, emailuser, passworduser, addressuser, residenciauser } = req.body;
 
   // Verifique se o email já está cadastrado
   const checkEmailQuery = 'SELECT * FROM users WHERE emailuser = ?';
@@ -58,8 +58,8 @@ router.post('/register', (req, res) => {
           res.status(500).json({ error: 'Erro interno do servidor' });
         } else {
           // Insira o novo usuário no banco de dados com a senha hasheada
-          const insertUserQuery = 'INSERT INTO users (nomeuser, emailuser, passworduser, addressuser) VALUES (?, ?, ?, ?)';
-          db.query(insertUserQuery, [nomeuser, emailuser, hashedPassword, addressuser], (insertErr, insertResults) => {
+          const insertUserQuery = 'INSERT INTO users (nomeuser, emailuser, passworduser, addressuser, residenciauser) VALUES (?, ?, ?, ?, ?)';
+          db.query(insertUserQuery, [nomeuser, emailuser, hashedPassword, addressuser, residenciauser], (insertErr, insertResults) => {
             if (insertErr) {
               console.error('Erro ao registrar usuário:', insertErr);
               res.status(500).json({ error: 'Erro interno do servidor' });
@@ -106,7 +106,8 @@ router.post('/login', (req, res) => {
               nomeuser: user.nomeuser,
               emailuser: user.emailuser,
               addressuser: user.addressuser,
-              imguser: user.imguser
+              imguser: user.imguser,
+              residenciauser: user.residenciauser
             },
             process.env.JWT_SECRET,
             { expiresIn: '365d' }
@@ -186,5 +187,48 @@ router.post('/upload-image', verifyToken, upload.single('image'), (req, res) => 
   });
 });
 
+// Rota para atualizar as informações do usuário
+router.post('/atualizar-usuario', verifyToken, (req, res) => {
+  const { nomeuser, emailuser, addressuser } = req.body;
+  const userId = req.user.userId; // ID do usuário a ser atualizado
+
+  // Atualize as informações do usuário no banco de dados
+  const updateQuery = 'UPDATE users SET nomeuser = ?, emailuser = ?, addressuser = ? WHERE idusers = ?';
+
+  db.query(updateQuery, [nomeuser, emailuser, addressuser, userId], (updateErr, updateResults) => {
+    if (updateErr) {
+      console.error('Erro ao atualizar informações do usuário:', updateErr);
+      res.status(500).json({ error: 'Erro interno do servidor' });
+    } else {
+      console.log('Informações do usuário atualizadas com sucesso no banco de dados');
+
+      // Recupere as informações atualizadas do usuário após a atualização
+      db.query('SELECT * FROM users WHERE idusers = ?', [userId], (selectErr, selectResults) => {
+        if (selectErr) {
+          console.error('Erro ao recuperar informações atualizadas do usuário:', selectErr);
+          res.status(500).json({ error: 'Erro interno do servidor' });
+        } else {
+          // Crie um novo token JWT com as informações atualizadas
+          const updatedUser = selectResults[0];
+          const token = jwt.sign(
+            {
+              userId: updatedUser.idusers,
+              role: "user",
+              nomeuser: updatedUser.nomeuser,
+              emailuser: updatedUser.emailuser,
+              addressuser: updatedUser.addressuser,
+              imguser: updatedUser.imguser
+            },
+            process.env.JWT_SECRET,
+            { expiresIn: '365d' }
+          );
+
+          // Envie o novo token e as informações atualizadas do usuário como resposta
+          res.json({ token, user: updatedUser });
+        }
+      });
+    }
+  });
+});
 
 module.exports = router;

@@ -13,7 +13,7 @@
 </template>
 <script setup>
 import { useRouter } from 'vue-router';
-import { computed, defineEmits } from 'vue';
+import { computed } from 'vue';
 
 const emit = defineEmits();
 const isUserLoggedIn = computed(() => {

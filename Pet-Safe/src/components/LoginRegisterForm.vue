@@ -30,12 +30,17 @@
                     placeholder="Insira seu nome">
                 <input v-model="formData.emailuser" required type="email" name="emailuser" class="emailuser"
                     placeholder="Insira seu e-mail">
-                <input v-model="formData.addressuser" required type="text" name="addressuser" class="addressuser"
-                    placeholder="Digite seu endereço (inclua o CEP)">
-                <input v-model="formData.passworduser" required type="password" name="passworduser" class="passworduser"
+                    <input v-model="formData.passworduser" required type="password" name="passworduser" class="passworduser"
                     placeholder="Insira sua senha">
-                <input v-model="formData.passworduserrepeat" required type="password" name="passworduserrepeat"
+                    <input v-model="formData.passworduserrepeat" required type="password" name="passworduserrepeat"
                     class="passworduser" placeholder="Repita sua senha">
+                    <input v-model="formData.addressuser" required type="text" name="addressuser" class="addressuser"
+                    placeholder="Digite seu endereço (inclua o CEP)">
+                    <select required v-model="formData.residenciauser" name="residenciauser" id="residenciauser">
+                        <option value="" disabled>Selecione o tipo de residência</option>
+                        <option value="Casa">Casa</option>
+                        <option value="Apartamento">Apartamento</option>
+                    </select>
                 <button type="submit" class="submitform">Registrar</button>
             </form>
             <p v-if="registrationError" class="error">{{ registrationError }}</p>
@@ -47,7 +52,7 @@
 </template>
   
 <script setup>
-import { ref, defineProps, defineEmits } from 'vue';
+import { ref, defineProps } from 'vue';
 import axios from 'axios'
 import { useRouter } from 'vue-router';
 
@@ -63,6 +68,7 @@ const formData = {
     passworduser: '',
     passworduserrepeat: '',
     addressuser: '',
+    residenciauser: ''
 };
 
 function handleChangeForm() {
@@ -75,7 +81,7 @@ const handleRegistration = async () => {
     registrationSuccess.value = null;
     try {
         // Realize a validação dos campos do formulário aqui
-        if (!formData.nomeuser || !formData.emailuser || !formData.passworduser || !formData.addressuser || !formData.passworduserrepeat) {
+        if (!formData.nomeuser || !formData.emailuser || !formData.passworduser || !formData.addressuser || !formData.passworduserrepeat ||  !formData.residenciauser) {
             throw new Error('Por favor, preencha todos os campos.');
         }
         if (formData.passworduser !== formData.passworduserrepeat) {
@@ -177,10 +183,11 @@ const handleLogin = async () => {
         font-size: 14px;
     }
 
-    input {
+    input, select {
         padding: 5px;
         border-radius: 5px;
         border: solid 2px #fff;
+        background-color: #fff;
 
         &::placeholder {
             color: #1a1a1a8f;
@@ -235,7 +242,7 @@ const handleLogin = async () => {
         gap: 8px;
 
         @media(max-width:668px) {
-            input {
+            input, select {
                 flex-basis: 100% !important;
             }
         }
@@ -264,8 +271,14 @@ const handleLogin = async () => {
             width: 100%;
         }
 
-        .submitform {
+        select{
             order: 5;
+            flex-basis: 100%;
+            width: 100%;
+        }
+
+        .submitform {
+            order: 6;
             width: 100%;
             background-color: var(--primary);
             color: var(--dark);
