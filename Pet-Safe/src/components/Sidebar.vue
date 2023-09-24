@@ -1,7 +1,8 @@
 <template>
     <aside :class="`${is_expanded && 'is-expanded'}`">
         <div class="logo">
-            <img src="../assets/images/logo.png" alt="pet-safe-logo" id="logo">
+            <img v-if="userData" :src="getUserImageSrc()" id="logo" alt="userimg">
+            <img v-else src="../assets/images/logo.png" alt="pet-safe-logo" id="logo">
         </div>
         <div class="menu-toggle-wrap">
             <button class="menu-toggle" @click="ToggleMenu">
@@ -55,8 +56,9 @@
 
 <script setup>
 import { ref } from "vue";
+import axios from 'axios';
 import { useRouter } from "vue-router";
-
+const userData = ref(null);
 const router = useRouter();
 // Verifique se o usuário está logado com base na presença do token no localStorage
 const isUserLoggedIn = localStorage.getItem("token") !== null;
@@ -65,6 +67,26 @@ const ToggleMenu = () => {
     is_expanded.value = !is_expanded.value
     localStorage.setItem("is_expanded", is_expanded.value)
 }
+const token = localStorage.getItem('token');
+if (token) {
+    axios.get('http://localhost:3000/protegido', {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+        .then((response) => {
+            userData.value = response.data.user;
+        })
+        .catch((error) => {
+            console.error('Erro ao acessar o endpoint protegido:', error);
+        });
+}
+const getUserImageSrc = () => {
+    if (userData.value) {
+        return `http://localhost:3000/api/public${userData.value.imguser}`;
+    }
+    return ''; // Retorne uma imagem padrão ou uma string vazia, dependendo do que desejar
+};
 </script>
 
 <style lang="scss" scoped>

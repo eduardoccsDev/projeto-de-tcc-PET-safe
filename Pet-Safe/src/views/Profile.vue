@@ -45,7 +45,8 @@
                         </div>
                         <div class="inputContainer half">
                             <label for="residenciauser"><i class="fa-solid fa-house"></i> Residência:</label>
-                            <select :disabled="isDisabled" v-if="userData" required v-model="editedUserInfo.residenciauser" name="residenciauser" id="residenciauser">
+                            <select :disabled="isDisabled" v-if="userData" required v-model="editedUserInfo.residenciauser"
+                                name="residenciauser" id="residenciauser">
                                 <option value="" disabled>Selecione o tipo de residência</option>
                                 <option value="Casa">Casa</option>
                                 <option value="Apartamento">Apartamento</option>
@@ -55,20 +56,75 @@
                                 class="fa-solid fa-floppy-disk"></i> Salvar</button>
                     </form>
                     <p v-if="msgUserInfo" class="msgUserInfo">{{ msgUserInfo }}</p>
-                    <h3>- Informações do pet</h3>
-                    <p v-if="userData" class="cardUser__name">
-                        <i class="fa-solid fa-dog"></i>
-                        Pitoco - Macho
-                        <i class="fa-solid fa-mars"></i>
-                    </p>
-                    <p v-if="userData" class="cardUser__email">
-                        <i class="fa-solid fa-cake-candles"></i>
-                        12/09/2020 - 3 anos
-                    </p>
+                    <div class="infoUserTitleContainer">
+                        <h3>- Informações de pet</h3>
+                        <button class="editUserInfo" @click="handleIsAddPet"><i class="fa-solid fa-plus"></i>
+                            Adicionar pet</button>
+                    </div>
+                    <form v-if="isAddPet" @submit.prevent="handleAddPet" class="infoUser">
+                        <div class="inputContainer half">
+                            <label for="nomepet"><i class="fa-solid fa-signature"></i> Nome do pet:</label>
+                            <input id="nomepet" placeholder="Digite o nome do pet" v-model="petData.nomepet" type="text"
+                                name="nomepet">
+                        </div>
+                        <div class="inputContainer half">
+                            <label for="nomepet"><i class="fa-solid fa-paw"></i> Espécie do pet:</label>
+                            <select name="especiepet" id="especiepet" v-model="petData.especiepet">
+                                <option value="" disabled>Selecione a espécie:</option>
+                                <option value="Cão">Cão</option>
+                                <option value="Gato">Gato</option>
+                            </select>
+                        </div>
+                        <div class="inputContainer half">
+                            <label for="nomepet"><i class="fa-solid fa-venus-mars"></i> Sexo do pet:</label>
+                            <select name="sexopet" id="sexopet" v-model="petData.sexopet">
+                                <option value="" disabled>Selecione o sexo:</option>
+                                <option value="Macho">Macho</option>
+                                <option value="Fêmea">Fêmea</option>
+                            </select>
+                        </div>
+                        <div class="inputContainer half">
+                            <label for="nomepet"><i class="fa-solid fa-paw"></i> Raça do pet:</label>
+                            <select name="racapet" id="racapet" v-model="petData.racapet">
+                                <option value="" disabled>Selecione a raça:</option>
+                                <option value="raca1">Raça 1</option>
+                                <option value="raca2">Raça 2</option>
+                            </select>
+                        </div>
+                        <div class="inputContainer half">
+                            <label for="nascimentopet"><i class="fa-solid fa-cake-candles"></i> Data de nascimento: </label>
+                            <input id="nascimentopet" v-model="petData.nascimentopet" type="date" name="nascimentopet">
+                        </div>
+                        <div class="inputContainer half">
+                            <label for="idadepet"><i class="fa-solid fa-arrow-up-1-9"></i> Idade: </label>
+                            <input id="idadepet" placeholder="Digite a idade do pet" v-model="petData.idadepet"
+                                type="number" name="idadepet">
+                        </div>
+                        <button class="saveUserInfo" type="submit"><i class="fa-solid fa-plus"></i> Adicionar</button>
+                    </form>
+                    <p v-if="msgUserInfo" class="msgUserInfo">{{ msgUserInfo }}</p>
+                    <div class="petCardsContainer">
+                        <div v-if="userPets" v-for="pet in userPets" :key="pet.idpets" class="petCard">
+                            <img class="petImg" src="../assets/images/logo.png" alt="petImg">
+                            <div class="petPrimaryInfo">
+                                <i v-if="pet.especiepet === 'Cão'" class="fa-solid fa-dog"></i>
+                                <i v-else class="fa-solid fa-cat"></i>
+                                <p>{{ pet.nomepet }} - {{ pet.racapet }}</p>
+                            </div>
+                            <p>
+                                <i v-if="pet.sexopet === 'Macho'" class="fa-solid fa-mars"></i>
+                                <i v-else class="fa-solid fa-venus"></i>
+                                {{ pet.sexopet }}
+                            </p>
+                            <p><i class="fa-solid fa-cake-candles"></i> {{ pet.idadepet }} anos</p>
+                            <button class="removePet"><i class="fa-solid fa-xmark"></i> Remover</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
     </div>
+    {{ console.log(userPets) }}
 </template>
 
 <script setup>
@@ -76,9 +132,12 @@ import axios from 'axios';
 import { ref, computed } from 'vue';
 
 const userData = ref(null);
+const userPets = ref(null);
 const msgUserImg = ref(null);
 const msgUserInfo = ref(null);
+const msgPetInfo = ref(null);
 const isEditImage = ref(false);
+const isAddPet = ref(false);
 const isDisabled = ref(true);
 const userImageSrc = ref('');
 let editedUserInfo = {
@@ -93,22 +152,13 @@ const token = localStorage.getItem('token');
 function handleIsDisabled() {
     isDisabled.value = !isDisabled.value;
 }
+function handleIsAddPet() {
+    isAddPet.value = !isAddPet.value;
+}
 function handleEditUserImage() {
     isEditImage.value = !isEditImage.value;
     msgUserImg.value = null;
 }
-
-const loadUserDataFromLocalStorage = () => {
-    const storedUserData = localStorage.getItem('userData');
-    if (storedUserData) {
-        userData.value = JSON.parse(storedUserData);
-        // Preencha os campos de edição com os dados do Local Storage
-        editedUserInfo.nomeuser = userData.value.nomeuser;
-        editedUserInfo.emailuser = userData.value.emailuser;
-        editedUserInfo.addressuser = userData.value.addressuser;
-        editedUserInfo.residenciauser = userData.value.residenciauser;
-    }
-};
 
 const updateUserProfileData = () => {
     if (token) {
@@ -220,11 +270,80 @@ const handleUpdateUserInfo = () => {
     }
 };
 
+
+const petData = {
+    nomepet: '',
+    especiepet: '',
+    sexopet: '',
+    idadepet: '',
+    nascimentopet: '',
+    racapet: ''
+}
+
+const handleAddPet = () => {
+    // Certifique-se de que todos os campos obrigatórios foram preenchidos
+    if (!petData.nomepet || !petData.especiepet || !petData.sexopet || !petData.idadepet || !petData.nascimentopet || !petData.racapet) {
+        console.error('Por favor, preencha todos os campos obrigatórios.');
+        return;
+    }
+    // Atualize os dados do usuário antes de adicionar o pet
+    updateUserProfileData();
+    // Aguarde até que os dados do usuário estejam disponíveis
+    if (!userData.value) {
+        console.error('Dados do usuário não disponíveis.');
+        return;
+    }
+    // Agora você pode acessar userData e petData com segurança
+    petData.idtutor = userData.value.userId; // Defina o idtutor como o ID do usuário logado
+    axios
+        .post('http://localhost:3000/adicionar-pet', petData, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+        .then((response) => {
+            petData.nomepet = '';
+            petData.especiepet = '';
+            petData.sexopet = '';
+            petData.idadepet = '';
+            petData.nascimentopet = '';
+            petData.racapet = '';
+            // Exiba uma mensagem de sucesso
+            window.location.reload();
+            msgPetInfo.value = 'Pet adicionado com sucesso!';
+            setTimeout(() => {
+                msgUserInfo.value = null;
+            }, 3000);
+        })
+        .catch((error) => {
+            console.error('Erro ao adicionar pet:', error);
+            // Exiba uma mensagem de erro
+            msgUserInfo.value = 'Erro ao adicionar pet.';
+        });
+};
+
+const fetchUserPets = () => {
+    if (token) {
+        axios.get('http://localhost:3000/pets', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+            .then((response) => {
+                userPets.value = response.data;
+                // console.log(userPets);
+            })
+            .catch((error) => {
+                console.error('Erro ao buscar os pets:', error);
+            });
+    }
+};
+
 import { onMounted } from 'vue';
 onMounted(() => {
     updateUserProfileData();
+    fetchUserPets();
 });
-
 </script>
 
 <style scoped lang="scss">
@@ -232,11 +351,13 @@ onMounted(() => {
     display: flex;
     align-items: center;
     gap: 10px;
-    @media(max-width:668px){
+
+    @media(max-width:668px) {
         flex-direction: column;
         gap: 0px;
     }
 }
+
 .msgUserInfo {
     background-color: var(--primary-opacity);
     padding: 5px 10px;
@@ -249,7 +370,8 @@ onMounted(() => {
 .sideContainer {
     display: flex;
     gap: 30px;
-    @media(max-width:668px){
+
+    @media(max-width:668px) {
         flex-direction: column;
     }
 
@@ -323,6 +445,76 @@ onMounted(() => {
         padding: 20px;
         border-radius: 10px;
 
+        .petCardsContainer {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+
+            .petCard {
+                background-color: var(--primary);
+                padding: 10px;
+                border-radius: 5px;
+                width: 200px;
+                text-align: center;
+                @media(max-width:668px){
+                    width: 100%;
+                }
+                .removePet{
+                    width: 100%;
+                    background-color: #FFF;
+                    color:var(--dark);
+                    padding: 5px 10px;
+                    border-radius: 5px;
+                    transition: .5s;
+                    cursor: pointer;
+                    &:hover{
+                        transform: scale(1.05);
+                    }
+                    i{
+                        background-color: transparent;
+                        padding: 0px;
+                    }
+                }
+                .petImg{
+                    width: 80px;
+                    border-radius: 100%;
+                    border: solid 2px var(--dark);
+                }
+
+                p {
+                    margin-bottom: 10px !important;
+                    text-align: left;
+                    &:last-child{
+                        margin-bottom: 0px !important;
+                    }
+                }
+
+                i {
+                    background-color: #fff;
+                    padding: 5px 6px;
+                    border-radius: 100%;
+                }
+
+                .petPrimaryInfo {
+                    display: flex;
+                    gap: 5px;
+                    align-items: center;
+                    margin-bottom: 10px;
+
+                    p {
+                        margin: 0 !important;
+                    }
+
+                    i {
+                        background-color: #fff;
+                        padding: 5px 4px;
+                        border-radius: 100%;
+                    }
+                }
+            }
+        }
+
+
         .infoUser {
             display: flex;
             flex-wrap: wrap;
@@ -368,20 +560,22 @@ onMounted(() => {
         .inputContainer {
             flex-basis: 100%;
 
-            @media(max-width:668px){
+            @media(max-width:668px) {
                 flex-basis: 100%;
                 text-align: initial;
             }
 
             &.half {
                 flex-basis: calc(50% - 5px);
-                @media(max-width:668px){
-                flex-basis: 100%;
-                text-align: initial;
-            }
+
+                @media(max-width:668px) {
+                    flex-basis: 100%;
+                    text-align: initial;
+                }
             }
 
-            input, select {
+            input,
+            select {
                 background-color: #f1f1f1;
                 padding: 5px;
                 border-radius: 5px;

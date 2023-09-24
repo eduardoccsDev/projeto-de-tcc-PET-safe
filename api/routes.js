@@ -232,4 +232,36 @@ router.post('/atualizar-usuario', verifyToken, (req, res) => {
   });
 });
 
+router.post('/adicionar-pet', verifyToken, (req, res) => {
+  const { idtutor, nomepet, especiepet, sexopet, idadepet, nascimentopet, racapet } = req.body;
+  // Execute uma consulta SQL para adicionar o pet ao banco de dados
+  const addPetQuery = 'INSERT INTO pets (idtutor, nomepet, especiepet, sexopet, idadepet, nascimentopet, racapet) VALUES (?, ?, ?, ?, ?, ?, ?)';
+
+  db.query(addPetQuery, [idtutor, nomepet, especiepet, sexopet, idadepet, nascimentopet, racapet], (addErr, addResults) => {
+    if (addErr) {
+      console.error('Erro ao adicionar pet:', addErr);
+      res.status(500).json({ error: 'Erro interno do servidor' });
+    } else {
+      console.log('Pet adicionado com sucesso');
+      res.json({ message: 'Pet adicionado com sucesso' });
+    }
+  });
+});
+
+// Rota para buscar os pets do usuário logado
+router.get('/pets', verifyToken, (req, res) => {
+  // O `idtutor` é o `userId` do usuário logado
+  const idtutor = req.user.userId;
+  // Consulte o banco de dados para buscar os pets com o mesmo `idtutor`
+  db.query('SELECT * FROM pets WHERE idtutor = ?', [idtutor], (err, results) => {
+    if (err) {
+      console.error('Erro na consulta SQL:', err);
+      res.status(500).json({ error: 'Erro interno do servidor' });
+    } else {
+      // Retorna os pets encontrados
+      res.json(results);
+    }
+  });
+});
+
 module.exports = router;
