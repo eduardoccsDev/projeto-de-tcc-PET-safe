@@ -175,7 +175,9 @@ router.post('/upload-image', verifyToken, upload.single('image'), (req, res) => 
           nomeuser: req.user.nomeuser,
           emailuser: req.user.emailuser,
           addressuser: req.user.addressuser,
-          imguser: imagePath // Use o novo caminho da imagem aqui
+          imguser: imagePath,
+          residenciauser: req.user.residenciauser
+
         },
         process.env.JWT_SECRET,
         { expiresIn: '365d' }

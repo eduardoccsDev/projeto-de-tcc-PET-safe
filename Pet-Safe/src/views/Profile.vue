@@ -102,7 +102,7 @@
                         </div>
                         <button class="saveUserInfo" type="submit"><i class="fa-solid fa-plus"></i> Adicionar</button>
                     </form>
-                    <p v-if="msgUserInfo" class="msgUserInfo">{{ msgUserInfo }}</p>
+                    <p v-if="msgPetInfo" class="msgUserInfo">{{ msgPetInfo }}</p>
                     <div class="petCardsContainer">
                         <div v-if="userPets" v-for="pet in userPets" :key="pet.idpets" class="petCard">
                             <img class="petImg" src="../assets/images/logo.png" alt="petImg">
@@ -312,7 +312,7 @@ const handleAddPet = () => {
             window.location.reload();
             msgPetInfo.value = 'Pet adicionado com sucesso!';
             setTimeout(() => {
-                msgUserInfo.value = null;
+                msgPetInfo.value = null;
             }, 3000);
         })
         .catch((error) => {
@@ -386,6 +386,7 @@ onMounted(() => {
 
         img {
             width: 150px;
+            height: 150px;
             border-radius: 100%;
             border: solid 2px var(--primary);
         }
@@ -454,7 +455,7 @@ onMounted(() => {
                 background-color: var(--primary);
                 padding: 10px;
                 border-radius: 5px;
-                width: 200px;
+                width: 337px;
                 text-align: center;
                 @media(max-width:668px){
                     width: 100%;
