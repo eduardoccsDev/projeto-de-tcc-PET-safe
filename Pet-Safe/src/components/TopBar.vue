@@ -1,7 +1,7 @@
 <template>
     <section class="topbar">
         <div class="btns">
-            <router-link v-if="isUserLoggedIn" to="/clinicas" class="buttonLink">
+            <router-link to="/clinicas" class="buttonLink">
                 <span class="icons">
                     <i class="fa-solid fa-hospital"></i>
                 </span>
