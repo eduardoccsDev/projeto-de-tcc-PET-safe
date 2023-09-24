@@ -7,6 +7,7 @@ const dotenv = require('dotenv');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const axios = require('axios');
 dotenv.config();
 
 // Middleware para verificar e decodificar o token JWT
@@ -265,5 +266,49 @@ router.get('/pets', verifyToken, (req, res) => {
     }
   });
 });
+
+// Rota para remover um pet
+router.delete('/remover-pet/:idpets', verifyToken, (req, res) => {
+  const idpets = req.params.idpets;
+  const idtutor = req.user.userId; // ID do tutor (usuário logado)
+
+  // Execute uma consulta SQL para verificar se o pet pertence ao usuário logado antes de remover
+  db.query('SELECT * FROM pets WHERE idpets = ? AND idtutor = ?', [idpets, idtutor], (selectErr, selectResults) => {
+    if (selectErr) {
+      console.error('Erro ao verificar a propriedade do pet:', selectErr);
+      res.status(500).json({ error: 'Erro interno do servidor' });
+    } else if (selectResults.length === 0) {
+      // Se não houver correspondência (o pet não pertence ao usuário logado), retorne um erro
+      res.status(404).json({ error: 'Pet não encontrado' });
+    } else {
+      // Execute uma consulta SQL para remover o pet do banco de dados
+      db.query('DELETE FROM pets WHERE idpets = ?', [idpets], (deleteErr, deleteResults) => {
+        if (deleteErr) {
+          console.error('Erro ao remover pet:', deleteErr);
+          res.status(500).json({ error: 'Erro interno do servidor' });
+        } else {
+          console.log('Pet removido com sucesso');
+          res.json({ message: 'Pet removido com sucesso' });
+        }
+      });
+    }
+  });
+});
+
+// Rota de proxy para a API do Google Maps
+router.get('/google-maps-proxy', async (req, res) => {
+  try {
+    const apiKey = 'AIzaSyCcR7yUn_K1EmYVI7PMBeXN_tOxSde2tHw';
+    const query = req.query.query;
+    const apiUrl = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${query}&key=${apiKey}`;
+    
+    const response = await axios.get(apiUrl);
+    res.json(response.data);
+  } catch (error) {
+    console.error('Erro na solicitação à API do Google Maps:', error);
+    res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+});
+
 
 module.exports = router;

@@ -41,6 +41,12 @@ const router = createRouter({
       name: 'profile',
       component: () => import('../views/Profile.vue'),
       meta: { requiresAuth: true }
+    },
+    {
+      path: '/clinicas',
+      name: 'NearbyClinics',
+      component: () => import('../views/NearbyClinics.vue'),
+      meta: { requiresAuth: true }
     }
   ]
 });

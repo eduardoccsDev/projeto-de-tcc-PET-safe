@@ -117,7 +117,8 @@
                                 {{ pet.sexopet }}
                             </p>
                             <p><i class="fa-solid fa-cake-candles"></i> {{ pet.idadepet }} anos</p>
-                            <button class="removePet"><i class="fa-solid fa-xmark"></i> Remover</button>
+                            <button @click="handleRemovePet(pet)" class="removePet"><i class="fa-solid fa-xmark"></i>
+                                Remover</button>
                         </div>
                     </div>
                 </div>
@@ -339,6 +340,35 @@ const fetchUserPets = () => {
     }
 };
 
+const handleRemovePet = (petToRemove) => {
+    axios
+        .delete(`http://localhost:3000/remover-pet/${petToRemove.idpets}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+        .then((response) => {
+            // Verifique se a remoção foi bem-sucedida no servidor antes de atualizar a lista localmente
+            if (response.status === 200) {
+                // Remova o pet da lista local userPets
+                userPets.value = userPets.value.filter((pet) => pet.idpets !== petToRemove.idpets);
+                // Exiba uma mensagem de sucesso (opcional)
+                msgPetInfo.value = 'Pet removido com sucesso!';
+                setTimeout(() => {
+                    msgPetInfo.value = null;
+                }, 3000);
+            } else {
+                // Exiba uma mensagem de erro se a remoção falhar (opcional)
+                msgPetInfo.value = 'Erro ao remover o pet.';
+            }
+        })
+        .catch((error) => {
+            console.error('Erro ao remover pet:', error);
+            // Exiba uma mensagem de erro
+            msgPetInfo.value = 'Erro ao remover o pet.';
+        });
+};
+
 import { onMounted } from 'vue';
 onMounted(() => {
     updateUserProfileData();
@@ -457,26 +487,31 @@ onMounted(() => {
                 border-radius: 5px;
                 width: 337px;
                 text-align: center;
-                @media(max-width:668px){
+
+                @media(max-width:668px) {
                     width: 100%;
                 }
-                .removePet{
+
+                .removePet {
                     width: 100%;
                     background-color: #FFF;
-                    color:var(--dark);
+                    color: var(--dark);
                     padding: 5px 10px;
                     border-radius: 5px;
                     transition: .5s;
                     cursor: pointer;
-                    &:hover{
+
+                    &:hover {
                         transform: scale(1.05);
                     }
-                    i{
+
+                    i {
                         background-color: transparent;
                         padding: 0px;
                     }
                 }
-                .petImg{
+
+                .petImg {
                     width: 80px;
                     border-radius: 100%;
                     border: solid 2px var(--dark);
@@ -485,7 +520,8 @@ onMounted(() => {
                 p {
                     margin-bottom: 10px !important;
                     text-align: left;
-                    &:last-child{
+
+                    &:last-child {
                         margin-bottom: 0px !important;
                     }
                 }

@@ -1,6 +1,14 @@
 <template>
     <section class="topbar">
         <div class="btns">
+            <router-link v-if="isUserLoggedIn" to="/clinicas" class="buttonLink">
+                <span class="icons">
+                    <i class="fa-solid fa-hospital"></i>
+                </span>
+                <span class="text">
+                    Clínicas próximas
+                </span>
+            </router-link>
             <router-link v-if="isUserLoggedIn" to="/perfil" class="buttonLink">
                 <span class="icons">
                     <i class="fa-regular fa-address-card"></i>
