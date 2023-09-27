@@ -46,6 +46,11 @@ const router = createRouter({
       path: '/clinicas',
       name: 'NearbyClinics',
       component: () => import('../views/NearbyClinics.vue'),
+    },
+    {
+      path: '/primeiros-socorros',
+      name: 'SosPet',
+      component: () => import('../views/SosPet.vue'),
     }
   ]
 });

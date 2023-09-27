@@ -21,6 +21,14 @@
                     Home
                 </span>
             </router-link>
+            <router-link v-if="isUserLoggedIn" to="/perfil" class="buttonLink">
+                <span class="icons">
+                    <i class="fa-regular fa-address-card"></i>
+                </span>
+                <span class="text">
+                    Perfil
+                </span>
+            </router-link>
             <router-link to="/sobre" class="buttonLink">
                 <span class="icons">
                     <i class="fa-solid fa-users"></i>
@@ -29,12 +37,12 @@
                     Sobre
                 </span>
             </router-link>
-            <router-link v-if="isUserLoggedIn" to="/perfil" class="buttonLink">
+            <router-link to="/primeiros-socorros" class="buttonLink">
                 <span class="icons">
-                    <i class="fa-regular fa-address-card"></i>
+                    <i class="fa-solid fa-kit-medical"></i>
                 </span>
                 <span class="text">
-                    Perfil
+                    SOS Pets
                 </span>
             </router-link>
             <!-- DEMAIS LINKS SEGUEM O MESMO PADRÃO -->
