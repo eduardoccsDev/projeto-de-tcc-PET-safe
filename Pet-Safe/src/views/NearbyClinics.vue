@@ -8,7 +8,7 @@
             <label for="userAddress"><i class="fa-solid fa-location-dot"></i> Seu endereço:</label>
             <input v-model="userAddress" @input="userAddress = $event.target.value" placeholder="Digite seu endereço" />
             <button @click="searchVeterinariesNearby"><i class="fa-solid fa-magnifying-glass"></i> Buscar Clínicas</button>
-            <button @click="getUserLocation"><i class="fa-solid fa-globe"></i> Usar Geolocalização</button>
+            <button @click="getUserLocation"><i class="fa-solid fa-globe"></i> Geolocalização</button>
         </div>
         <!-- Exibir resultados das clínicas -->
         <div class="clinics-list">
@@ -22,18 +22,23 @@
                     </div>
                     <div class="clinicInfo">
                         <h3>{{ clinic.name }}</h3>
-                        <p class="clinicStatus" v-if="clinic.business_status === 'OPERATIONAL'"><i
+                        <p class="clinicStatus" v-if="clinic.opening_hours.open_now === true"><i
                                 class="fa-solid fa-door-open"></i> ABERTO</p>
                         <p class="clinicStatus" v-else><i class="fa-solid fa-door-closed"></i> FECHADO</p>
-                        <p class="clinicRating"><i class="fa-solid fa-star"></i>Avaliação Média: {{ clinic.rating }}</p>
+                        <p class="clinicRating"><i class="fa-solid fa-star"></i>Avaliação Média: {{ clinic.rating }} - de
+                            {{ clinic.user_ratings_total }} avaliações</p>
                         <p class="clinicAddress"><i class="fa-solid fa-map-location-dot"></i> Enereço:
-                            {{ clinic.formatted_address }}</p>
+                            <a :href="getGoogleMapsLink(clinic.formatted_address)" target="_blank">
+                                {{ clinic.formatted_address }}
+                            </a>
+                        </p>
                     </div>
                 </div>
             </div>
             <p v-else>Nenhum resultado encontrado.</p>
         </div>
     </div>
+    {{ console.log(clinics.opening_hours) }}
 </template>
   
 <script setup>
@@ -96,7 +101,8 @@ const getAddressFromCoordinates = async (lat, lng) => {
 };
 
 if (userData && userData.addressuser) {
-  userAddress.value = userData.addressuser;
+    userAddress.value = userData.addressuser;
+    searchVeterinariesNearby();
 }
 
 
@@ -139,19 +145,47 @@ const getPhotoUrl = (photo) => {
     return `https://maps.googleapis.com/maps/api/place/photo?maxwidth=${maxWidth}&photoreference=${photoReference}&key=AIzaSyCcR7yUn_K1EmYVI7PMBeXN_tOxSde2tHw`;
 };
 
+// Função para obter o link do Google Maps com base no endereço
+const getGoogleMapsLink = (address) => {
+    // Encode o endereço para que ele possa ser incluído no URL do Google Maps
+    const encodedAddress = encodeURIComponent(address);
+    return `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`;
+};
+
 </script>
 
 <style scoped lang="scss">
 .user-address {
-    button{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+
+    label {
+        flex-basis: 100%;
+        width: 100%;
+    }
+
+    input {
+        flex-basis: calc(73% - 10px);
+        @media(max-width:668px){
+            flex-basis: 100%;
+        }
+    }
+
+    button {
         background-color: var(--primary);
         color: var(--dark);
         padding: 5px 10px;
-        margin-right: 10px;
         border-radius: 5px;
-        margin-top: 10px;
         transition: .5s;
-        &:hover{
+        flex-basis: calc(13.8% - 10px);
+        width: 100%;
+        @media(max-width:668px){
+            flex-basis: 100%;
+        }
+
+        &:hover {
             transform: scale(1.05);
         }
     }
@@ -206,5 +240,17 @@ const getPhotoUrl = (photo) => {
             object-position: top;
             border-radius: 100%;
         }
+
+        .clinicAddress {
+            a {
+                color: var(--primary-alt);
+                transition: .5s;
+
+                &:hover {
+                    color: #000;
+                }
+            }
+        }
     }
-}</style>
+}
+</style>

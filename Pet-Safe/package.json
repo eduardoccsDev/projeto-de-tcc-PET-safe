@@ -10,6 +10,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@google-cloud/translate": "^8.0.2",
     "axios": "^1.5.0",
     "js-cookie": "^3.0.5",
     "sass": "^1.66.1",

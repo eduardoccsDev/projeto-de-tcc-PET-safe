@@ -52,7 +52,7 @@
                                 <option value="Apartamento">Apartamento</option>
                             </select>
                         </div>
-                        <button :disabled="isDisabled" class="saveUserInfo" type="submit"><i
+                        <button v-if="!isDisabled" class="saveUserInfo" type="submit"><i
                                 class="fa-solid fa-floppy-disk"></i> Salvar</button>
                     </form>
                     <p v-if="msgUserInfo" class="msgUserInfo">{{ msgUserInfo }}</p>
@@ -62,7 +62,7 @@
                             Adicionar pet</button>
                     </div>
                     <form v-if="isAddPet" @submit.prevent="handleAddPet" class="infoUser">
-                        <div class="inputContainer half">
+                        <div class="inputContainer">
                             <label for="nomepet"><i class="fa-solid fa-signature"></i> Nome do pet:</label>
                             <input id="nomepet" placeholder="Digite o nome do pet" v-model="petData.nomepet" type="text"
                                 name="nomepet">
@@ -84,14 +84,6 @@
                             </select>
                         </div>
                         <div class="inputContainer half">
-                            <label for="nomepet"><i class="fa-solid fa-paw"></i> Raça do pet:</label>
-                            <select name="racapet" id="racapet" v-model="petData.racapet">
-                                <option value="" disabled>Selecione a raça:</option>
-                                <option value="raca1">Raça 1</option>
-                                <option value="raca2">Raça 2</option>
-                            </select>
-                        </div>
-                        <div class="inputContainer half">
                             <label for="nascimentopet"><i class="fa-solid fa-cake-candles"></i> Data de nascimento: </label>
                             <input id="nascimentopet" v-model="petData.nascimentopet" type="date" name="nascimentopet">
                         </div>
@@ -105,11 +97,16 @@
                     <p v-if="msgPetInfo" class="msgUserInfo">{{ msgPetInfo }}</p>
                     <div class="petCardsContainer">
                         <div v-if="userPets" v-for="pet in userPets" :key="pet.idpets" class="petCard">
-                            <img class="petImg" src="../assets/images/logo.png" alt="petImg">
                             <div class="petPrimaryInfo">
-                                <i v-if="pet.especiepet === 'Cão'" class="fa-solid fa-dog"></i>
-                                <i v-else class="fa-solid fa-cat"></i>
-                                <p>{{ pet.nomepet }} - {{ pet.racapet }}</p>
+                                <div class="petInfoContainer">
+                                    <i v-if="pet.especiepet === 'Cão'" class="fa-solid fa-dog"></i>
+                                    <i v-else class="fa-solid fa-cat"></i>
+                                    <p>{{ pet.nomepet }}</p>
+                                </div>
+                                <div class="rmvContainer">
+                                    <button @click="handleRemovePet(pet)" class="removePet"><i
+                                            class="fa-solid fa-xmark"></i></button>
+                                </div>
                             </div>
                             <p>
                                 <i v-if="pet.sexopet === 'Macho'" class="fa-solid fa-mars"></i>
@@ -117,15 +114,30 @@
                                 {{ pet.sexopet }}
                             </p>
                             <p><i class="fa-solid fa-cake-candles"></i> {{ pet.idadepet }} anos</p>
-                            <button @click="handleRemovePet(pet)" class="removePet"><i class="fa-solid fa-xmark"></i>
-                                Remover</button>
+                            <label for="atividade"><i class="fa-solid fa-message"></i> Lembretes: </label>
+                            <div class="lembretesContainer">
+                                <p class="atividade" v-if="pet.atividade" v-for="part in pet.atividade.split(',')" :key="part">{{ part.trim() }}</p>
+                                <p v-else class="atividade">Adicione lembretes e atividades.</p>
+                            </div>
+                            <textarea v-if="pet.isLembreteEdit" v-model="editedPetLembrete.atividade"
+                                :disabled="!pet.isLembreteEdit" id="atividade" name="atividade"
+                                placeholder="Lembrete, atividade, etc...">{{ editedPetLembrete.atividade }}</textarea>
+                            <div class="btnLembreteContainer">
+                                <button v-if="pet.atividade" class="editAtividade" @click="toggleEditLembrete(pet)"><i
+                                        class="fa-solid fa-pen-to-square"></i>
+                                    Editar</button>
+                                    <button v-else class="editAtividade" @click="toggleEditLembrete(pet)"><i
+                                        class="fa-solid fa-pen-to-square"></i>
+                                    Adicionar</button>
+                                <button class="salvarAtividade" v-if="pet.isLembreteEdit" @click="handleEditLembrete(pet.idpets)"><i
+                                        class="fa-solid fa-pen-to-square"></i> Salvar</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
     </div>
-    {{ console.log(userPets) }}
 </template>
 
 <script setup>
@@ -134,13 +146,13 @@ import { ref, computed } from 'vue';
 
 const userData = ref(null);
 const userPets = ref(null);
+const isLembreteEdit = ref(true);
 const msgUserImg = ref(null);
 const msgUserInfo = ref(null);
 const msgPetInfo = ref(null);
 const isEditImage = ref(false);
 const isAddPet = ref(false);
 const isDisabled = ref(true);
-const userImageSrc = ref('');
 let editedUserInfo = {
     nomeuser: '',
     emailuser: '',
@@ -156,6 +168,12 @@ function handleIsDisabled() {
 function handleIsAddPet() {
     isAddPet.value = !isAddPet.value;
 }
+
+const toggleEditLembrete = (pet) => {
+  pet.isLembreteEdit = !pet.isLembreteEdit;
+  editedPetLembrete.atividade = pet.atividade;
+};
+
 function handleEditUserImage() {
     isEditImage.value = !isEditImage.value;
     msgUserImg.value = null;
@@ -271,7 +289,6 @@ const handleUpdateUserInfo = () => {
     }
 };
 
-
 const petData = {
     nomepet: '',
     especiepet: '',
@@ -283,7 +300,7 @@ const petData = {
 
 const handleAddPet = () => {
     // Certifique-se de que todos os campos obrigatórios foram preenchidos
-    if (!petData.nomepet || !petData.especiepet || !petData.sexopet || !petData.idadepet || !petData.nascimentopet || !petData.racapet) {
+    if (!petData.nomepet || !petData.especiepet || !petData.sexopet || !petData.idadepet || !petData.nascimentopet) {
         console.error('Por favor, preencha todos os campos obrigatórios.');
         return;
     }
@@ -308,7 +325,6 @@ const handleAddPet = () => {
             petData.sexopet = '';
             petData.idadepet = '';
             petData.nascimentopet = '';
-            petData.racapet = '';
             // Exiba uma mensagem de sucesso
             window.location.reload();
             msgPetInfo.value = 'Pet adicionado com sucesso!';
@@ -332,7 +348,6 @@ const fetchUserPets = () => {
         })
             .then((response) => {
                 userPets.value = response.data;
-                // console.log(userPets);
             })
             .catch((error) => {
                 console.error('Erro ao buscar os pets:', error);
@@ -368,6 +383,40 @@ const handleRemovePet = (petToRemove) => {
             msgPetInfo.value = 'Erro ao remover o pet.';
         });
 };
+
+const editedPetLembrete = {
+    atividade: ''
+}
+
+function handleEditLembrete(petId) {
+    try {
+        // Construa um objeto contendo os dados de atualização do lembrete
+        const updatedLembreteData = {
+            atividade: editedPetLembrete.atividade
+        };
+
+        // Faça uma solicitação HTTP para atualizar o lembrete do pet
+        axios.post(`http://localhost:3000/pets/${petId}/update-lembrete`, updatedLembreteData)
+            .then((response) => {
+                // Exiba uma mensagem de sucesso ou faça qualquer ação necessária após a atualização
+                console.log('Lembrete do pet atualizado com sucesso');
+                isLembreteEdit.value = true;
+                window.location.reload();
+            })
+            .catch((error) => {
+                console.error('Erro ao atualizar lembrete do pet:', error);
+                // Exiba uma mensagem de erro ou trate-o conforme necessário
+            });
+    } catch (error) {
+        console.error('Erro ao atualizar lembrete do pet:', error);
+    }
+}
+
+function formatText(text) {
+  // Use a função replace com uma expressão regular para substituir todas as vírgulas por quebras de linha
+  // ou parágrafos (você pode escolher qual formato usar)
+  return text.replace(/,/g, '\n'); // Neste exemplo, estamos usando quebras de linha (\n)
+}
 
 import { onMounted } from 'vue';
 onMounted(() => {
@@ -486,18 +535,84 @@ onMounted(() => {
                 padding: 10px;
                 border-radius: 5px;
                 width: 337px;
-                text-align: center;
 
                 @media(max-width:668px) {
                     width: 100%;
+                }
+                .btnLembreteContainer{
+                    display: flex;
+                    gap: 10px;
+                }
+                .lembretesContainer{
+                    max-height: 114px;
+                    overflow-y: scroll; 
+                    margin-bottom: 10px;
+                    border-radius: 5px;
+                    margin-top: 10px;
+                }
+                .salvarAtividade{
+                    background-color: #fff;
+                    color: var(--primary);
+                    padding: 5px 10px;
+                    border-radius: 5px;
+                    transition: .5s;
+                    &:hover{
+                        transform: scale(1.05);
+                    }
+                    i{
+                        background-color: transparent;
+                        padding: 0;
+                    }
+
+                }
+                .editAtividade{
+                    background-color: var(--dark);
+                    color: var(--primary);
+                    padding: 5px 10px;
+                    border-radius: 5px;
+                    transition: .5s;
+                    &:hover{
+                        transform: scale(1.05);
+                    }
+                    i{
+                        background-color: transparent;
+                        padding: 0;
+                    }
+                }
+                .atividade {
+                    margin-bottom: 10px;
+                    background-color: #fff;
+                    padding: 5px;
+                    border-radius: 5px;
+                    font-size: 14px;
+                }
+
+                textarea {
+                    background-color: #f1f1f1;
+                    padding: 5px;
+                    border-radius: 5px;
+                    border: solid 2px #fff;
+                    width: 100%;
+                    margin-bottom: 10px;
+                    max-height: 150px;
+                    height: 150px;
+                    font-size: 14px;
+
+                    &::placeholder {
+                        color: #1a1a1a8f;
+                    }
+
+                    &:focus-visible {
+                        outline: 2px solid var(--primary);
+                    }
                 }
 
                 .removePet {
                     width: 100%;
                     background-color: #FFF;
                     color: var(--dark);
-                    padding: 5px 10px;
-                    border-radius: 5px;
+                    padding: 5px 8px;
+                    border-radius: 100%;
                     transition: .5s;
                     cursor: pointer;
 
@@ -536,7 +651,13 @@ onMounted(() => {
                     display: flex;
                     gap: 5px;
                     align-items: center;
-                    margin-bottom: 10px;
+                    margin-bottom: 5px;
+                    justify-content: space-between;
+
+                    .petInfoContainer {
+                        display: flex;
+                        gap: 5px;
+                    }
 
                     p {
                         margin: 0 !important;

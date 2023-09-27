@@ -236,11 +236,11 @@ router.post('/atualizar-usuario', verifyToken, (req, res) => {
 });
 
 router.post('/adicionar-pet', verifyToken, (req, res) => {
-  const { idtutor, nomepet, especiepet, sexopet, idadepet, nascimentopet, racapet } = req.body;
+  const { idtutor, nomepet, especiepet, sexopet, idadepet, nascimentopet } = req.body;
   // Execute uma consulta SQL para adicionar o pet ao banco de dados
-  const addPetQuery = 'INSERT INTO pets (idtutor, nomepet, especiepet, sexopet, idadepet, nascimentopet, racapet) VALUES (?, ?, ?, ?, ?, ?, ?)';
+  const addPetQuery = 'INSERT INTO pets (idtutor, nomepet, especiepet, sexopet, idadepet, nascimentopet) VALUES (?, ?, ?, ?, ?, ?)';
 
-  db.query(addPetQuery, [idtutor, nomepet, especiepet, sexopet, idadepet, nascimentopet, racapet], (addErr, addResults) => {
+  db.query(addPetQuery, [idtutor, nomepet, especiepet, sexopet, idadepet, nascimentopet], (addErr, addResults) => {
     if (addErr) {
       console.error('Erro ao adicionar pet:', addErr);
       res.status(500).json({ error: 'Erro interno do servidor' });
@@ -310,5 +310,28 @@ router.get('/google-maps-proxy', async (req, res) => {
   }
 });
 
+// Rota para atualizar o lembrete de um pet
+router.post('/pets/:petId/update-lembrete', async (req, res) => {
+  try {
+    const petId = req.params.petId;
+    const { atividade } = req.body;
+
+    // Execute uma consulta SQL para atualizar o campo "atividade" do pet
+    const updateQuery = 'UPDATE pets SET atividade = ? WHERE idpets = ?';
+
+    db.query(updateQuery, [atividade, petId], (updateErr, updateResults) => {
+      if (updateErr) {
+        console.error('Erro ao atualizar o lembrete do pet:', updateErr);
+        res.status(500).json({ error: 'Erro interno do servidor' });
+      } else {
+        console.log('Lembrete do pet atualizado com sucesso');
+        res.json({ message: 'Lembrete do pet atualizado com sucesso' });
+      }
+    });
+  } catch (error) {
+    console.error('Erro ao atualizar o lembrete do pet:', error);
+    res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+});
 
 module.exports = router;
