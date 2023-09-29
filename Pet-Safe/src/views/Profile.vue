@@ -8,14 +8,14 @@
             <div class="sideContainer">
                 <div class="sideLeft">
                     <div class="userImgContainer">
-                        <img v-if="userData" :src="getUserImageSrc()" alt="foto-de-perfil" class="cardUser__img">
+                        <img v-if="userData && userData.imguser" :src="getUserImageSrc()" alt="foto-de-perfil" class="cardUser__img">
                         <img v-else src="../assets/images/logo.png" alt="foto-de-perfil" class="cardUser__img">
                     </div>
                     <div class="inputContainer">
                         <button @click="handleEditUserImage" class="editUserImage"><i class="fa-solid fa-pen-to-square"></i>
                             Editar imagem</button>
                         <label v-if="isEditImage" for="userimg"><i class="fa-solid fa-image"></i> Selecionar imagem</label>
-                        <input id="userimg" ref="fileInput" type="file" @change="handleFileChange">
+                        <input id="userimg" ref="fileInput" accept="image/png, image/jpeg" type="file" @change="handleFileChange">
                         <p class="msgUserImg" v-if="msgUserImg">{{ msgUserImg }}</p>
                         <button class="sendUserImage" v-if="isEditImage" @click="uploadImage"><i
                                 class="fa-solid fa-upload"></i> Enviar Imagem</button>

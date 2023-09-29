@@ -1,7 +1,7 @@
 <template>
     <aside :class="`${is_expanded && 'is-expanded'}`">
         <div class="logo">
-            <img v-if="userData" :src="getUserImageSrc()" id="logo" alt="userimg">
+            <img v-if="userData && userData.imgUser" :src="getUserImageSrc()" id="logo" alt="userimg">
             <img v-else src="../assets/images/logo.png" alt="pet-safe-logo" id="logo">
         </div>
         <div class="menu-toggle-wrap">

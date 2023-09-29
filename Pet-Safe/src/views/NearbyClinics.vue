@@ -22,9 +22,10 @@
                     </div>
                     <div class="clinicInfo">
                         <h3>{{ clinic.name }}</h3>
-                        <p class="clinicStatus" v-if="clinic.opening_hours.open_now === true"><i
-                                class="fa-solid fa-door-open"></i> ABERTO</p>
-                        <p class="clinicStatus" v-else><i class="fa-solid fa-door-closed"></i> FECHADO</p>
+                        <p class="clinicStatus" v-if="clinic.opening_hours && clinic.opening_hours.open_now === true">
+                            <i class="fa-solid fa-door-open"></i> ABERTO</p>
+                        <p class="clinicStatus" v-else-if="clinic.opening_hours && clinic.opening_hours.open_now === false">
+                            <i class="fa-solid fa-door-closed"></i> FECHADO</p>
                         <p class="clinicRating"><i class="fa-solid fa-star"></i>Avaliação Média: {{ clinic.rating }} - de
                             {{ clinic.user_ratings_total }} avaliações</p>
                         <p class="clinicAddress"><i class="fa-solid fa-map-location-dot"></i> Enereço:
@@ -38,7 +39,6 @@
             <p v-else>Nenhum resultado encontrado.</p>
         </div>
     </div>
-    {{ console.log(clinics.opening_hours) }}
 </template>
   
 <script setup>
@@ -179,6 +179,7 @@ const getGoogleMapsLink = (address) => {
         padding: 5px 10px;
         border-radius: 5px;
         transition: .5s;
+        font-size: 14px;
         flex-basis: calc(13.8% - 10px);
         width: 100%;
         @media(max-width:668px){
