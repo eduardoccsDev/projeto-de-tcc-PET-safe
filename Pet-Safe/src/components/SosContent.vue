@@ -88,11 +88,11 @@
                         <h3 class="infoTittle">Frequência cardíaca (FC)</h3>
                         <div class="doubleInfoContainer">
                             <img src="../assets/images/gato-icon.png" alt="gato">
-                            <p>Gatos: 160 a 240 bpm<i class="fa-solid fa-heart-pulse fa-beat"></i></p>
+                            <p>Gatos: 160 a 240 bpm<i class="fa-solid fa-heart-pulse"></i></p>
                         </div>
                         <div class="doubleInfoContainer">
                             <img src="../assets/images/dog-icon.png" alt="cachorro">
-                            <p>Cães: 70 a 130 bpm<i class="fa-solid fa-heart-pulse fa-beat"></i></p>
+                            <p>Cães: 70 a 130 bpm<i class="fa-solid fa-heart-pulse"></i></p>
                         </div>
                         <p class="obs short">Para avaliar a frequência cardíaca ou pulmonar,
                             conte o número de batimentos ou respirações em 15
@@ -149,7 +149,7 @@
             <div class="accordion-body">
                 <h3 class="infoTittle">Coloração das mucosas:</h3>
                 <div class="containerInfo flex">
-                    <figure>
+                    <figure class="auto">
                         <img class="media" src="../assets/images/mucosas.jpg" alt="mucosas">
                         <figcaption>Fonte da imagem: Freepik</figcaption>
                     </figure>
@@ -170,7 +170,7 @@
                 </div>
                 <h3 class="infoTittle">Condições de Hidratação:</h3>
                 <div class="containerInfo flex">
-                    <figure>
+                    <figure class="auto">
                         <img class="media" src="../assets/images/desidratacao.jpg" alt="desidratação">
                         <figcaption>Fonte da imagem: Do You Have a Dehydrated Cat? | Catster</figcaption>
                     </figure>
@@ -192,6 +192,143 @@
                     </div>
                 </div>
                 <p class="font">Fonte: Hospital veterinário taquaral</p>
+            </div>
+        </div>
+    </div>
+    <div class="accordion-item" id="vomito-diarreia">
+        <h2 class="accordion-header" id="headingFour">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                <i class="fa-solid fa-poop"></i>Vômitos e diarreias
+            </button>
+        </h2>
+        <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour"
+            data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+                <h3 class="infoTittle">O que Observar:</h3>
+                <p class="obs">Vômitos e diarreia merecem atenção, pois podem indicar problemas sérios.</p>
+                <div class="basicInfos">
+                    <div class="containerInfoCard">
+                        <ul>
+                            <li> Pets frequentemente comem grama para aliviar desconforto gástrico.</li>
+                            <li> Vômitos podem ser causados por intoxicação, doenças bacterianas e desidratação.</li>
+                            <li>Observe o conteúdo do vômito, como aspecto espumoso, cor e o ambiente do pet.</li>
+                        </ul>
+                    </div>
+                    <div class="containerInfoCard">
+                        <ul>
+                            <li>Presença de sangue no vômito: pequenas manchas podem não ser graves, mas muito sangue pode
+                                indicar envenenamento ou lesões graves.</li>
+                        </ul>
+                    </div>
+                    <div class="containerInfoCard">
+                        <ul>
+                            <li> Diarreia intensa pode levar à desidratação rapidamente.</li>
+                            <li> Causas incluem vermes, intoxicações, estresse, mudanças na dieta e viroses.</li>
+                        </ul>
+                    </div>
+                </div>
+                <h3 class="infoTittle">Procedimentos:</h3>
+                <div class="basicInfos">
+                    <div class="containerInfoCard">
+                        <p>1 - Retire a comida e a água do seu pet.</p>
+                        <figure>
+                            <img class="media altura-fixa" src="../assets/images/cachorro-comida.jpg" alt="cachorro-comida">
+                            <figcaption>Fonte da imagem: Freepik</figcaption>
+                        </figure>
+                    </div>
+                    <div class="containerInfoCard">
+                        <p>2 - Prepare um soro caseiro:</p>
+                        <figure>
+                            <img class="media altura-fixa" src="../assets/images/soro-caseiro.png" alt="soro-caseiro">
+                            <figcaption>Fonte da imagem: Aprenda a fazer soro caseiro | Ana cadengue</figcaption>
+                        </figure>
+                        <p class="obs short">200ml de água fervida ou filtrada (1 copo) 1 colher de
+                            sobremesa de açúcar e 1 pitada de sal.</p>
+                    </div>
+                    <div class="containerInfoCard">
+                        <p>3 - Verifique se ele está desidratado.</p>
+                        <figure>
+                            <img class="media altura-fixa" src="../assets/images/gato-bonito-no-chao.jpg"
+                                alt="soro-caseiro">
+                            <figcaption>Fonte da imagem: Freepik</figcaption>
+                        </figure>
+                        <p class="obs short">Caso a desidratação
+                            seja muito severa leve-o imediatamente ao pronto
+                            atendimento para que não entre em choque.</p>
+                    </div>
+                </div>
+                <p>Caso seja uma desidratação leve vá dando soro caseiro com uma
+                    seringa e quando perceber que os vômitos pararam pode deixar um
+                    vasilha do mesmo soro para ele ir se hidratando.
+                    Se você perceber que em 24 horas ele não reagiu e os sintomas não
+                    cessaram leve-o a um veterinário.</p>
+                <p class="obs">DICA: cozinhe o arroz em bastante água sem sal e sem
+                    temperos, não deixe que seque você irá coá-lo e
+                    depois que a água do arroz esfriar é só deixar na
+                    vasilha para seu pet.</p>
+                <p class="font">Fonte: Hospital veterinário taquaral</p>
+            </div>
+        </div>
+    </div>
+    <div class="accordion-item" id="ferimentos-e-cortes">
+        <h2 class="accordion-header" id="headingFive">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                <i class="fa-solid fa-bandage"></i>Ferimentos e cortes (curativos)
+            </button>
+        </h2>
+        <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive"
+            data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+                <h3 class="infoTittle">Você vai precisar de:</h3>
+                <p>Compressas de gaze, faixa crepe, esparadrapo, antisséptico e
+                    pomada antibiótica.</p>
+                <div class="basicInfos">
+                    <div class="containerInfoCard">
+                        <p>1 - Estanque a hemorragia com gaze e pano limpo:</p>
+                        <figure>
+                            <img class="media altura-fixa" src="../assets/images/estancar.png" alt="estancando-ferimento">
+                            <figcaption>Fonte da imagem: Guia de primeiros socorros para cães e gatos | Silvia Parisi
+                            </figcaption>
+                        </figure>
+                        <p class="obs short">Aplique um pano limpo ou compres-
+                            sas de gaze sobre o local e pressione
+                            por alguns minutos. Mantenha a pres-
+                            são até o sangramento parar</p>
+                    </div>
+                    <div class="containerInfoCard">
+                        <p>2 - Coloque compressas de gaze sobre o
+                            ferimento e proteja com a faixa crepe,
+                            se o local permitir:</p>
+                        <figure>
+                            <img class="media altura-fixa" src="../assets/images/colocando-gaze.png" alt="colocando-gaze">
+                            <figcaption>Fonte da imagem: Guia de primeiros socorros para cães e gatos | Silvia Parisi
+                            </figcaption>
+                        </figure>
+                        <p class="obs short">Fixe com esparadra-
+                            po. Nunca deixe a lesão aberta para evitar
+                            o acesso de moscas ao ferimento</p>
+                    </div>
+                    <div class="containerInfoCard">
+                        <p>3 - Você pode aplicar
+                            um torniquete se o sangramento for severo:</p>
+                        <figure>
+                            <img class="media altura-fixa" src="../assets/images/torniquete.png" alt="torniquete">
+                            <figcaption>Fonte da imagem: Guia de primeiros socorros para cães e gatos | Silvia Parisi
+                            </figcaption>
+                        </figure>
+                        <p class="obs short">Nas patas e cauda, com um pedaço de faixa crepe ou
+                            cadarço de sapato, amarre o membro um
+                            pouco acima da região do sangramento
+                            Afrouxe a cada 5 minutos e depois volte a apertar.</p>
+                    </div>
+                </div>
+                <p>Leve o animal ao veterinário para desinfecção e sutura do corte. Se isso não
+                    for possível imediatamente, limpe o ferimento com água oxigenada, líquido
+                    de Dakin ou iodo povidine. Aplique pomada antibiótica.
+                    Se um vaso sanguíneo for atingido, o sangramento não irá parar facilmente. Mantenha a pressão sobre a região até chegar ao veterinário.</p>
+                <p class="font">Fonte: Guia de primeiros socorros para cães e gatos | Silvia Parisi</p>
             </div>
         </div>
     </div>
@@ -223,12 +360,26 @@
     }
 }
 
+.media.altura-fixa {
+    width: 100% !important;
+    height: 200px;
+    object-fit: cover;
+}
+
 .media {
     width: 300px;
     border-radius: 20px;
 
     @media(max-width:668px) {
         width: 100%;
+    }
+}
+
+figure {
+    width: 100%;
+
+    &.auto {
+        width: auto;
     }
 }
 

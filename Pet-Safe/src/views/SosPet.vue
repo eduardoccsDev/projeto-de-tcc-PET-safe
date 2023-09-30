@@ -11,6 +11,8 @@
                     <a href="#kit-sos">Kit de primeiros socorros</a>
                     <a href="#info-basicas">Informações básicas</a>
                     <a href="#mucosa-hidratacao">Mucosa & Hidratação</a>
+                    <a href="#vomito-diarreia">Vômitos & diarreias</a>
+                    <a href="#ferimentos-e-cortes">Ferimentos & cortes</a>
 
                 </div>
             </div>
