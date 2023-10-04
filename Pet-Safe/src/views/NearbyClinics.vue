@@ -47,6 +47,7 @@ import axios from 'axios';
 
 const userData = ref(null);
 const userAddress = ref("");
+const userCep = ref("");
 const token = localStorage.getItem('token');
 
 if (token) {
@@ -57,7 +58,8 @@ if (token) {
     })
         .then((response) => {
             userData.value = response.data.user;
-            userAddress.value = userData.value.addressuser;
+            userCep.value = userData.value.cepuser;
+            userAddress.value = userData.value.addressuser + '-' + userCep.value;
         })
         .catch((error) => {
             console.error('Erro ao acessar o endpoint protegido:', error);

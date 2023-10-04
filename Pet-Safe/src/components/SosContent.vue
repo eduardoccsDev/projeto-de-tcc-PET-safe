@@ -288,33 +288,31 @@
                     <div class="containerInfoCard">
                         <p>1 - Estanque a hemorragia com gaze e pano limpo:</p>
                         <figure>
-                            <img class="media altura-fixa" src="../assets/images/estancar.png" alt="estancando-ferimento">
+                            <img class="media altura-fixa" src="../assets/images/estancar.jpg" alt="estancando-ferimento">
                             <figcaption>Fonte da imagem: Guia de primeiros socorros para cães e gatos | Silvia Parisi
                             </figcaption>
                         </figure>
                         <p class="obs short">Aplique um pano limpo ou compres-
                             sas de gaze sobre o local e pressione
-                            por alguns minutos. Mantenha a pres-
-                            são até o sangramento parar</p>
+                            por alguns minutos. Mantenha a pressão até o sangramento parar</p>
                     </div>
                     <div class="containerInfoCard">
                         <p>2 - Coloque compressas de gaze sobre o
                             ferimento e proteja com a faixa crepe,
                             se o local permitir:</p>
                         <figure>
-                            <img class="media altura-fixa" src="../assets/images/colocando-gaze.png" alt="colocando-gaze">
+                            <img class="media altura-fixa" src="../assets/images/colocando-gaze.jpg" alt="colocando-gaze">
                             <figcaption>Fonte da imagem: Guia de primeiros socorros para cães e gatos | Silvia Parisi
                             </figcaption>
                         </figure>
-                        <p class="obs short">Fixe com esparadra-
-                            po. Nunca deixe a lesão aberta para evitar
+                        <p class="obs short">Fixe com esparadrapo. Nunca deixe a lesão aberta para evitar
                             o acesso de moscas ao ferimento</p>
                     </div>
                     <div class="containerInfoCard">
                         <p>3 - Você pode aplicar
                             um torniquete se o sangramento for severo:</p>
                         <figure>
-                            <img class="media altura-fixa" src="../assets/images/torniquete.png" alt="torniquete">
+                            <img class="media altura-fixa" src="../assets/images/torniquete.jpg" alt="torniquete">
                             <figcaption>Fonte da imagem: Guia de primeiros socorros para cães e gatos | Silvia Parisi
                             </figcaption>
                         </figure>
@@ -327,7 +325,12 @@
                 <p>Leve o animal ao veterinário para desinfecção e sutura do corte. Se isso não
                     for possível imediatamente, limpe o ferimento com água oxigenada, líquido
                     de Dakin ou iodo povidine. Aplique pomada antibiótica.
-                    Se um vaso sanguíneo for atingido, o sangramento não irá parar facilmente. Mantenha a pressão sobre a região até chegar ao veterinário.</p>
+                    Se um vaso sanguíneo for atingido, o sangramento não irá parar facilmente. Mantenha a pressão sobre a
+                    região até chegar ao veterinário.</p>
+                <p class="obs">Como eles têm o hábito de tirar o curativo para lamber,
+                    coloque imediatamente o colar elisabetano. Repita o
+                    curativo duas vezes por dia e assim que possível leve ao
+                    veterinário.</p>
                 <p class="font">Fonte: Guia de primeiros socorros para cães e gatos | Silvia Parisi</p>
             </div>
         </div>
@@ -362,7 +365,7 @@
 
 .media.altura-fixa {
     width: 100% !important;
-    height: 200px;
+    height: 280px;
     object-fit: cover;
 }
 

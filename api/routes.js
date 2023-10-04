@@ -40,7 +40,7 @@ router.get('/users', (req, res) => {
 });
 
 router.post('/register', (req, res) => {
-  const { nomeuser, emailuser, passworduser, addressuser, residenciauser } = req.body;
+  const { nomeuser, emailuser, passworduser, addressuser, residenciauser, cepuser } = req.body;
 
   // Verifique se o email já está cadastrado
   const checkEmailQuery = 'SELECT * FROM users WHERE emailuser = ?';
@@ -59,8 +59,8 @@ router.post('/register', (req, res) => {
           res.status(500).json({ error: 'Erro interno do servidor' });
         } else {
           // Insira o novo usuário no banco de dados com a senha hasheada
-          const insertUserQuery = 'INSERT INTO users (nomeuser, emailuser, passworduser, addressuser, residenciauser) VALUES (?, ?, ?, ?, ?)';
-          db.query(insertUserQuery, [nomeuser, emailuser, hashedPassword, addressuser, residenciauser], (insertErr, insertResults) => {
+          const insertUserQuery = 'INSERT INTO users (nomeuser, emailuser, passworduser, addressuser, residenciauser, cepuser) VALUES (?, ?, ?, ?, ?, ?)';
+          db.query(insertUserQuery, [nomeuser, emailuser, hashedPassword, addressuser, residenciauser, cepuser], (insertErr, insertResults) => {
             if (insertErr) {
               console.error('Erro ao registrar usuário:', insertErr);
               res.status(500).json({ error: 'Erro interno do servidor' });
@@ -108,7 +108,9 @@ router.post('/login', (req, res) => {
               emailuser: user.emailuser,
               addressuser: user.addressuser,
               imguser: user.imguser,
-              residenciauser: user.residenciauser
+              residenciauser: user.residenciauser,
+              cepuser: user.cepuser,
+              passworduser: user.passworduser
             },
             process.env.JWT_SECRET,
             { expiresIn: '365d' }
@@ -192,13 +194,13 @@ router.post('/upload-image', verifyToken, upload.single('image'), (req, res) => 
 
 // Rota para atualizar as informações do usuário
 router.post('/atualizar-usuario', verifyToken, (req, res) => {
-  const { nomeuser, emailuser, addressuser, residenciauser } = req.body;
+  const { nomeuser, emailuser, addressuser, residenciauser, cepuser } = req.body;
   const userId = req.user.userId; // ID do usuário a ser atualizado
 
   // Atualize as informações do usuário no banco de dados
-  const updateQuery = 'UPDATE users SET nomeuser = ?, emailuser = ?, residenciauser = ?, addressuser = ? WHERE idusers = ?';
+  const updateQuery = 'UPDATE users SET nomeuser = ?, emailuser = ?, residenciauser = ?, cepuser = ?, addressuser = ? WHERE idusers = ?';
 
-  db.query(updateQuery, [nomeuser, emailuser, residenciauser, addressuser, userId], (updateErr, updateResults) => {
+  db.query(updateQuery, [nomeuser, emailuser, residenciauser, cepuser, addressuser, userId], (updateErr, updateResults) => {
     if (updateErr) {
       console.error('Erro ao atualizar informações do usuário:', updateErr);
       res.status(500).json({ error: 'Erro interno do servidor' });
@@ -221,7 +223,8 @@ router.post('/atualizar-usuario', verifyToken, (req, res) => {
               emailuser: updatedUser.emailuser,
               addressuser: updatedUser.addressuser,
               imguser: updatedUser.imguser, 
-              residenciauser: updatedUser.residenciauser
+              residenciauser: updatedUser.residenciauser,
+              cepuser: updatedUser.cepuser
             },
             process.env.JWT_SECRET,
             { expiresIn: '365d' }
@@ -229,6 +232,33 @@ router.post('/atualizar-usuario', verifyToken, (req, res) => {
 
           // Envie o novo token e as informações atualizadas do usuário como resposta
           res.json({ token, user: updatedUser });
+        }
+      });
+    }
+  });
+});
+
+// Rota para atualizar a senha do usuário
+router.post('/atualizar-senha', verifyToken, (req, res) => {
+  const { newPassword } = req.body;
+  const userId = req.user.userId; // ID do usuário logado
+  console.log(typeof newPassword)
+  // Realize a hash da nova senha
+  bcrypt.hash(newPassword, 10, (hashErr, hashedPassword) => {
+    if (hashErr) {
+      console.error('Erro ao criar hash da nova senha:', hashErr);
+      res.status(500).json({ error: 'Erro interno do servidor' });
+    } else {
+      // Atualize a senha no banco de dados
+      const updateQuery = 'UPDATE users SET passworduser = ? WHERE idusers = ?';
+
+      db.query(updateQuery, [hashedPassword, userId], (updateErr, updateResults) => {
+        if (updateErr) {
+          console.error('Erro ao atualizar a senha do usuário:', updateErr);
+          res.status(500).json({ error: 'Erro interno do servidor' });
+        } else {
+          console.log('Senha do usuário atualizada com sucesso');
+          res.json({ message: 'Senha do usuário atualizada com sucesso' });
         }
       });
     }

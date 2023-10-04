@@ -8,14 +8,16 @@
             <div class="sideContainer">
                 <div class="sideLeft">
                     <div class="userImgContainer">
-                        <img v-if="userData && userData.imguser" :src="getUserImageSrc()" alt="foto-de-perfil" class="cardUser__img">
+                        <img v-if="userData && userData.imguser" :src="getUserImageSrc()" alt="foto-de-perfil"
+                            class="cardUser__img">
                         <img v-else src="../assets/images/logo.png" alt="foto-de-perfil" class="cardUser__img">
                     </div>
                     <div class="inputContainer">
                         <button @click="handleEditUserImage" class="editUserImage"><i class="fa-solid fa-pen-to-square"></i>
                             Editar imagem</button>
-                        <label v-if="isEditImage" for="userimg"><i class="fa-solid fa-image"></i> Selecionar imagem</label>
-                        <input id="userimg" ref="fileInput" accept="image/png, image/jpeg" type="file" @change="handleFileChange">
+                        <label v-if="isEditImage" for="userimg"><i class="fa-solid fa-image"></i> Buscar imagem</label>
+                        <input id="userimg" ref="fileInput" accept="image/png, image/jpeg" type="file"
+                            @change="handleFileChange">
                         <p class="msgUserImg" v-if="msgUserImg">{{ msgUserImg }}</p>
                         <button class="sendUserImage" v-if="isEditImage" @click="uploadImage"><i
                                 class="fa-solid fa-upload"></i> Enviar Imagem</button>
@@ -38,12 +40,17 @@
                             <input id="emailuser" v-model="editedUserInfo.emailuser" v-if="userData" :disabled="isDisabled"
                                 type="email" name="emailuser">
                         </div>
-                        <div class="inputContainer half">
+                        <div class="inputContainer half half-3">
                             <label for="addressuser"><i class="fa-solid fa-map-location-dot"></i> Endereço:</label>
                             <input id="addressuser" v-model="editedUserInfo.addressuser" v-if="userData"
                                 :disabled="isDisabled" type="text" name="addressuser">
                         </div>
-                        <div class="inputContainer half">
+                        <div class="inputContainer half half-3">
+                            <label for="cepuser"><i class="fa-solid fa-address-card"></i> CEP:</label>
+                            <input id="cepuser" v-model="editedUserInfo.cepuser" v-if="userData" :disabled="isDisabled"
+                                type="text" name="cepuser">
+                        </div>
+                        <div class="inputContainer half half-3">
                             <label for="residenciauser"><i class="fa-solid fa-house"></i> Residência:</label>
                             <select :disabled="isDisabled" v-if="userData" required v-model="editedUserInfo.residenciauser"
                                 name="residenciauser" id="residenciauser">
@@ -55,6 +62,21 @@
                         <button v-if="!isDisabled" class="saveUserInfo" type="submit"><i
                                 class="fa-solid fa-floppy-disk"></i> Salvar</button>
                     </form>
+                    <h3>- Redefinir senha</h3>
+                    <form class="infoUser" @submit.prevent="handleUpdateUserPassword">
+                        <div class="inputContainer half">
+                            <label for="passworddefault"><i class="fa-solid fa-lock"></i> Senha nova:</label>
+                            <input id="passworddefault" minlength="8" v-model="editedUserInfo.passworduser" v-if="userData"
+                                type="password" name="passworddefault" placeholder="Digite a senha nova">
+                        </div>
+                        <div class="inputContainer half">
+                            <label for="newpassword"><i class="fa-solid fa-lock"></i> Repita a senha nova:</label>
+                            <input id="newpassword" v-model="passworddefaultagain" v-if="userData"
+                                type="password" name="newpassword" placeholder="Repita a senha nova">
+                        </div>
+                        <button class="saveUserInfo" type="submit"><i
+                                class="fa-solid fa-floppy-disk"></i> Salvar</button>
+                    </form>
                     <p v-if="msgUserInfo" class="msgUserInfo">{{ msgUserInfo }}</p>
                     <div class="infoUserTitleContainer">
                         <h3>- Informações de pet</h3>
@@ -64,12 +86,12 @@
                     <form v-if="isAddPet" @submit.prevent="handleAddPet" class="infoUser">
                         <div class="inputContainer">
                             <label for="nomepet"><i class="fa-solid fa-signature"></i> Nome do pet:</label>
-                            <input id="nomepet" placeholder="Digite o nome do pet" v-model="petData.nomepet" type="text"
-                                name="nomepet">
+                            <input id="nomepet" required placeholder="Digite o nome do pet" v-model="petData.nomepet"
+                                type="text" name="nomepet">
                         </div>
                         <div class="inputContainer half">
                             <label for="nomepet"><i class="fa-solid fa-paw"></i> Espécie do pet:</label>
-                            <select name="especiepet" id="especiepet" v-model="petData.especiepet">
+                            <select name="especiepet" required id="especiepet" v-model="petData.especiepet">
                                 <option value="" disabled>Selecione a espécie:</option>
                                 <option value="Cão">Cão</option>
                                 <option value="Gato">Gato</option>
@@ -77,7 +99,7 @@
                         </div>
                         <div class="inputContainer half">
                             <label for="nomepet"><i class="fa-solid fa-venus-mars"></i> Sexo do pet:</label>
-                            <select name="sexopet" id="sexopet" v-model="petData.sexopet">
+                            <select name="sexopet" required id="sexopet" v-model="petData.sexopet">
                                 <option value="" disabled>Selecione o sexo:</option>
                                 <option value="Macho">Macho</option>
                                 <option value="Fêmea">Fêmea</option>
@@ -115,22 +137,25 @@
                             </p>
                             <p><i class="fa-solid fa-cake-candles"></i> {{ pet.idadepet }} anos</p>
                             <label for="atividade"><i class="fa-solid fa-message"></i> Lembretes: </label>
+                            <p class="dica">Cada linha separada por vírgula.</p>
                             <div class="lembretesContainer">
-                                <p class="atividade" v-if="pet.atividade" v-for="part in pet.atividade.split(',')" :key="part">{{ part.trim() }}</p>
+                                <p class="atividade" v-if="pet.atividade" v-for="part in pet.atividade.split(',')"
+                                    :key="part">{{ part.trim() }}</p>
                                 <p v-else class="atividade">Adicione lembretes e atividades.</p>
                             </div>
                             <textarea v-if="pet.isLembreteEdit" v-model="editedPetLembrete.atividade"
                                 :disabled="!pet.isLembreteEdit" id="atividade" name="atividade"
                                 placeholder="Lembrete, atividade, etc...">{{ editedPetLembrete.atividade }}</textarea>
                             <div class="btnLembreteContainer">
-                                <button v-if="pet.atividade" class="editAtividade" @click="toggleEditLembrete(pet)"><i
+                                <button class="salvarAtividade" v-if="pet.isLembreteEdit"
+                                    @click="handleEditLembrete(pet.idpets)"><i class="fa-solid fa-pen-to-square"></i>
+                                    Salvar</button>
+                                <button v-if="pet.atividade" class="editAtividade" :id="pet.notShow" @click="toggleEditLembrete(pet)"><i
                                         class="fa-solid fa-pen-to-square"></i>
                                     Editar</button>
-                                    <button v-else class="editAtividade" @click="toggleEditLembrete(pet)"><i
+                                <button v-else class="editAtividade" @click="toggleEditLembrete(pet)"><i
                                         class="fa-solid fa-pen-to-square"></i>
                                     Adicionar</button>
-                                <button class="salvarAtividade" v-if="pet.isLembreteEdit" @click="handleEditLembrete(pet.idpets)"><i
-                                        class="fa-solid fa-pen-to-square"></i> Salvar</button>
                             </div>
                         </div>
                     </div>
@@ -153,11 +178,15 @@ const msgPetInfo = ref(null);
 const isEditImage = ref(false);
 const isAddPet = ref(false);
 const isDisabled = ref(true);
+const passworddefaultagain = ref('');
+const notShow = ref('none');
 let editedUserInfo = {
     nomeuser: '',
     emailuser: '',
     addressuser: '',
-    residenciauser: ''
+    residenciauser: '',
+    cepuser: '',
+    passworduser: ''
 };
 // Recupere o token do localStorage
 const token = localStorage.getItem('token');
@@ -170,8 +199,9 @@ function handleIsAddPet() {
 }
 
 const toggleEditLembrete = (pet) => {
-  pet.isLembreteEdit = !pet.isLembreteEdit;
-  editedPetLembrete.atividade = pet.atividade;
+    pet.notShow = notShow.value;
+    pet.isLembreteEdit = !pet.isLembreteEdit;
+    editedPetLembrete.atividade = pet.atividade;
 };
 
 function handleEditUserImage() {
@@ -193,6 +223,7 @@ const updateUserProfileData = () => {
                 editedUserInfo.emailuser = response.data.user.emailuser;
                 editedUserInfo.addressuser = response.data.user.addressuser;
                 editedUserInfo.residenciauser = response.data.user.residenciauser;
+                editedUserInfo.cepuser = response.data.user.cepuser;
             })
             .catch((error) => {
                 console.error('Erro ao acessar o endpoint protegido:', error);
@@ -252,7 +283,8 @@ const handleUpdateUserInfo = () => {
             nomeuser: editedUserInfo.nomeuser,
             emailuser: editedUserInfo.emailuser,
             addressuser: editedUserInfo.addressuser,
-            residenciauser: editedUserInfo.residenciauser
+            residenciauser: editedUserInfo.residenciauser,
+            cepuser: editedUserInfo.cepuser,
         };
         axios
             .post('http://localhost:3000/atualizar-usuario', updatedUserInfo, {
@@ -282,12 +314,49 @@ const handleUpdateUserInfo = () => {
             .catch((error) => {
                 console.error('Erro ao atualizar informações do usuário:', error);
                 // Exiba uma mensagem de erro
-                msgUserImg.value = 'Erro ao atualizar informações do usuário.';
+                msgUserInfo.value = 'Erro ao atualizar informações do usuário.';
             });
     } else {
         // Campos de edição estão desabilitados, não há nada para enviar
     }
 };
+
+const handleUpdateUserPassword = () => {
+    // Certifique-se de que a nova senha seja uma string válida
+    if (typeof editedUserInfo.passworduser !== 'string') {
+        console.error('A nova senha não é uma string válida.');
+        // Exiba uma mensagem de erro
+        msgUserInfo.value = 'Erro ao atualizar a senha.';
+        return;
+    }
+    // Crie um objeto com a nova senha
+    const newPasswordData = {
+        newPassword: editedUserInfo.passworduser
+    };
+    if(newPasswordData.newPassword !== passworddefaultagain.value){
+        msgUserInfo.value = 'As senhas não coincidem';
+    }else{
+        axios
+            .post('http://localhost:3000/atualizar-senha', newPasswordData, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            .then(() => {
+                // Exiba uma mensagem de sucesso
+                msgUserInfo.value = 'Senha atualizada com sucesso!';
+                setTimeout(() => {
+                    msgUserInfo.value = null;
+                }, 3000);
+            })
+            .catch((error) => {
+                console.error('Erro ao atualizar a senha:', error);
+                // Exiba uma mensagem de erro
+                msgUserInfo.value = 'Erro ao atualizar a senha.';
+            });
+    }
+}
+
 
 const petData = {
     nomepet: '',
@@ -412,12 +481,6 @@ function handleEditLembrete(petId) {
     }
 }
 
-function formatText(text) {
-  // Use a função replace com uma expressão regular para substituir todas as vírgulas por quebras de linha
-  // ou parágrafos (você pode escolher qual formato usar)
-  return text.replace(/,/g, '\n'); // Neste exemplo, estamos usando quebras de linha (\n)
-}
-
 import { onMounted } from 'vue';
 onMounted(() => {
     updateUserProfileData();
@@ -435,6 +498,10 @@ onMounted(() => {
         flex-direction: column;
         gap: 0px;
     }
+}
+
+.userImgContainer {
+    margin-bottom: 10px;
 }
 
 .msgUserInfo {
@@ -529,7 +596,11 @@ onMounted(() => {
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
-
+            .dica{
+                font-size: 12px;
+                font-style: italic;
+                margin-top: 5px;
+            }
             .petCard {
                 background-color: var(--primary);
                 padding: 10px;
@@ -539,46 +610,57 @@ onMounted(() => {
                 @media(max-width:668px) {
                     width: 100%;
                 }
-                .btnLembreteContainer{
+
+                .btnLembreteContainer {
                     display: flex;
                     gap: 10px;
                 }
-                .lembretesContainer{
+
+                .lembretesContainer {
                     max-height: 114px;
-                    overflow-y: scroll; 
+                    overflow-y: scroll;
                     margin-bottom: 10px;
                     border-radius: 5px;
                     margin-top: 10px;
                 }
-                .salvarAtividade{
+
+                .salvarAtividade {
                     background-color: #fff;
                     color: var(--primary);
                     padding: 5px 10px;
                     border-radius: 5px;
                     transition: .5s;
-                    &:hover{
+
+                    &:hover {
                         transform: scale(1.05);
                     }
-                    i{
+
+                    i {
                         background-color: transparent;
                         padding: 0;
                     }
 
                 }
-                .editAtividade{
+                #none{
+                    display: none;
+                }
+                .editAtividade {
                     background-color: var(--dark);
                     color: var(--primary);
                     padding: 5px 10px;
                     border-radius: 5px;
                     transition: .5s;
-                    &:hover{
+
+                    &:hover {
                         transform: scale(1.05);
                     }
-                    i{
+
+                    i {
                         background-color: transparent;
                         padding: 0;
                     }
                 }
+
                 .atividade {
                     margin-bottom: 10px;
                     background-color: #fff;
@@ -725,6 +807,15 @@ onMounted(() => {
 
             &.half {
                 flex-basis: calc(50% - 5px);
+
+                &.half-3 {
+                    flex-basis: calc(33% - 5px);
+
+                    @media(max-width:668px) {
+                        flex-basis: 100%;
+                        text-align: initial;
+                    }
+                }
 
                 @media(max-width:668px) {
                     flex-basis: 100%;

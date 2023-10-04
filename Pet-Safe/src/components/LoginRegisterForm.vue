@@ -30,12 +30,14 @@
                     placeholder="Insira seu nome">
                 <input v-model="formData.emailuser" required type="email" name="emailuser" class="emailuser"
                     placeholder="Insira seu e-mail">
-                    <input v-model="formData.passworduser" required type="password" name="passworduser" class="passworduser"
+                    <input v-model="formData.passworduser" minlength="8" required type="password" name="passworduser" class="passworduser"
                     placeholder="Insira sua senha">
-                    <input v-model="formData.passworduserrepeat" required type="password" name="passworduserrepeat"
+                    <input v-model="formData.passworduserrepeat" minlength="8" required type="password" name="passworduserrepeat"
                     class="passworduser" placeholder="Repita sua senha">
                     <input v-model="formData.addressuser" required type="text" name="addressuser" class="addressuser"
-                    placeholder="Digite seu endereço (inclua o CEP)">
+                    placeholder="Digite seu endereço">
+                    <input v-model="formData.cepuser" required type="number" name="cepuser" class="cepuser"
+                    placeholder="Digite seu cep">
                     <select required v-model="formData.residenciauser" name="residenciauser" id="residenciauser">
                         <option value="" disabled>Selecione o tipo de residência</option>
                         <option value="Casa">Casa</option>
@@ -52,7 +54,7 @@
 </template>
   
 <script setup>
-import { ref, defineProps } from 'vue';
+import { ref } from 'vue';
 import axios from 'axios'
 import { useRouter } from 'vue-router';
 
@@ -68,7 +70,8 @@ const formData = {
     passworduser: '',
     passworduserrepeat: '',
     addressuser: '',
-    residenciauser: ''
+    residenciauser: '',
+    cepuser:''
 };
 
 function handleChangeForm() {
@@ -81,7 +84,7 @@ const handleRegistration = async () => {
     registrationSuccess.value = null;
     try {
         // Realize a validação dos campos do formulário aqui
-        if (!formData.nomeuser || !formData.emailuser || !formData.passworduser || !formData.addressuser || !formData.passworduserrepeat ||  !formData.residenciauser) {
+        if (!formData.nomeuser || !formData.emailuser || !formData.passworduser || !formData.addressuser || !formData.passworduserrepeat ||  !formData.residenciauser ||  !formData.cepuser) {
             throw new Error('Por favor, preencha todos os campos.');
         }
         if (formData.passworduser !== formData.passworduserrepeat) {
@@ -267,12 +270,18 @@ const handleLogin = async () => {
 
         .addressuser {
             order: 4;
-            flex-basis: 100%;
+            flex-basis: calc(50% - 4px);
+            width: 100%;
+        }
+
+        .cepuser {
+            order: 5;
+            flex-basis: calc(50% - 4px);
             width: 100%;
         }
 
         select{
-            order: 5;
+            order: 6;
             flex-basis: 100%;
             width: 100%;
         }
