@@ -66,12 +66,12 @@
                     <form class="infoUser" @submit.prevent="handleUpdateUserPassword">
                         <div class="inputContainer half">
                             <label for="passworddefault"><i class="fa-solid fa-lock"></i> Senha nova:</label>
-                            <input id="passworddefault" minlength="8" v-model="editedUserInfo.passworduser" v-if="userData"
+                            <input id="passworddefault" required minlength="8" v-model="editedUserInfo.passworduser" v-if="userData"
                                 type="password" name="passworddefault" placeholder="Digite a senha nova">
                         </div>
                         <div class="inputContainer half">
                             <label for="newpassword"><i class="fa-solid fa-lock"></i> Repita a senha nova:</label>
-                            <input id="newpassword" v-model="passworddefaultagain" v-if="userData"
+                            <input id="newpassword" required v-model="passworddefaultagain" v-if="userData"
                                 type="password" name="newpassword" placeholder="Repita a senha nova">
                         </div>
                         <button class="saveUserInfo" type="submit"><i
