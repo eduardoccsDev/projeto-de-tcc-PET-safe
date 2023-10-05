@@ -97,7 +97,7 @@ router.post('/login', (req, res) => {
           res.status(500).json({ error: 'Erro interno do servidor' });
         } else if (!passwordMatch) {
           // Se as senhas não coincidirem, retorne um erro de autenticação
-          res.status(401).json({ error: 'Credenciais inválidas' });
+          res.status(401).json({ error: 'E-mail e/ou senha inválidos' });
         } else {
           // Se as credenciais estiverem corretas, crie um token JWT
           const token = jwt.sign(
@@ -179,7 +179,8 @@ router.post('/upload-image', verifyToken, upload.single('image'), (req, res) => 
           emailuser: req.user.emailuser,
           addressuser: req.user.addressuser,
           imguser: imagePath,
-          residenciauser: req.user.residenciauser
+          residenciauser: req.user.residenciauser,
+          cepuser: req.user.cepuser,
 
         },
         process.env.JWT_SECRET,
@@ -224,7 +225,7 @@ router.post('/atualizar-usuario', verifyToken, (req, res) => {
               addressuser: updatedUser.addressuser,
               imguser: updatedUser.imguser, 
               residenciauser: updatedUser.residenciauser,
-              cepuser: updatedUser.cepuser
+              cepuser: updatedUser.cepuser,
             },
             process.env.JWT_SECRET,
             { expiresIn: '365d' }
@@ -266,11 +267,11 @@ router.post('/atualizar-senha', verifyToken, (req, res) => {
 });
 
 router.post('/adicionar-pet', verifyToken, (req, res) => {
-  const { idtutor, nomepet, especiepet, sexopet, idadepet, nascimentopet } = req.body;
+  const { idtutor, nomepet, especiepet, sexopet, nascimentopet } = req.body;
   // Execute uma consulta SQL para adicionar o pet ao banco de dados
-  const addPetQuery = 'INSERT INTO pets (idtutor, nomepet, especiepet, sexopet, idadepet, nascimentopet) VALUES (?, ?, ?, ?, ?, ?)';
+  const addPetQuery = 'INSERT INTO pets (idtutor, nomepet, especiepet, sexopet, nascimentopet) VALUES (?, ?, ?, ?, ?)';
 
-  db.query(addPetQuery, [idtutor, nomepet, especiepet, sexopet, idadepet, nascimentopet], (addErr, addResults) => {
+  db.query(addPetQuery, [idtutor, nomepet, especiepet, sexopet, nascimentopet], (addErr, addResults) => {
     if (addErr) {
       console.error('Erro ao adicionar pet:', addErr);
       res.status(500).json({ error: 'Erro interno do servidor' });
@@ -363,5 +364,69 @@ router.post('/pets/:petId/update-lembrete', async (req, res) => {
     res.status(500).json({ error: 'Erro interno do servidor' });
   }
 });
+
+// Rota para remover uma conta de usuário
+router.delete('/remover-conta', verifyToken, async (req, res) => {
+  try {
+    const userId = req.user.userId; // ID do usuário logado
+
+    // Inicialize um array vazio para armazenar os IDs dos pets do usuário
+    const petIds = [];
+
+    // Execute uma consulta SQL para buscar os pets do usuário
+    const selectPetsQuery = 'SELECT idpets FROM pets WHERE idtutor = ?';
+    db.query(selectPetsQuery, [userId], async (selectPetsErr, selectPetsResults) => {
+      if (selectPetsErr) {
+        console.error('Erro ao buscar pets do usuário:', selectPetsErr);
+        res.status(500).json({ error: 'Erro interno do servidor' });
+      } else {
+        // Preencha o array de petIds com os IDs dos pets do usuário
+        for (const pet of selectPetsResults) {
+          petIds.push(pet.idpets);
+        }
+
+        if (petIds.length > 0) {
+          // Execute uma consulta SQL para remover os pets do usuário apenas se houver pets para excluir
+          const deletePetsQuery = 'DELETE FROM pets WHERE idpets IN (?)';
+          db.query(deletePetsQuery, [petIds], async (deletePetsErr, deletePetsResults) => {
+            if (deletePetsErr) {
+              console.error('Erro ao remover pets do usuário:', deletePetsErr);
+              res.status(500).json({ error: 'Erro interno do servidor' });
+            } else {
+              console.log('Pets removidos com sucesso');
+            }
+          });
+        }
+
+        // Execute uma consulta SQL para excluir a imagem de perfil do usuário, se existir
+        const user = req.user;
+        if (user.imguser) {
+          const imagePath = path.join(__dirname, 'public', user.imguser);
+          fs.unlink(imagePath, (unlinkErr) => {
+            if (unlinkErr) {
+              console.error('Erro ao excluir imagem de perfil do usuário:', unlinkErr);
+            }
+          });
+        }
+
+        // Execute uma consulta SQL para remover o usuário
+        const deleteUserQuery = 'DELETE FROM users WHERE idusers = ?';
+        db.query(deleteUserQuery, [userId], async (deleteUserErr, deleteUserResults) => {
+          if (deleteUserErr) {
+            console.error('Erro ao remover usuário:', deleteUserErr);
+            res.status(500).json({ error: 'Erro interno do servidor' });
+          } else {
+            console.log('Usuário removido com sucesso');
+            res.json({ message: 'Usuário removido com sucesso' });
+          }
+        });
+      }
+    });
+  } catch (error) {
+    console.error('Erro ao remover a conta de usuário:', error);
+    res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+});
+
 
 module.exports = router;

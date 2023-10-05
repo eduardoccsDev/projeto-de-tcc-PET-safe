@@ -22,6 +22,31 @@
                         <button class="sendUserImage" v-if="isEditImage" @click="uploadImage"><i
                                 class="fa-solid fa-upload"></i> Enviar Imagem</button>
                     </div>
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn removeAccount" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        <i class="fa-solid fa-trash"></i> Apagar conta
+                    </button>
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Tem certeza?</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Tem certeza de que deseja apagar sua conta? Isto removerá todos os seus dados.
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fa-solid fa-ban"></i> Cancelar</button>
+                                    <button @click="handleRemoveAccount" type="button" class="btn removeAccount simple"><i class="fa-solid fa-trash"></i> Excluir</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
                 <div class="sideRight">
                     <div class="infoUserTitleContainer">
@@ -48,8 +73,9 @@
                         <div class="inputContainer half half-3">
                             <label for="cepuser"><i class="fa-solid fa-address-card"></i> CEP:</label>
                             <input id="cepuser" v-model="editedUserInfo.cepuser" v-if="userData" :disabled="isDisabled"
-                                type="text" name="cepuser">
+                                type="number" name="cepuser">
                         </div>
+                        {{console.log(editedUserInfo.cepuser)}}
                         <div class="inputContainer half half-3">
                             <label for="residenciauser"><i class="fa-solid fa-house"></i> Residência:</label>
                             <select :disabled="isDisabled" v-if="userData" required v-model="editedUserInfo.residenciauser"
@@ -62,22 +88,29 @@
                         <button v-if="!isDisabled" class="saveUserInfo" type="submit"><i
                                 class="fa-solid fa-floppy-disk"></i> Salvar</button>
                     </form>
-                    <h3>- Redefinir senha</h3>
+                    <div class="infoUserTitleContainer">
+                        <h3>- Redefinir senha</h3>
+                        <button class="editUserInfo" @click="handleIsDisabledPassword"><i
+                                class="fa-solid fa-pen-to-square"></i>
+                            Editar senha</button>
+                    </div>
                     <form class="infoUser" @submit.prevent="handleUpdateUserPassword">
                         <div class="inputContainer half">
                             <label for="passworddefault"><i class="fa-solid fa-lock"></i> Senha nova:</label>
-                            <input id="passworddefault" required minlength="8" v-model="editedUserInfo.passworduser" v-if="userData"
-                                type="password" name="passworddefault" placeholder="Digite a senha nova">
+                            <input :disabled="isDisablePassword" id="passworddefault" required minlength="8"
+                                v-model="editedUserInfo.passworduser" v-if="userData" type="password" name="passworddefault"
+                                placeholder="Digite a senha nova">
                         </div>
                         <div class="inputContainer half">
                             <label for="newpassword"><i class="fa-solid fa-lock"></i> Repita a senha nova:</label>
-                            <input id="newpassword" required v-model="passworddefaultagain" v-if="userData"
-                                type="password" name="newpassword" placeholder="Repita a senha nova">
+                            <input :disabled="isDisablePassword" id="newpassword" required v-model="passworddefaultagain"
+                                v-if="userData" type="password" name="newpassword" placeholder="Repita a senha nova">
                         </div>
-                        <button class="saveUserInfo" type="submit"><i
+                        <button v-if="!isDisablePassword" class="saveUserInfo" type="submit"><i
                                 class="fa-solid fa-floppy-disk"></i> Salvar</button>
                     </form>
                     <p v-if="msgUserInfo" class="msgUserInfo">{{ msgUserInfo }}</p>
+                    <p v-if="msgUserInfoError" class="msgUserInfo error">{{ msgUserInfoError }}</p>
                     <div class="infoUserTitleContainer">
                         <h3>- Informações de pet</h3>
                         <button class="editUserInfo" @click="handleIsAddPet"><i class="fa-solid fa-plus"></i>
@@ -105,14 +138,9 @@
                                 <option value="Fêmea">Fêmea</option>
                             </select>
                         </div>
-                        <div class="inputContainer half">
+                        <div class="inputContainer">
                             <label for="nascimentopet"><i class="fa-solid fa-cake-candles"></i> Data de nascimento: </label>
                             <input id="nascimentopet" v-model="petData.nascimentopet" type="date" name="nascimentopet">
-                        </div>
-                        <div class="inputContainer half">
-                            <label for="idadepet"><i class="fa-solid fa-arrow-up-1-9"></i> Idade: </label>
-                            <input id="idadepet" placeholder="Digite a idade do pet" v-model="petData.idadepet"
-                                type="number" name="idadepet">
                         </div>
                         <button class="saveUserInfo" type="submit"><i class="fa-solid fa-plus"></i> Adicionar</button>
                     </form>
@@ -135,23 +163,25 @@
                                 <i v-else class="fa-solid fa-venus"></i>
                                 {{ pet.sexopet }}
                             </p>
-                            <p><i class="fa-solid fa-cake-candles"></i> {{ pet.idadepet }} anos</p>
-                            <label for="atividade"><i class="fa-solid fa-message"></i> Lembretes: </label>
+                            <p v-if="pet.nascimentopet"><i class="fa-solid fa-cake-candles"></i> {{
+                                formatDate(pet.nascimentopet) }} - {{ calculateAge(formatDate(pet.nascimentopet)) }} anos
+                            </p>
+                            <label for="atividade"><i class="fa-solid fa-message"></i> Anotações: </label>
                             <p class="dica">Cada linha separada por vírgula.</p>
                             <div class="lembretesContainer">
                                 <p class="atividade" v-if="pet.atividade" v-for="part in pet.atividade.split(',')"
                                     :key="part">{{ part.trim() }}</p>
-                                <p v-else class="atividade">Adicione lembretes e atividades.</p>
+                                <p v-else class="atividade">Adicione anotações e atividades.</p>
                             </div>
                             <textarea v-if="pet.isLembreteEdit" v-model="editedPetLembrete.atividade"
                                 :disabled="!pet.isLembreteEdit" id="atividade" name="atividade"
-                                placeholder="Lembrete, atividade, etc...">{{ editedPetLembrete.atividade }}</textarea>
+                                placeholder="Anotações, atividades, etc...">{{ editedPetLembrete.atividade }}</textarea>
                             <div class="btnLembreteContainer">
                                 <button class="salvarAtividade" v-if="pet.isLembreteEdit"
                                     @click="handleEditLembrete(pet.idpets)"><i class="fa-solid fa-pen-to-square"></i>
                                     Salvar</button>
-                                <button v-if="pet.atividade" class="editAtividade" :id="pet.notShow" @click="toggleEditLembrete(pet)"><i
-                                        class="fa-solid fa-pen-to-square"></i>
+                                <button v-if="pet.atividade" class="editAtividade" :id="pet.notShow"
+                                    @click="toggleEditLembrete(pet)"><i class="fa-solid fa-pen-to-square"></i>
                                     Editar</button>
                                 <button v-else class="editAtividade" @click="toggleEditLembrete(pet)"><i
                                         class="fa-solid fa-pen-to-square"></i>
@@ -168,16 +198,19 @@
 <script setup>
 import axios from 'axios';
 import { ref, computed } from 'vue';
+import moment from 'moment';
 
 const userData = ref(null);
 const userPets = ref(null);
 const isLembreteEdit = ref(true);
 const msgUserImg = ref(null);
 const msgUserInfo = ref(null);
+const msgUserInfoError = ref(null);
 const msgPetInfo = ref(null);
 const isEditImage = ref(false);
 const isAddPet = ref(false);
 const isDisabled = ref(true);
+const isDisablePassword = ref(true);
 const passworddefaultagain = ref('');
 const notShow = ref('none');
 let editedUserInfo = {
@@ -194,8 +227,29 @@ const token = localStorage.getItem('token');
 function handleIsDisabled() {
     isDisabled.value = !isDisabled.value;
 }
+function handleIsDisabledPassword() {
+    isDisablePassword.value = !isDisablePassword.value;
+}
 function handleIsAddPet() {
     isAddPet.value = !isAddPet.value;
+}
+
+function formatDate(date) {
+    return moment(date).format('DD/MM/YYYY');
+}
+
+function calculateAge(dateOfBirth) {
+    const birthDate = new Date(dateOfBirth);
+    const currentDate = new Date();
+
+    let age = currentDate.getFullYear() - birthDate.getFullYear();
+
+    // Verifique se o aniversário deste ano já ocorreu
+    if (currentDate.getMonth() < birthDate.getMonth() || (currentDate.getMonth() === birthDate.getMonth() && currentDate.getDate() < birthDate.getDate())) {
+        age--;
+    }
+
+    return age;
 }
 
 const toggleEditLembrete = (pet) => {
@@ -218,7 +272,6 @@ const updateUserProfileData = () => {
         })
             .then((response) => {
                 userData.value = response.data.user;
-                // Atualize os campos de edição com os novos dados do usuário
                 editedUserInfo.nomeuser = response.data.user.nomeuser;
                 editedUserInfo.emailuser = response.data.user.emailuser;
                 editedUserInfo.addressuser = response.data.user.addressuser;
@@ -247,16 +300,9 @@ const uploadImage = () => {
             .post('http://localhost:3000/upload-image', formData)
             .then((response) => {
                 const imagePath = response.data.imagePath;
-
-                // Atualize a imagem de perfil imediatamente após o upload
                 userData.value.imguser = imagePath;
-
-                // Atualize o token JWT armazenado no local storage com o novo token
                 const newToken = response.data.token;
                 localStorage.setItem('token', newToken);
-
-                // Faça algo com o imagePath, se necessário
-                // Você pode até mesmo exibir uma mensagem de sucesso
                 msgUserImg.value = null;
             })
             .catch((error) => {
@@ -333,9 +379,12 @@ const handleUpdateUserPassword = () => {
     const newPasswordData = {
         newPassword: editedUserInfo.passworduser
     };
-    if(newPasswordData.newPassword !== passworddefaultagain.value){
-        msgUserInfo.value = 'As senhas não coincidem';
-    }else{
+    if (newPasswordData.newPassword !== passworddefaultagain.value) {
+        msgUserInfoError.value = 'As senhas não coincidem';
+        setTimeout(() => {
+            msgUserInfoError.value = null;
+        }, 3000);
+    } else {
         axios
             .post('http://localhost:3000/atualizar-senha', newPasswordData, {
                 headers: {
@@ -352,24 +401,25 @@ const handleUpdateUserPassword = () => {
             .catch((error) => {
                 console.error('Erro ao atualizar a senha:', error);
                 // Exiba uma mensagem de erro
-                msgUserInfo.value = 'Erro ao atualizar a senha.';
+                msgUserInfoError.value = 'Erro ao atualizar a senha.';
+                setTimeout(() => {
+                    msgUserInfoError.value = null;
+                }, 3000);
             });
     }
 }
-
 
 const petData = {
     nomepet: '',
     especiepet: '',
     sexopet: '',
-    idadepet: '',
     nascimentopet: '',
     racapet: ''
 }
 
 const handleAddPet = () => {
     // Certifique-se de que todos os campos obrigatórios foram preenchidos
-    if (!petData.nomepet || !petData.especiepet || !petData.sexopet || !petData.idadepet || !petData.nascimentopet) {
+    if (!petData.nomepet || !petData.especiepet || !petData.sexopet) {
         console.error('Por favor, preencha todos os campos obrigatórios.');
         return;
     }
@@ -379,6 +429,9 @@ const handleAddPet = () => {
     if (!userData.value) {
         console.error('Dados do usuário não disponíveis.');
         return;
+    }
+    if (!petData.nascimentopet) {
+        petData.nascimentopet = null;
     }
     // Agora você pode acessar userData e petData com segurança
     petData.idtutor = userData.value.userId; // Defina o idtutor como o ID do usuário logado
@@ -392,7 +445,6 @@ const handleAddPet = () => {
             petData.nomepet = '';
             petData.especiepet = '';
             petData.sexopet = '';
-            petData.idadepet = '';
             petData.nascimentopet = '';
             // Exiba uma mensagem de sucesso
             window.location.reload();
@@ -468,9 +520,12 @@ function handleEditLembrete(petId) {
         axios.post(`http://localhost:3000/pets/${petId}/update-lembrete`, updatedLembreteData)
             .then((response) => {
                 // Exiba uma mensagem de sucesso ou faça qualquer ação necessária após a atualização
-                console.log('Lembrete do pet atualizado com sucesso');
                 isLembreteEdit.value = true;
-                window.location.reload();
+                msgPetInfo.value = 'Lembrete atualizado com sucesso!';
+                setTimeout(() => {
+                    msgPetInfo.value = null;
+                    window.location.reload();
+                }, 1000);
             })
             .catch((error) => {
                 console.error('Erro ao atualizar lembrete do pet:', error);
@@ -480,6 +535,20 @@ function handleEditLembrete(petId) {
         console.error('Erro ao atualizar lembrete do pet:', error);
     }
 }
+
+const handleRemoveAccount = async () => {
+  try {
+    const response = await axios.delete('http://localhost:3000/remover-conta');
+    if (response.status === 200) {
+      localStorage.removeItem('token');
+      window.location.reload();
+    } else {
+      console.error('Erro ao remover a conta do usuário');
+    }
+  } catch (error) {
+    console.error('Erro ao remover a conta do usuário:', error);
+  }
+};
 
 import { onMounted } from 'vue';
 onMounted(() => {
@@ -493,13 +562,28 @@ onMounted(() => {
     display: flex;
     align-items: center;
     gap: 10px;
+    border-bottom: solid 2px #0000000d;
+    margin-bottom: 20px;
 
     @media(max-width:668px) {
         flex-direction: column;
         gap: 0px;
     }
 }
-
+.removeAccount{
+    background-color: rgb(255, 106, 106);
+    color: var(--dark);
+    padding: 5px 10px;
+    border-radius: 5px;
+    width: 100%;
+    transition: .5s;
+    &.simple{
+        width: inherit;
+    }
+    &:hover{
+        transform: scale(1.05);
+    }
+}
 .userImgContainer {
     margin-bottom: 10px;
 }
@@ -511,6 +595,15 @@ onMounted(() => {
     border: solid 2px var(--primary);
     color: var(--primary);
     text-align: center;
+
+    &.error {
+        background-color: rgb(255, 106, 106);
+        color: rgb(144, 15, 15);
+        border: solid 2px rgb(144, 15, 15);
+        padding: 5px 10px;
+        border-radius: 5px;
+        text-align: center;
+    }
 }
 
 .sideContainer {
@@ -558,6 +651,11 @@ onMounted(() => {
                 cursor: pointer;
                 width: 100%;
                 display: block;
+                transition: .5s;
+
+                &:hover {
+                    transform: scale(1.05);
+                }
 
             }
 
@@ -596,16 +694,18 @@ onMounted(() => {
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
-            .dica{
+
+            .dica {
                 font-size: 12px;
                 font-style: italic;
                 margin-top: 5px;
             }
+
             .petCard {
                 background-color: var(--primary);
                 padding: 10px;
                 border-radius: 5px;
-                width: 337px;
+                width: 330px;
 
                 @media(max-width:668px) {
                     width: 100%;
@@ -641,9 +741,11 @@ onMounted(() => {
                     }
 
                 }
-                #none{
+
+                #none {
                     display: none;
                 }
+
                 .editAtividade {
                     background-color: var(--dark);
                     color: var(--primary);

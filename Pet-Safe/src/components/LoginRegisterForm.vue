@@ -8,9 +8,9 @@
                 <p class="forms__headerDescription">Lorem ipsum dolor, lorem ipsum dolor lorem ipsim dolor.</p>
             </div>
             <form @submit.prevent="handleLogin" class="login">
-                <input v-model="formData.emailuser" type="email" name="emailuser" class="emailuser"
+                <input required v-model="formData.emailuser" type="email" name="emailuser" class="emailuser"
                     placeholder="Insira seu e-mail">
-                <input v-model="formData.passworduser" type="password" name="passworduser" class="passworduser"
+                <input required v-model="formData.passworduser" type="password" name="passworduser" class="passworduser"
                     placeholder="Insira sua senha">
                 <button type="submit" class="submitform">Entrar</button>
             </form>
@@ -131,8 +131,8 @@ const handleLogin = async () => {
         // router.push('/');
         window.location.href = '/';
     } catch (error) {
-        loginError.value = error.message;
-        console.error(error);
+        loginError.value = error.response.data.error;
+        // console.error(error);
     }
 };
 
