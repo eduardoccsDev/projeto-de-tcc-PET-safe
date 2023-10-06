@@ -9,14 +9,14 @@
                     Clínicas próximas
                 </span>
             </router-link>
-            <router-link v-if="isUserLoggedIn" to="/perfil" class="buttonLink">
+            <!-- <router-link v-if="isUserLoggedIn" to="/perfil" class="buttonLink">
                 <span class="icons">
                     <i class="fa-regular fa-address-card"></i>
                 </span>
                 <span class="text">
                     Perfil
                 </span>
-            </router-link>
+            </router-link> -->
             <LoginLogoutBtns />
         </div>
     </section>

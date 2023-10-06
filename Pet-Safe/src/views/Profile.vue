@@ -40,13 +40,14 @@
                                     Tem certeza de que deseja apagar sua conta? Isto removerá todos os seus dados.
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fa-solid fa-ban"></i> Cancelar</button>
-                                    <button @click="handleRemoveAccount" type="button" class="btn removeAccount simple"><i class="fa-solid fa-trash"></i> Excluir</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i
+                                            class="fa-solid fa-ban"></i> Cancelar</button>
+                                    <button @click="handleRemoveAccount" type="button" class="btn removeAccount simple"><i
+                                            class="fa-solid fa-trash"></i> Excluir</button>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                 </div>
                 <div class="sideRight">
                     <div class="infoUserTitleContainer">
@@ -75,7 +76,6 @@
                             <input id="cepuser" v-model="editedUserInfo.cepuser" v-if="userData" :disabled="isDisabled"
                                 type="number" name="cepuser">
                         </div>
-                        {{console.log(editedUserInfo.cepuser)}}
                         <div class="inputContainer half half-3">
                             <label for="residenciauser"><i class="fa-solid fa-house"></i> Residência:</label>
                             <select :disabled="isDisabled" v-if="userData" required v-model="editedUserInfo.residenciauser"
@@ -147,25 +147,50 @@
                     <p v-if="msgPetInfo" class="msgUserInfo">{{ msgPetInfo }}</p>
                     <div class="petCardsContainer">
                         <div v-if="userPets" v-for="pet in userPets" :key="pet.idpets" class="petCard">
-                            <div class="petPrimaryInfo">
-                                <div class="petInfoContainer">
-                                    <i v-if="pet.especiepet === 'Cão'" class="fa-solid fa-dog"></i>
-                                    <i v-else class="fa-solid fa-cat"></i>
-                                    <p>{{ pet.nomepet }}</p>
+                                <div class="petPrimaryInfo">
+                                    <div class="petInfoContainer">
+                                        <i v-if="pet.especiepet === 'Cão' && !pet.isEditPet" class="fa-solid fa-dog"></i>
+                                        <i v-else-if="pet.especiepet === 'Gato' && !pet.isEditPet"
+                                            class="fa-solid fa-cat"></i>
+                                        <p v-if="!pet.isEditPet">{{ pet.nomepet }}</p>
+                                    </div>
+                                    <div class="rmvContainer">
+                                        <button @click="handleEditPet(pet)" class="removePet"><i
+                                                class="fa-solid fa-pen-to-square"></i></button>
+                                        <button @click="handleRemovePet(pet)" class="removePet"><i
+                                                class="fa-solid fa-xmark"></i></button>
+                                    </div>
                                 </div>
-                                <div class="rmvContainer">
-                                    <button @click="handleRemovePet(pet)" class="removePet"><i
-                                            class="fa-solid fa-xmark"></i></button>
-                                </div>
+                                <form>
+                                <input v-if="pet.isEditPet" required class="petInputs" type="text" name="namepet"
+                                    placeholder="Nome do pet" v-model="pet.nomepet">
+                                <select v-if="pet.isEditPet" name="especiepet" required v-model="pet.especiepet"
+                                    id="especiepet">
+                                    <option value="" disabled>Selecionar a espécie</option>
+                                    <option value="Cão">Cão</option>
+                                    <option value="Gato">Gato</option>
+                                </select>
+                                <p v-if="!pet.isEditPet">
+                                    <i v-if="pet.sexopet === 'Macho'" class="fa-solid fa-mars"></i>
+                                    <i v-else class="fa-solid fa-venus"></i>
+                                    {{ pet.sexopet }}
+                                </p>
+                                <select v-if="pet.isEditPet" name="sexopet" required v-model="pet.sexopet" id="sexopet">
+                                    <option value="" disabled>Selecionar sexo</option>
+                                    <option value="Macho">Macho</option>
+                                    <option value="Fêmea">Fêmea</option>
+                                </select>
+                                <p v-if="pet.nascimentopet && !pet.isEditPet"><i class="fa-solid fa-cake-candles"></i> {{
+                                    formatDate(pet.nascimentopet) }} - {{ calculateAge(pet.nascimentopet) }}
+                                    anos
+                                </p>
+                                <input v-if="pet.isEditPet" type="date" v-model="pet.nascimentopet" @input="formatDate(pet.nascimentopet)" name="nascimentopet" required>
+                            </form>
+                            <div class="btnContainerPet">
+                                <button class="editPet" v-if="pet.isEditPet" @click="editPetInfo(pet)">Salvar</button>
+                                <button class="cancelEditPet" v-if="pet.isEditPet"
+                                    @click="cancelPetEdit(pet)">Cancelar</button>
                             </div>
-                            <p>
-                                <i v-if="pet.sexopet === 'Macho'" class="fa-solid fa-mars"></i>
-                                <i v-else class="fa-solid fa-venus"></i>
-                                {{ pet.sexopet }}
-                            </p>
-                            <p v-if="pet.nascimentopet"><i class="fa-solid fa-cake-candles"></i> {{
-                                formatDate(pet.nascimentopet) }} - {{ calculateAge(formatDate(pet.nascimentopet)) }} anos
-                            </p>
                             <label for="atividade"><i class="fa-solid fa-message"></i> Anotações: </label>
                             <p class="dica">Cada linha separada por vírgula.</p>
                             <div class="lembretesContainer">
@@ -209,6 +234,7 @@ const msgUserInfoError = ref(null);
 const msgPetInfo = ref(null);
 const isEditImage = ref(false);
 const isAddPet = ref(false);
+const isEditPet = ref(false);
 const isDisabled = ref(true);
 const isDisablePassword = ref(true);
 const passworddefaultagain = ref('');
@@ -257,6 +283,14 @@ const toggleEditLembrete = (pet) => {
     pet.isLembreteEdit = !pet.isLembreteEdit;
     editedPetLembrete.atividade = pet.atividade;
 };
+
+function handleEditPet(pet) {
+    pet.isEditPet = !isEditPet.value;
+};
+
+function cancelPetEdit(pet) {
+    pet.isEditPet = isEditPet.value;
+}
 
 function handleEditUserImage() {
     isEditImage.value = !isEditImage.value;
@@ -505,6 +539,37 @@ const handleRemovePet = (petToRemove) => {
         });
 };
 
+const editPetInfo = (pet) => {
+    try {
+        const editPetData = {
+            idpets: pet.idpets,
+            nascimentopet: pet.nascimentopet,
+            nomepet: pet.nomepet,
+            sexopet: pet.sexopet,
+            especiepet: pet.especiepet
+        }
+
+        // Faça uma solicitação HTTP para atualizar o lembrete do pet
+        axios.post(`http://localhost:3000/pets/${editPetData.idpets}/update-petinfo`, editPetData)
+            .then((response) => {
+                // Exiba uma mensagem de sucesso ou faça qualquer ação necessária após a atualização
+                isEditPet.value = false;
+                msgPetInfo.value = 'Informações do pet atualizadas!!';
+                setTimeout(() => {
+                    msgPetInfo.value = null;
+                    window.location.reload();
+                }, 1000);
+            })
+            .catch((error) => {
+                console.error('Erro ao atualizar o pet:', error);
+                // Exiba uma mensagem de erro ou trate-o conforme necessário
+            });
+    } catch (error) {
+        console.error('Erro ao atualizar o pet:', error);
+    }
+
+}
+
 const editedPetLembrete = {
     atividade: ''
 }
@@ -537,17 +602,17 @@ function handleEditLembrete(petId) {
 }
 
 const handleRemoveAccount = async () => {
-  try {
-    const response = await axios.delete('http://localhost:3000/remover-conta');
-    if (response.status === 200) {
-      localStorage.removeItem('token');
-      window.location.reload();
-    } else {
-      console.error('Erro ao remover a conta do usuário');
+    try {
+        const response = await axios.delete('http://localhost:3000/remover-conta');
+        if (response.status === 200) {
+            localStorage.removeItem('token');
+            window.location.reload();
+        } else {
+            console.error('Erro ao remover a conta do usuário');
+        }
+    } catch (error) {
+        console.error('Erro ao remover a conta do usuário:', error);
     }
-  } catch (error) {
-    console.error('Erro ao remover a conta do usuário:', error);
-  }
 };
 
 import { onMounted } from 'vue';
@@ -570,20 +635,24 @@ onMounted(() => {
         gap: 0px;
     }
 }
-.removeAccount{
+
+.removeAccount {
     background-color: rgb(255, 106, 106);
     color: var(--dark);
     padding: 5px 10px;
     border-radius: 5px;
     width: 100%;
     transition: .5s;
-    &.simple{
+
+    &.simple {
         width: inherit;
     }
-    &:hover{
+
+    &:hover {
         transform: scale(1.05);
     }
 }
+
 .userImgContainer {
     margin-bottom: 10px;
 }
@@ -616,6 +685,9 @@ onMounted(() => {
 
     h3 {
         margin-bottom: 10px;
+        @media(max-width:668px){
+            font-size: 18px;
+        }
     }
 
     .sideLeft {
@@ -694,6 +766,43 @@ onMounted(() => {
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
+
+            input,
+            select {
+                background-color: #f1f1f1;
+                padding: 5px;
+                border-radius: 5px;
+                border: solid 2px #fff;
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            .btnContainerPet {
+                display: flex;
+                gap: 10px;
+                margin-block: 5px;
+
+                button {
+                    width: 100%;
+                    border-radius: 5px;
+                    padding: 5px 10px;
+                    transition: .5s;
+
+                    &:hover {
+                        transform: scale(1.05);
+                    }
+                }
+
+                .editPet {
+                    background-color: #fff;
+                    color: var(--primary);
+                }
+
+                .cancelEditPet {
+                    background-color: rgb(253, 93, 93);
+                    color: var(--dark);
+                }
+            }
 
             .dica {
                 font-size: 12px;
@@ -838,6 +947,11 @@ onMounted(() => {
                     margin-bottom: 5px;
                     justify-content: space-between;
 
+                    .rmvContainer {
+                        display: flex;
+                        gap: 5px;
+                    }
+
                     .petInfoContainer {
                         display: flex;
                         gap: 5px;
@@ -943,4 +1057,5 @@ onMounted(() => {
             }
         }
     }
-}</style>
+}
+</style>

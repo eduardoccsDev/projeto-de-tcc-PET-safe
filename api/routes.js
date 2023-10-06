@@ -65,7 +65,7 @@ router.post('/register', (req, res) => {
               console.error('Erro ao registrar usuário:', insertErr);
               res.status(500).json({ error: 'Erro interno do servidor' });
             } else {
-              console.log('Usuário registrado com sucesso');
+              //console.log('Usuário registrado com sucesso');
               res.json({ message: 'Usuário registrado com sucesso' });
             }
           });
@@ -168,8 +168,7 @@ router.post('/upload-image', verifyToken, upload.single('image'), (req, res) => 
       console.error('Erro ao atualizar o caminho da imagem no banco de dados:', updateErr);
       res.status(500).json({ error: 'Erro interno do servidor' });
     } else {
-      console.log('Caminho da imagem atualizado com sucesso no banco de dados');
-
+      //console.log('Caminho da imagem atualizado com sucesso no banco de dados');
       // Gere um novo token JWT com o caminho da imagem atualizado
       const newToken = jwt.sign(
         {
@@ -186,7 +185,6 @@ router.post('/upload-image', verifyToken, upload.single('image'), (req, res) => 
         process.env.JWT_SECRET,
         { expiresIn: '365d' }
       );
-
       // Envie o novo token como parte da resposta, juntamente com o caminho da imagem
       res.json({ imagePath, token: newToken });
     }
@@ -206,7 +204,7 @@ router.post('/atualizar-usuario', verifyToken, (req, res) => {
       console.error('Erro ao atualizar informações do usuário:', updateErr);
       res.status(500).json({ error: 'Erro interno do servidor' });
     } else {
-      console.log('Informações do usuário atualizadas com sucesso no banco de dados');
+      //console.log('Informações do usuário atualizadas com sucesso no banco de dados');
 
       // Recupere as informações atualizadas do usuário após a atualização
       db.query('SELECT * FROM users WHERE idusers = ?', [userId], (selectErr, selectResults) => {
@@ -243,7 +241,7 @@ router.post('/atualizar-usuario', verifyToken, (req, res) => {
 router.post('/atualizar-senha', verifyToken, (req, res) => {
   const { newPassword } = req.body;
   const userId = req.user.userId; // ID do usuário logado
-  console.log(typeof newPassword)
+  //console.log(typeof newPassword)
   // Realize a hash da nova senha
   bcrypt.hash(newPassword, 10, (hashErr, hashedPassword) => {
     if (hashErr) {
@@ -258,7 +256,7 @@ router.post('/atualizar-senha', verifyToken, (req, res) => {
           console.error('Erro ao atualizar a senha do usuário:', updateErr);
           res.status(500).json({ error: 'Erro interno do servidor' });
         } else {
-          console.log('Senha do usuário atualizada com sucesso');
+          //console.log('Senha do usuário atualizada com sucesso');
           res.json({ message: 'Senha do usuário atualizada com sucesso' });
         }
       });
@@ -276,7 +274,7 @@ router.post('/adicionar-pet', verifyToken, (req, res) => {
       console.error('Erro ao adicionar pet:', addErr);
       res.status(500).json({ error: 'Erro interno do servidor' });
     } else {
-      console.log('Pet adicionado com sucesso');
+      //console.log('Pet adicionado com sucesso');
       res.json({ message: 'Pet adicionado com sucesso' });
     }
   });
@@ -318,7 +316,7 @@ router.delete('/remover-pet/:idpets', verifyToken, (req, res) => {
           console.error('Erro ao remover pet:', deleteErr);
           res.status(500).json({ error: 'Erro interno do servidor' });
         } else {
-          console.log('Pet removido com sucesso');
+          //console.log('Pet removido com sucesso');
           res.json({ message: 'Pet removido com sucesso' });
         }
       });
@@ -355,12 +353,36 @@ router.post('/pets/:petId/update-lembrete', async (req, res) => {
         console.error('Erro ao atualizar o lembrete do pet:', updateErr);
         res.status(500).json({ error: 'Erro interno do servidor' });
       } else {
-        console.log('Lembrete do pet atualizado com sucesso');
+        //console.log('Lembrete do pet atualizado com sucesso');
         res.json({ message: 'Lembrete do pet atualizado com sucesso' });
       }
     });
   } catch (error) {
     console.error('Erro ao atualizar o lembrete do pet:', error);
+    res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+});
+
+// Rota para atualizar o pet
+router.post('/pets/:petId/update-petinfo', async (req, res) => {
+  try {
+    const petId = req.params.petId;
+    const { nomepet, sexopet, nascimentopet, especiepet } = req.body;
+
+    // Execute uma consulta SQL para atualizar o campo "atividade" do pet
+    const updateQuery = 'UPDATE pets SET nomepet = ?, sexopet = ?, nascimentopet = ?, especiepet = ? WHERE idpets = ?';
+
+    db.query(updateQuery, [nomepet, sexopet, nascimentopet, especiepet, petId], (updateErr, updateResults) => {
+      if (updateErr) {
+        console.error('Erro ao atualizar o pet:', updateErr);
+        res.status(500).json({ error: 'Erro interno do servidor' });
+      } else {
+        //console.log('Pet atualizado com sucesso');
+        res.json({ message: 'Pet atualizado com sucesso' });
+      }
+    });
+  } catch (error) {
+    console.error('Erro ao atualizar o pet:', error);
     res.status(500).json({ error: 'Erro interno do servidor' });
   }
 });
@@ -393,7 +415,7 @@ router.delete('/remover-conta', verifyToken, async (req, res) => {
               console.error('Erro ao remover pets do usuário:', deletePetsErr);
               res.status(500).json({ error: 'Erro interno do servidor' });
             } else {
-              console.log('Pets removidos com sucesso');
+              //console.log('Pets removidos com sucesso');
             }
           });
         }
@@ -416,7 +438,7 @@ router.delete('/remover-conta', verifyToken, async (req, res) => {
             console.error('Erro ao remover usuário:', deleteUserErr);
             res.status(500).json({ error: 'Erro interno do servidor' });
           } else {
-            console.log('Usuário removido com sucesso');
+            //console.log('Usuário removido com sucesso');
             res.json({ message: 'Usuário removido com sucesso' });
           }
         });

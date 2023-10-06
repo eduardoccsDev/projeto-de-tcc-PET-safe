@@ -20,6 +20,7 @@
         background-color: var(--dark-alt);
         text-align: center;
         display: flex;
+        padding-block: 20px;
         .container{
             display: flex;
             flex-direction: column;

@@ -79,7 +79,6 @@ function handleChangeForm() {
 }
 
 const handleRegistration = async () => {
-    // Limpe mensagens anteriores
     registrationError.value = null;
     registrationSuccess.value = null;
     try {
@@ -99,16 +98,29 @@ const handleRegistration = async () => {
             body: JSON.stringify(formData),
         });
         if (!response.ok) {
-            throw new Error('Erro ao registrar. Verifique os dados inseridos.');
+            // Verifique se a resposta é um erro 400 com formato JSON
+            if (response.status === 400) {
+                const responseData = await response.json();
+                if (responseData.error === 'Email já cadastrado') {
+                    // Se o email já estiver cadastrado, exiba a mensagem de erro
+                    registrationError.value = responseData.error;
+                } else {
+                    throw new Error('Erro ao registrar. Verifique os dados inseridos.');
+                }
+            } else {
+                throw new Error('Erro ao registrar. Verifique os dados inseridos.');
+            }
+        } else {
+            registrationSuccess.value = "Usuário criado com sucesso!";
+            setTimeout(window.location.reload(), 5000);
         }
-        // Redirecione o usuário após o registro bem-sucedido (você pode escolher a rota apropriada)
-        registrationSuccess.value = "Usuário criado com sucesso!";
-        setTimeout(window.location.reload(), 5000);
     } catch (error) {
         // Trate os erros de validação ou da API aqui
+        console.log(error.message);
         registrationError.value = error.message;
     }
 };
+
 const emit = defineEmits();
 const handleLogin = async () => {
     // Limpe os erros anteriores
