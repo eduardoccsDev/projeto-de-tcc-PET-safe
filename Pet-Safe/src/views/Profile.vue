@@ -326,27 +326,36 @@ const handleFileChange = (event) => {
 
 const uploadImage = () => {
     if (hasSelectedFiles.value) {
-        const formData = new FormData();
-        formData.append('image', selectedFile.value);
+        const file = selectedFile.value;
 
-        // Enviar a imagem para a rota de upload no servidor
-        axios
-            .post('http://localhost:3000/upload-image', formData)
-            .then((response) => {
-                const imagePath = response.data.imagePath;
-                userData.value.imguser = imagePath;
-                const newToken = response.data.token;
-                localStorage.setItem('token', newToken);
-                msgUserImg.value = null;
-            })
-            .catch((error) => {
-                console.error('Erro ao fazer upload da imagem:', error);
-            });
+        // Verifique se o arquivo é uma imagem
+        if (file.type.startsWith('image/')) {
+            const formData = new FormData();
+            formData.append('image', file);
+
+            // Enviar a imagem para a rota de upload no servidor
+            axios
+                .post('http://localhost:3000/upload-image', formData)
+                .then((response) => {
+                    const imagePath = response.data.imagePath;
+                    userData.value.imguser = imagePath;
+                    const newToken = response.data.token;
+                    localStorage.setItem('token', newToken);
+                    msgUserImg.value = null;
+                })
+                .catch((error) => {
+                    console.error('Erro ao fazer upload da imagem:', error);
+                });
+        } else {
+            console.error('O arquivo selecionado não é uma imagem.');
+            msgUserImg.value = 'Selecione um arquivo de imagem válido.';
+        }
     } else {
         console.error('Nenhum arquivo selecionado para upload.');
-        msgUserImg.value = "Selecione um arquivo."
+        msgUserImg.value = 'Selecione um arquivo.';
     }
 };
+
 
 const getUserImageSrc = () => {
     if (userData.value) {
