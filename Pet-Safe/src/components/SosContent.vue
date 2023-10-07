@@ -289,7 +289,7 @@
                         <p>1 - Estanque a hemorragia com gaze e pano limpo:</p>
                         <figure>
                             <img class="media altura-fixa" src="../assets/images/estancar.jpg" alt="estancando-ferimento">
-                            <figcaption>Fonte da imagem: Guia de primeiros socorros para cães e gatos | Silvia Parisi
+                            <figcaption>Fonte da imagem: Pet Safe
                             </figcaption>
                         </figure>
                         <p class="obs short">Aplique um pano limpo ou compres-
@@ -302,7 +302,7 @@
                             se o local permitir:</p>
                         <figure>
                             <img class="media altura-fixa" src="../assets/images/colocando-gaze.jpg" alt="colocando-gaze">
-                            <figcaption>Fonte da imagem: Guia de primeiros socorros para cães e gatos | Silvia Parisi
+                            <figcaption>Fonte da imagem: Pet Safe
                             </figcaption>
                         </figure>
                         <p class="obs short">Fixe com esparadrapo. Nunca deixe a lesão aberta para evitar
@@ -313,7 +313,7 @@
                             um torniquete se o sangramento for severo:</p>
                         <figure>
                             <img class="media altura-fixa" src="../assets/images/torniquete.jpg" alt="torniquete">
-                            <figcaption>Fonte da imagem: Guia de primeiros socorros para cães e gatos | Silvia Parisi
+                            <figcaption>Fonte da imagem: Pet Safe
                             </figcaption>
                         </figure>
                         <p class="obs short">Nas patas e cauda, com um pedaço de faixa crepe ou
@@ -335,10 +335,126 @@
             </div>
         </div>
     </div>
+    <div class="accordion-item" id="queimaduras">
+        <h2 class="accordion-header" id="headingSix">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix"
+                aria-expanded="false" aria-controls="collapseSix">
+                <i class="fa-solid fa-fire"></i> Queimaduras
+            </button>
+        </h2>
+        <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix"
+            data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+                <p>Todos sabemos que queimaduras não são fáceis de
+                    aguentar, a dor costuma ser insuportável mesmo em
+                    queimaduras de primeiro grau. Assim, cuide sempre para
+                    que seu pet não fique na cozinha, principalmente perto
+                    dos fogões.</p>
+                <p>Ilustrações:</p>
+                <div class="conatinerBtns">
+                    <button @click="handleChangeDog" class="especieImg"><i class="fa-solid fa-dog"></i>
+                        Cão</button>
+                    <button @click="handleChangeCat" class="especieImg"><i class="fa-solid fa-cat"></i>
+                        Gato</button>
+                </div>
+                <div class="basicInfos">
+                    <div class="containerInfoCard">
+                        <p>1 - Em caso a queimadura grande
+                            pegue o pet com cuidado e leve-o imediatamente ao
+                            veterinário:</p>
+                        <div class="imagesContainer">
+                            <figure v-if="isDog">
+                                <img class="media altura-fixa" src="../assets/images/segurar-cao.jpg" alt="segurar-cao">
+                                <figcaption>Fonte da imagem: Pet Safe
+                                </figcaption>
+                            </figure>
+                            <figure v-else>
+                                <img class="media altura-fixa" src="../assets/images/segurar-gato.jpg" alt="segurar-gato">
+                                <figcaption>Fonte da imagem: Pet Safe
+                                </figcaption>
+                            </figure>
+                        </div>
+                    </div>
+                    <div class="containerInfoCard">
+                        <p>2 - <span class="page__destaque">NÃO USE</span> creme dental sobre a área afetada:</p>
+                        <figure>
+                            <img class="media altura-fixa" src="../assets/images/nao-creme-dental.jpg"
+                                alt="nao-creme-dental">
+                            <figcaption>Fonte da imagem: Pet Safe
+                            </figcaption>
+                        </figure>
+                    </div>
+                    <div class="containerInfoCard">
+                        <p>3 - Limpe com soro fisiológico (ou água mineral) e
+                            depois aplique pomada:</p>
+                        <figure>
+                            <img class="media altura-fixa" src="../assets/images/soro.jpg" alt="soro">
+                            <figcaption>Fonte da imagem: Pet Safe
+                            </figcaption>
+                        </figure>
+                    </div>
+                    <div class="containerInfoCard">
+                        <p>4 - Não cubra o ferimento. Use o colar
+                            elisabetano do seu kit:</p>
+                        <div class="imagesContainer">
+                            <figure v-if="isDog">
+                                <img class="media altura-fixa" src="../assets/images/colar.jpg" alt="colar">
+                                <figcaption>Fonte da imagem: Pet Safe
+                                </figcaption>
+                            </figure>
+                            <figure v-else>
+                                <img class="media altura-fixa" src="../assets/images/gato-colar.jpg" alt="gato-colar">
+                                <figcaption>Fonte da imagem: Pet Safe
+                                </figcaption>
+                            </figure>
+                        </div>
+                    </div>
+                </div>
+                <p class="obs">É importante ressaltar que gatos e cães brancos são
+                    propensos a queimaduras solares porque não possuem a
+                    pigmentação necessária na pele. Não os deixe expostos
+                    ao sol. Existem filtros solares específicos para eles,
+                    pergunte aos seu veterinário. Mas, caso ocorra um
+                    acidente você tem que ter a mão, soro fisiológico frio e
+                    pomada antibiótica.</p>
+                <p class="font">Fonte: Hospital veterinário taquaral</p>
+            </div>
+        </div>
+    </div>
 </template>
 <script setup>
+import { ref } from 'vue';
+
+const isDog = ref(false);
+
+function handleChangeDog() {
+    isDog.value = true
+}
+function handleChangeCat() {
+    isDog.value = false
+}
+
 </script>
 <style lang="scss" scoped>
+.conatinerBtns {
+    display: flex;
+    gap: 15px;
+    justify-content: flex-start;
+
+    button {
+        background-color: var(--primary);
+        color: var(--dark);
+        padding: 5px 10px;
+        border-radius: 5px;
+        transition: .5s;
+
+
+        &:hover {
+            transform: scale(1.05);
+        }
+    }
+}
+
 .containerInfoCard {
     padding-inline: 10px;
     width: 100%;
@@ -365,8 +481,8 @@
 
 .media.altura-fixa {
     width: 100% !important;
-    height: 280px;
-    object-fit: cover;
+    height: 210px;
+    object-fit: contain;
 }
 
 .media {

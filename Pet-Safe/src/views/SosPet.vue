@@ -13,6 +13,7 @@
                     <a href="#mucosa-hidratacao">Mucosa & Hidratação</a>
                     <a href="#vomito-diarreia">Vômitos & diarreias</a>
                     <a href="#ferimentos-e-cortes">Ferimentos & cortes</a>
+                    <a href="#queimaduras">Queimaduras</a>
 
                 </div>
             </div>
