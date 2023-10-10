@@ -208,7 +208,7 @@
         <div class="containerInfo flex">
           <figure class="auto">
             <img class="media" src="../assets/images/mucosa.jpg" alt="mucosas" />
-            <figcaption>Fonte da imagem: Freepik</figcaption>
+            <figcaption>Fonte da imagem: Pet Safe</figcaption>
           </figure>
           <div class="infoTxt">
             <p><strong>Saudável:</strong></p>
@@ -361,9 +361,7 @@
                 src="../assets/images/soro-caseiro.jpg"
                 alt="soro-caseiro"
               />
-              <figcaption>
-                Fonte da imagem: Pet Safe
-              </figcaption>
+              <figcaption>Fonte da imagem: Pet Safe</figcaption>
             </figure>
             <p class="obs short">
               200ml de água fervida ou filtrada (1 copo) 1 colher de sobremesa de açúcar e
@@ -435,6 +433,7 @@
         <p>
           Compressas de gaze, faixa crepe, esparadrapo, antisséptico e pomada antibiótica.
         </p>
+        <h3 class="infoTittle">Procedimentos:</h3>
         <div class="basicInfos">
           <div class="containerInfoCard">
             <p>1 - Estanque a hemorragia com gaze e pano limpo:</p>
@@ -538,6 +537,7 @@
             <i class="fa-solid fa-cat"></i> Gato
           </button>
         </div>
+        <h3 class="infoTittle">Procedimentos:</h3>
         <div class="basicInfos">
           <div class="containerInfoCard">
             <p>
@@ -619,6 +619,168 @@
       </div>
     </div>
   </div>
+  <div class="accordion-item" id="afogamento">
+    <h2 class="accordion-header" id="headingSeven">
+      <button
+        class="accordion-button collapsed"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#collapseSeven"
+        aria-expanded="false"
+        aria-controls="collapseSeven"
+      >
+        <i class="fa-solid fa-water"></i> Afogamentos
+      </button>
+    </h2>
+    <div
+      id="collapseSeven"
+      class="accordion-collapse collapse"
+      aria-labelledby="headingSeven"
+      data-bs-parent="#accordionExample"
+    >
+      <div class="accordion-body">
+        <h3 class="infoTittle">Procedimentos:</h3>
+        <div class="basicInfos">
+          <div class="containerInfoCard">
+            <p>
+              1 - Retire-o da água e pegue seu pet pelas patas traseiras deixando que a
+              água ingerida saia pelas narinas e pela boca:
+            </p>
+            <figure>
+              <img
+                class="media altura-fixa"
+                src="../assets/images/remover.jpg"
+                alt="remover-pet"
+              />
+              <figcaption>Fonte da imagem: Pet Safe</figcaption>
+            </figure>
+          </div>
+          <div class="containerInfoCard">
+            <p>
+              2 - Verifique se há batimentos cardíacos e respiratórios. Caso não haja
+              comece a fazer a massagem cardíaca e a massagem respiratória:
+            </p>
+            <figure>
+              <img
+                class="media altura-fixa"
+                src="../assets/images/cardiaco.jpg"
+                alt="batimentos-pet"
+              />
+              <figcaption>Fonte da imagem: Pet Safe</figcaption>
+            </figure>
+          </div>
+          <div class="containerInfoCard">
+            <p>
+              3 - Pressione o peito perto das costelas para expulsar a água para fora do
+              pulmão:
+            </p>
+            <figure>
+              <img
+                class="media altura-fixa"
+                src="../assets/images/pressionar-peito.jpg"
+                alt="pressionar-peito"
+              />
+              <figcaption>Fonte da imagem: Pet Safe</figcaption>
+            </figure>
+            <p class="obs short">
+              Enrole-o em um cobertor para aumentar sua temperatura e continue o
+              procedimento.
+            </p>
+          </div>
+        </div>
+        <p class="obs">
+          Cães e gatos sabem nadar mas, quando caem na piscina, se assustam, ficam
+          estressados e cansados. Se demorar muito para serem resgatados após um tempo
+          acabam afundando. Muitos cães adoram água e se você costuma deixá-los entrar na
+          piscina com você fica mais difícil controlá-los quando estão só. O ideal para
+          quem tem piscina em casa é cobri-las e ter plataformas ou degraus para que seu
+          pet saia sozinho.
+        </p>
+        <p class="font">Fonte: Hospital veterinário taquaral</p>
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item" id="engasgo">
+    <h2 class="accordion-header" id="headingEight">
+      <button
+        class="accordion-button collapsed"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#collapseEight"
+        aria-expanded="false"
+        aria-controls="collapseEight"
+      >
+        <i class="fa-solid fa-lungs"></i> Engasgamentos & asfixia
+      </button>
+    </h2>
+    <div
+      id="collapseEight"
+      class="accordion-collapse collapse"
+      aria-labelledby="headingEight"
+      data-bs-parent="#accordionExample"
+    >
+      <div class="accordion-body">
+        <h3 class="infoTittle">Procedimentos:</h3>
+        <div class="basicInfos">
+          <div class="containerInfoCard">
+            <p>
+              1 - Abra a boca do pet, puxe a língua com a gaze e veja se há algo
+              obstruindo a garganta. Caso haja algo você pode tentar tirar com a pinça mas
+              nunca empurrar:
+            </p>
+            <figure>
+              <img
+                class="media altura-fixa"
+                src="../assets/images/abrir-boca.jpg"
+                alt="abrir-boca"
+              />
+              <figcaption>Fonte da imagem: Pet Safe</figcaption>
+            </figure>
+          </div>
+          <div class="containerInfoCard">
+            <p>
+              2 - Se não conseguir tirar o objeto, aperte o tórax do pet com força para
+              tentar expelir o objeto com o ar dos pulmões. Faça várias vezes até
+              conseguir:
+            </p>
+            <figure>
+              <img
+                class="media altura-fixa"
+                src="../assets/images/pressionar-peito.jpg"
+                alt="pressionar-peito"
+              />
+              <figcaption>Fonte da imagem: Pet Safe</figcaption>
+            </figure>
+          </div>
+        </div>
+        <div class="containerInfo flex">
+          <figure class="auto">
+            <img class="media" src="../assets/images/respiracao-cao.jpg" alt="respiracao-cao" />
+            <figcaption>Fonte da imagem: Pet Safe</figcaption>
+          </figure>
+          <div class="infoTxt button">
+            <p class="obs">
+              Fique atento: se ele apresentar líquido no focinho e boca você deve ir
+              secando com uma toalha e levá-lo imediatamente ao veterinário. Isso porque
+              ele pode estar apresentando um quadro de edema pulmonar agudo, que é
+              gravíssimo.
+            </p>
+            <p class="page__destaque">
+              Faça uma respiração artificial e corra para o veterinário.
+            </p>
+            <p><strong>Busque por clínicas próximas:</strong></p>
+            <router-link to="/clinicas" class="buttonLink">
+              <span class="icons">
+                <i class="fa-solid fa-hospital"></i>
+              </span>
+              <span class="text"> Clínicas próximas </span>
+            </router-link>
+          </div>
+        </div>
+        <p class="font">Fonte: Hospital veterinário taquaral</p>
+      </div>
+    </div>
+  </div>
 </template>
 <script setup>
 import { ref } from "vue";
@@ -668,6 +830,23 @@ function handleChangeCat() {
 
 .infoTxt {
   width: 100%;
+  &.button {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: flex-start;
+    a {
+      background-color: var(--primary);
+      text-decoration: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      color: var(--dark);
+      transition: 0.5s;
+      &:hover {
+        transform: scale(1.05);
+      }
+    }
+  }
 
   @media (max-width: 668px) {
     ul {
@@ -681,8 +860,8 @@ function handleChangeCat() {
   height: 210px;
   object-fit: contain;
 
-  &.cover{
-    object-fit:cover;
+  &.cover {
+    object-fit: cover;
   }
 }
 

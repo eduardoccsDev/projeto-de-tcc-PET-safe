@@ -14,6 +14,8 @@
                     <a href="#vomito-diarreia">Vômitos & diarreias</a>
                     <a href="#ferimentos-e-cortes">Ferimentos & cortes</a>
                     <a href="#queimaduras">Queimaduras</a>
+                    <a href="#afogamento">Afogamento</a>
+                    <a href="#engasgo">Ensgasgamento & asfixia</a>
                 </div>
             </div>
             <div class="accordion" id="accordionExample">
