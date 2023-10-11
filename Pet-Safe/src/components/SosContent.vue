@@ -753,11 +753,34 @@
             </figure>
           </div>
         </div>
+        <p>Ilustrações:</p>
+        <div class="conatinerBtns">
+          <button @click="handleChangeDog" class="especieImg">
+            <i class="fa-solid fa-dog"></i> Cão
+          </button>
+          <button @click="handleChangeCat" class="especieImg">
+            <i class="fa-solid fa-cat"></i> Gato
+          </button>
+        </div>
         <div class="containerInfo flex">
-          <figure class="auto">
-            <img class="media" src="../assets/images/respiracao-cao.jpg" alt="respiracao-cao" />
-            <figcaption>Fonte da imagem: Pet Safe</figcaption>
-          </figure>
+          <div class="imagesContainer">
+            <figure v-if="isDog" class="auto">
+              <img
+                class="media"
+                src="../assets/images/respiracao-cao.jpg"
+                alt="respiracao-gato"
+              />
+              <figcaption>Fonte da imagem: Pet Safe</figcaption>
+            </figure>
+            <figure v-else class="auto">
+              <img
+                class="media"
+                src="../assets/images/respiracao-gato.jpg"
+                alt="respiracao-cao"
+              />
+              <figcaption>Fonte da imagem: Pet Safe</figcaption>
+            </figure>
+          </div>
           <div class="infoTxt button">
             <p class="obs">
               Fique atento: se ele apresentar líquido no focinho e boca você deve ir
@@ -781,6 +804,104 @@
       </div>
     </div>
   </div>
+  <div class="accordion-item" id="intoxicacao">
+    <h2 class="accordion-header" id="headingNine">
+      <button
+        class="accordion-button collapsed"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#collapseNine"
+        aria-expanded="false"
+        aria-controls="collapseNine"
+      >
+        <i class="fa-solid fa-biohazard"></i> Intoxicações
+      </button>
+    </h2>
+    <div
+      id="collapseNine"
+      class="accordion-collapse collapse"
+      aria-labelledby="headingNine"
+      data-bs-parent="#accordionExample"
+    >
+      <div class="accordion-body">
+        <p>
+          Muitos fatores podem causar intoxicação no seu pet, desde ingerir uma planta no
+          seu jardim até ingerir produtos de limpeza. O importante é você saber o que ele
+          ingeriu.
+        </p>
+        <h3 class="infoTittle">Procedimentos:</h3>
+        <div class="basicInfos">
+          <div class="containerInfoCard">
+            <p>
+              1 - Quando ele ingeriu uma substância tóxica você deve induzir o vômito
+              (<span class="page__destaque"
+                >isso deve ser feito apenas quando o animal ingeriu o produto há poucas
+                horas</span
+              >):
+            </p>
+            <figure>
+              <img
+                class="media altura-fixa"
+                src="../assets/images/seringa-na-boca.jpg"
+                alt="seringa-na-boca"
+              />
+              <figcaption>Fonte da imagem: Pet Safe</figcaption>
+            </figure>
+            <p class="obs short">
+              Use água oxigenada (2ml/kg) ou água morna com sal, coloque na boca do pet
+              com uma seringa.
+            </p>
+          </div>
+          <div class="containerInfoCard">
+            <p>
+              2 - <span class="page__destaque">Nunca induza o vômito se</span>: A
+              substância ingerida for ácida ou cáustica ou se animal estiver desacordado.
+              Se não souber avaliar, não provoque o vômito.
+            </p>
+            <figure>
+              <img
+                class="media altura-fixa"
+                src="../assets/images/pressionar-peito.jpg"
+                alt="pressionar-peito"
+              />
+              <figcaption>Fonte da imagem: Pet Safe</figcaption>
+            </figure>
+            <p class="short obs">
+              Se não souber avaliar: Leve-o imediatamente ao veterinário.
+            </p>
+          </div>
+          <div class="containerInfoCard">
+            <p>3 - Force o animal a beber água ou leite:</p>
+            <p class="obs">
+              Nem todos os tóxicos são “inativados” pelo leite, mas a ingestão de líquidos
+              faz com que o veneno seja diluído e eliminado mais rapidamente.
+            </p>
+            <p class="obs">
+              <span class="page__destaque"
+                >Não dê leite em caso e intoxicação por inseticidas domésticos</span
+              >
+              cuja fórmula contenha piretroides.
+            </p>
+            <p class="obs">Não force o animal a beber se estiver desacordado.</p>
+          </div>
+        </div>
+        <p class="obs">
+          Caso ele esteja desacordado, não o force a beber nada.
+          <span class="page__destaque">Leve-o imediatamente ao veterinário.</span>
+        </p>
+        <div class="clinicasProximasContainer">
+          <p><strong>Busque por clínicas próximas:</strong></p>
+          <router-link to="/clinicas" class="buttonLink">
+            <span class="icons">
+              <i class="fa-solid fa-hospital"></i>
+            </span>
+            <span class="text"> Clínicas próximas </span>
+          </router-link>
+        </div>
+        <p class="font">Fonte: Hospital veterinário taquaral</p>
+      </div>
+    </div>
+  </div>
 </template>
 <script setup>
 import { ref } from "vue";
@@ -795,6 +916,26 @@ function handleChangeCat() {
 }
 </script>
 <style lang="scss" scoped>
+.clinicasProximasContainer {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  p {
+    margin-bottom: 0px !important;
+  }
+  a {
+    background-color: var(--primary);
+    color: var(--dark);
+    padding: 5px 10px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: 0.5s;
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+}
+
 .conatinerBtns {
   display: flex;
   gap: 15px;

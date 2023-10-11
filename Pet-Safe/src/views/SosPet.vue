@@ -16,6 +16,7 @@
                     <a href="#queimaduras">Queimaduras</a>
                     <a href="#afogamento">Afogamento</a>
                     <a href="#engasgo">Ensgasgamento & asfixia</a>
+                    <a href="#intoxicacao">Intoxicações</a>
                 </div>
             </div>
             <div class="accordion" id="accordionExample">
