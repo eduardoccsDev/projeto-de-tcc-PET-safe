@@ -902,6 +902,74 @@
       </div>
     </div>
   </div>
+  <div class="accordion-item" id="parada-cardiaca">
+    <h2 class="accordion-header" id="headingTen">
+      <button
+        class="accordion-button collapsed"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#collapseTen"
+        aria-expanded="false"
+        aria-controls="collapseTen"
+      >
+        <i class="fa-solid fa-heart-pulse"></i> Parada carcíaca
+      </button>
+    </h2>
+    <div
+      id="collapseTen"
+      class="accordion-collapse collapse"
+      aria-labelledby="headingTen"
+      data-bs-parent="#accordionExample"
+    >
+      <div class="accordion-body">
+        <p>
+          Geralmente animais saudáveis podem ter uma parada cardíaca se forem vítimas de
+          afogamentos, quedas, atropelamentos, traumatismos graves ou após morderem fios
+          elétricos. Cães e gatos cardíacos podem sofrer uma parada cardíaca se forem
+          submetidos a estresse ou exercícios físicos intensos. Sendo assim, você precisa
+          agir rapidamente assim que perceba que o coração parou para que não falte ar no
+          cérebro do seu pet e causa danos irreversíveis.
+        </p>
+        <h3 class="infoTittle">Procedimentos:</h3>
+        <div class="basicInfos">
+          <div class="containerInfoCard">
+            <p>
+              1 - Mantenha o pet deitado do lado direito e faça uma massagem cardíaca com
+              movimentos bem rápidos:
+            </p>
+            <figure>
+              <img
+                class="media altura-fixa"
+                src="../assets/images/pressionar-peito.jpg"
+                alt="pressionar-peito"
+              />
+              <figcaption>Fonte da imagem: Pet Safe</figcaption>
+            </figure>
+            <p class="obs">
+              É simples, mantenha a calma, coloque as duas mãos sobre o coração do pet e
+              faça pressão firme e rápida sobre a região e solte. Faça isso uma vez por
+              segundo. Em cães pequenos e gatos, use a ponta dos dedos para pressionar o
+              coração. Faça 30 pressões e veja se os batimentos voltaram, caso isso não
+              ocorra,
+              <span class="page__destaque"
+                >leve imediatamente ao veterinário fazendo a massagem no caminho.</span
+              >
+            </p>
+          </div>
+        </div>
+        <div class="clinicasProximasContainer">
+          <p><strong>Busque por clínicas próximas:</strong></p>
+          <router-link to="/clinicas" class="buttonLink">
+            <span class="icons">
+              <i class="fa-solid fa-hospital"></i>
+            </span>
+            <span class="text"> Clínicas próximas </span>
+          </router-link>
+        </div>
+        <p class="font">Fonte: Hospital veterinário taquaral</p>
+      </div>
+    </div>
+  </div>
 </template>
 <script setup>
 import { ref } from "vue";
@@ -920,6 +988,12 @@ function handleChangeCat() {
   display: flex;
   gap: 20px;
   align-items: center;
+  @media (max-width: 668px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
   p {
     margin-bottom: 0px !important;
   }
@@ -958,6 +1032,11 @@ function handleChangeCat() {
 .containerInfoCard {
   padding-inline: 10px;
   width: 100%;
+  ul {
+    @media (max-width: 668px) {
+      padding: 0px;
+    }
+  }
 }
 
 .flex {
