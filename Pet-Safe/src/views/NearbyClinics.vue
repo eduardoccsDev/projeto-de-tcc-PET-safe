@@ -77,7 +77,7 @@ const token = localStorage.getItem("token");
 
 if (token) {
   axios
-    .get("http://localhost:3000/protegido", {
+    .get("https://node-mysl-api.onrender.com/protegido", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -144,7 +144,7 @@ const searchVeterinariesNearby = async () => {
   }
 
   // Use a rota de proxy no seu servidor para acessar a API do Google Maps
-  const proxyUrl = "http://localhost:3000/google-maps-proxy";
+  const proxyUrl = "https://node-mysl-api.onrender.com/google-maps-proxy";
   const query = `veterinary+clinic+near+${userAddress.value}`;
 
   try {

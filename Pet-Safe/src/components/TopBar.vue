@@ -34,7 +34,7 @@ const token = localStorage.getItem('token');
 if (!token) {
     console.log("SEM TOKEN");
 } else {
-    axios.get('http://localhost:3000/protegido', {
+    axios.get('https://node-mysl-api.onrender.com/protegido', {
         headers: {
             Authorization: `Bearer ${token}`
         }

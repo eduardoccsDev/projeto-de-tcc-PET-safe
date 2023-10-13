@@ -77,7 +77,7 @@ const ToggleMenu = () => {
 }
 const token = localStorage.getItem('token');
 if (token) {
-    axios.get('http://localhost:3000/protegido', {
+    axios.get('https://node-mysl-api.onrender.com/protegido', {
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -91,7 +91,7 @@ if (token) {
 }
 const getUserImageSrc = () => {
     if (userData.value) {
-        return `http://localhost:3000/api/public${userData.value.imguser}`;
+        return `https://node-mysl-api.onrender.com/api/public${userData.value.imguser}`;
     }
     return ''; // Retorne uma imagem padrão ou uma string vazia, dependendo do que desejar
 };

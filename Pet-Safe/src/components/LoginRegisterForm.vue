@@ -90,7 +90,7 @@ const handleRegistration = async () => {
             throw new Error('As senhas não coincidem.');
         }
         // Envie os dados do formulário para o servidor ou a API usando uma solicitação POST
-        const response = await fetch('http://localhost:3000/register', {
+        const response = await fetch('https://node-mysl-api.onrender.com/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -129,7 +129,7 @@ const handleLogin = async () => {
         if (!formData.emailuser || !formData.passworduser) {
             throw new Error('Por favor, preencha todos os campos.');
         }
-        const response = await axios.post('http://localhost:3000/login', formData);
+        const response = await axios.post('https://node-mysl-api.onrender.com/login', formData);
 
         if (!response.data.token) {
             throw new Error('Erro ao fazer login. Verifique os dados inseridos.');

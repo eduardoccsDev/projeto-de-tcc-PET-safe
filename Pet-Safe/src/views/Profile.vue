@@ -494,7 +494,7 @@ function handleEditUserImage() {
 const updateUserProfileData = () => {
   if (token) {
     axios
-      .get("http://localhost:3000/protegido", {
+      .get("https://node-mysl-api.onrender.com/protegido", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -530,7 +530,7 @@ const uploadImage = () => {
 
       // Enviar a imagem para a rota de upload no servidor
       axios
-        .post("http://localhost:3000/upload-image", formData)
+        .post("https://node-mysl-api.onrender.com/upload-image", formData)
         .then((response) => {
           const imagePath = response.data.imagePath;
           userData.value.imguser = imagePath;
@@ -553,7 +553,7 @@ const uploadImage = () => {
 
 const getUserImageSrc = () => {
   if (userData.value) {
-    return `http://localhost:3000/api/public${userData.value.imguser}`;
+    return `https://node-mysl-api.onrender.com/api/public${userData.value.imguser}`;
   }
   return ""; // Retorne uma imagem padrão ou uma string vazia, dependendo do que desejar
 };
@@ -570,7 +570,7 @@ const handleUpdateUserInfo = () => {
       cepuser: editedUserInfo.cepuser,
     };
     axios
-      .post("http://localhost:3000/atualizar-usuario", updatedUserInfo, {
+      .post("https://node-mysl-api.onrender.com/atualizar-usuario", updatedUserInfo, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -623,7 +623,7 @@ const handleUpdateUserPassword = () => {
     }, 3000);
   } else {
     axios
-      .post("http://localhost:3000/atualizar-senha", newPasswordData, {
+      .post("https://node-mysl-api.onrender.com/atualizar-senha", newPasswordData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -684,7 +684,7 @@ const handleAddPet = () => {
   // Agora você pode acessar userData e petData com segurança
   petData.idtutor = userData.value.userId; // Defina o idtutor como o ID do usuário logado
   axios
-    .post("http://localhost:3000/adicionar-pet", petData, {
+    .post("https://node-mysl-api.onrender.com/adicionar-pet", petData, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -711,7 +711,7 @@ const handleAddPet = () => {
 const fetchUserPets = () => {
   if (token) {
     axios
-      .get("http://localhost:3000/pets", {
+      .get("https://node-mysl-api.onrender.com/pets", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -727,7 +727,7 @@ const fetchUserPets = () => {
 
 const handleRemovePet = (petToRemove) => {
   axios
-    .delete(`http://localhost:3000/remover-pet/${petToRemove.idpets}`, {
+    .delete(`https://node-mysl-api.onrender.com/remover-pet/${petToRemove.idpets}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -782,7 +782,7 @@ const editPetInfo = (pet) => {
     // Faça uma solicitação HTTP para atualizar o lembrete do pet
     axios
       .post(
-        `http://localhost:3000/pets/${editPetData.idpets}/update-petinfo`,
+        `https://node-mysl-api.onrender.com/pets/${editPetData.idpets}/update-petinfo`,
         editPetData
       )
       .then((response) => {
@@ -816,7 +816,7 @@ function handleEditLembrete(petId) {
 
     // Faça uma solicitação HTTP para atualizar o lembrete do pet
     axios
-      .post(`http://localhost:3000/pets/${petId}/update-lembrete`, updatedLembreteData)
+      .post(`https://node-mysl-api.onrender.com/pets/${petId}/update-lembrete`, updatedLembreteData)
       .then((response) => {
         // Exiba uma mensagem de sucesso ou faça qualquer ação necessária após a atualização
         isLembreteEdit.value = true;
@@ -837,7 +837,7 @@ function handleEditLembrete(petId) {
 
 const handleRemoveAccount = async () => {
   try {
-    const response = await axios.delete("http://localhost:3000/remover-conta");
+    const response = await axios.delete("https://node-mysl-api.onrender.com/remover-conta");
     if (response.status === 200) {
       localStorage.removeItem("token");
       window.location.reload();
