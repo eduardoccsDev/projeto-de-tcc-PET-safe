@@ -9,7 +9,6 @@
       hero-description="Lorem ipsum dolor, lorem ipsum dolor"
       hero-btn-text="Saiba mais"
       hero-btn-link="/sobre"
-      hero-img="assets/images/caes-e-gatos.jpg"
     />
     <section class="page__content">
       <h3 id="introducao" class="page__subTittle">Preparando a casa</h3>
