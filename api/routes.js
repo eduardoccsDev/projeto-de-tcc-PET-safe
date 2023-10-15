@@ -129,19 +129,13 @@ router.get('/protegido', verifyToken, (req, res) => {
   res.json({ user: req.user });
 });
 
-// Configurar o armazenamento para o upload de imagens
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'public/uploads'); // Diretório onde as imagens serão armazenadas
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    const fileExtension = path.extname(file.originalname);
-    cb(null, file.fieldname + '-' + uniqueSuffix + fileExtension);
-  },
+const { Storage } = require('@google-cloud/storage');
+const storage = new Storage({
+  projectId: 'pet-safe-102fa',
+  keyFilename: './pet-safe-102fa-firebase-adminsdk-8ho7y-9621d34569.json',
 });
-
-const upload = multer({ storage });
+const bucketName = 'pet-safe-102fa.appspot.com'; // Nome do seu bucket no Firebase Storage
+const upload = multer();
 
 // Rota para upload de imagem
 router.post('/upload-image', verifyToken, upload.single('image'), (req, res) => {
@@ -149,46 +143,88 @@ router.post('/upload-image', verifyToken, upload.single('image'), (req, res) => 
     return res.status(400).json({ error: 'Nenhuma imagem foi enviada' });
   }
 
-  const imagePath = '/uploads/' + req.file.filename;
+  // Gere um nome de arquivo personalizado
+  const userId = req.user.userId;
+  const userName = req.user.nomeuser;
+  const originalFileName = req.file.originalname;
+  const fileExtension = originalFileName.split('.').pop(); // Obtém a extensão do arquivo
+
+  // Remova espaços em branco e substitua por hífens, e converta para letras minúsculas
+  const sanitizedUserName = userName.replace(/ /g, '-').toLowerCase();
+
+  const customFileName = `${sanitizedUserName}-${userId}.${fileExtension}`;
+
+  const imagePath = 'uploads/' + customFileName;
 
   // Antes de atualizar a imagem, você pode excluir a imagem anterior, se houver
   if (req.user.imguser) {
-    const previousImagePath = path.join(__dirname, 'public', req.user.imguser);
-    fs.unlink(previousImagePath, (unlinkErr) => {
-      if (unlinkErr) {
-        console.error('Erro ao excluir imagem anterior:', unlinkErr);
-      }
-    });
+    // Excluir a imagem anterior no Firebase Storage
+    const previousImagePath = req.user.imguser;
+    const file = storage.bucket(bucketName).file(previousImagePath);
+    file.delete()
+      .then(() => {
+        console.log('Imagem anterior excluída com sucesso no Firebase Storage');
+      })
+      .catch((err) => {
+        console.error('Erro ao excluir imagem anterior no Firebase Storage:', err);
+      });
   }
-  // Atualizar o campo imguser no banco de dados
-  const updateQuery = 'UPDATE users SET imguser = ? WHERE idusers = ?';
 
-  db.query(updateQuery, [imagePath, req.user.userId], (updateErr, updateResults) => {
-    if (updateErr) {
-      console.error('Erro ao atualizar o caminho da imagem no banco de dados:', updateErr);
-      res.status(500).json({ error: 'Erro interno do servidor' });
-    } else {
-      //console.log('Caminho da imagem atualizado com sucesso no banco de dados');
-      // Gere um novo token JWT com o caminho da imagem atualizado
-      const newToken = jwt.sign(
-        {
-          userId: req.user.userId,
-          role: "user",
-          nomeuser: req.user.nomeuser,
-          emailuser: req.user.emailuser,
-          addressuser: req.user.addressuser,
-          imguser: imagePath,
-          residenciauser: req.user.residenciauser,
-          cepuser: req.user.cepuser,
-
-        },
-        process.env.JWT_SECRET,
-        { expiresIn: '365d' }
-      );
-      // Envie o novo token como parte da resposta, juntamente com o caminho da imagem
-      res.json({ imagePath, token: newToken });
-    }
+  // Upload da nova imagem para o Firebase Storage
+  const file = storage.bucket(bucketName).file(imagePath);
+  const stream = file.createWriteStream({
+    metadata: {
+      contentType: req.file.mimetype,
+    },
   });
+
+  stream.on('error', (err) => {
+    console.error('Erro ao fazer upload da imagem para o Firebase Storage:', err);
+    res.status(500).json({ error: 'Erro interno do servidor' });
+  });
+
+  stream.on('finish', () => {
+    // Obtenha o URL de download do arquivo
+    file.getSignedUrl({ action: 'read', expires: '03-09-2491' }) // Expiração futura
+      .then((signedUrls) => {
+        const urlWithToken = signedUrls[0];
+
+        // Atualizar o campo imguser no banco de dados com o caminho no Firebase Storage
+        const updateQuery = 'UPDATE users SET imguser = ? WHERE idusers = ?';
+
+        db.query(updateQuery, [urlWithToken, req.user.userId], (updateErr, updateResults) => {
+          if (updateErr) {
+            console.error('Erro ao atualizar o caminho da imagem no banco de dados:', updateErr);
+            res.status(500).json({ error: 'Erro interno do servidor' });
+          } else {
+            // Gere um novo token JWT com o caminho da imagem atualizado
+            const newToken = jwt.sign(
+              {
+                userId: req.user.userId,
+                role: "user",
+                nomeuser: req.user.nomeuser,
+                emailuser: req.user.emailuser,
+                addressuser: req.user.addressuser,
+                imguser: urlWithToken, // Use o URL com token de acesso
+                residenciauser: req.user.residenciauser,
+                cepuser: req.user.cepuser,
+              },
+              process.env.JWT_SECRET,
+              { expiresIn: '365d' }
+            );
+
+            // Envie o novo token como parte da resposta, juntamente com o caminho da imagem
+            res.json({ imagePath: urlWithToken, token: newToken });
+          }
+        });
+      })
+      .catch((error) => {
+        console.error('Erro ao obter o URL de download com token de acesso:', error);
+        res.status(500).json({ error: 'Erro interno do servidor' });
+      });
+  });
+
+  stream.end(req.file.buffer);
 });
 
 // Rota para atualizar as informações do usuário
@@ -221,7 +257,7 @@ router.post('/atualizar-usuario', verifyToken, (req, res) => {
               nomeuser: updatedUser.nomeuser,
               emailuser: updatedUser.emailuser,
               addressuser: updatedUser.addressuser,
-              imguser: updatedUser.imguser, 
+              imguser: updatedUser.imguser,
               residenciauser: updatedUser.residenciauser,
               cepuser: updatedUser.cepuser,
             },
@@ -330,7 +366,7 @@ router.get('/google-maps-proxy', async (req, res) => {
     const apiKey = 'AIzaSyCcR7yUn_K1EmYVI7PMBeXN_tOxSde2tHw';
     const query = req.query.query;
     const apiUrl = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${query}&key=${apiKey}`;
-    
+
     const response = await axios.get(apiUrl);
     res.json(response.data);
   } catch (error) {
@@ -390,10 +426,26 @@ router.post('/pets/:petId/update-petinfo', async (req, res) => {
 // Rota para remover uma conta de usuário
 router.delete('/remover-conta', verifyToken, async (req, res) => {
   try {
-    const userId = req.user.userId; // ID do usuário logado
+    const fileExtension = 'jpeg'; // Obtém a extensão do arquivo
+    const userId = req.user.userId;
+    const userName = req.user.nomeuser;
+    // Remova espaços em branco e substitua por hífens, e converta para letras minúsculas
+    const sanitizedUserName = userName.replace(/ /g, '-').toLowerCase();
+    const customFileName = `${sanitizedUserName}-${userId}.${fileExtension}`;
 
-    // Inicialize um array vazio para armazenar os IDs dos pets do usuário
-    const petIds = [];
+    // Defina o caminho do arquivo
+    const imagePath = 'uploads/' + customFileName;
+    const bucket = storage.bucket(bucketName); // Substitua "bucketName" pelo nome do seu bucket 
+
+    // Exclua o arquivo no Firebase Storage
+    const file = bucket.file(imagePath);
+    file.delete()
+      .then(() => {
+        console.log('Imagem de perfil do usuário excluída com sucesso no Firebase Storage');
+      })
+      .catch((err) => {
+        console.error('Erro ao excluir imagem de perfil do usuário no Firebase Storage:', err);
+      });
 
     // Execute uma consulta SQL para buscar os pets do usuário
     const selectPetsQuery = 'SELECT idpets FROM pets WHERE idtutor = ?';
@@ -403,9 +455,7 @@ router.delete('/remover-conta', verifyToken, async (req, res) => {
         res.status(500).json({ error: 'Erro interno do servidor' });
       } else {
         // Preencha o array de petIds com os IDs dos pets do usuário
-        for (const pet of selectPetsResults) {
-          petIds.push(pet.idpets);
-        }
+        const petIds = selectPetsResults.map((pet) => pet.idpets);
 
         if (petIds.length > 0) {
           // Execute uma consulta SQL para remover os pets do usuário apenas se houver pets para excluir
@@ -415,21 +465,45 @@ router.delete('/remover-conta', verifyToken, async (req, res) => {
               console.error('Erro ao remover pets do usuário:', deletePetsErr);
               res.status(500).json({ error: 'Erro interno do servidor' });
             } else {
-              //console.log('Pets removidos com sucesso');
+              console.log('Pets removidos com sucesso');
             }
           });
         }
 
-        // Execute uma consulta SQL para excluir a imagem de perfil do usuário, se existir
-        const user = req.user;
-        if (user.imguser) {
-          const imagePath = path.join(__dirname, 'public', user.imguser);
-          fs.unlink(imagePath, (unlinkErr) => {
-            if (unlinkErr) {
-              console.error('Erro ao excluir imagem de perfil do usuário:', unlinkErr);
-            }
-          });
-        }
+        // // Execute uma consulta SQL para obter a URL do arquivo de imagem do usuário
+        // const selectUserImageQuery = 'SELECT imguser FROM users WHERE idusers = ?';
+        // db.query(selectUserImageQuery, [userId], async (selectUserImageErr, selectUserImageResults) => {
+        //   if (selectUserImageErr) {
+        //     console.error('Erro ao buscar imagem de perfil do usuário:', selectUserImageErr);
+        //     res.status(500).json({ error: 'Erro interno do servidor' });
+        //   } else {
+        //     // Obtenha a URL da imagem do usuário a partir do banco de dados
+        //     const userImageURL = selectUserImageResults[0].imguser;
+
+        //     if (userImageURL) {
+        //       // Extrair o nome do arquivo da URL
+        //       const fileName = userImageURL.split('/').pop();
+
+        //       // Extrair o ID do usuário do nome do arquivo
+        //       const userIdFromFileName = fileName.split('-').pop().split('.')[0];
+
+        //       if (userIdFromFileName === userId) {
+        //         // O ID do usuário no nome do arquivo corresponde ao usuário logado
+        //         // Exclua o arquivo no Firebase Storage
+        //         const file = storage.bucket(bucketName).file(fileName);
+        //         file.delete()
+        //           .then(() => {
+        //             console.log('Imagem de perfil do usuário excluída com sucesso no Firebase Storage');
+        //           })
+        //           .catch((err) => {
+        //             console.error('Erro ao excluir imagem de perfil do usuário no Firebase Storage:', err);
+        //           });
+        //       } else {
+        //         console.error('Tentativa de excluir uma imagem de perfil que não corresponde ao usuário logado.');
+        //       }
+        //     }
+        //   }
+        // });
 
         // Execute uma consulta SQL para remover o usuário
         const deleteUserQuery = 'DELETE FROM users WHERE idusers = ?';
@@ -438,7 +512,7 @@ router.delete('/remover-conta', verifyToken, async (req, res) => {
             console.error('Erro ao remover usuário:', deleteUserErr);
             res.status(500).json({ error: 'Erro interno do servidor' });
           } else {
-            //console.log('Usuário removido com sucesso');
+            console.log('Usuário removido com sucesso');
             res.json({ message: 'Usuário removido com sucesso' });
           }
         });
@@ -449,6 +523,5 @@ router.delete('/remover-conta', verifyToken, async (req, res) => {
     res.status(500).json({ error: 'Erro interno do servidor' });
   }
 });
-
 
 module.exports = router;

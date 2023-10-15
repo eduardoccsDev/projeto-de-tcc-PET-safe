@@ -10,7 +10,7 @@
           <div class="userImgContainer">
             <img
               v-if="userData && userData.imguser"
-              :src="getUserImageSrc()"
+              :src="userData.imguser"
               alt="foto-de-perfil"
               class="cardUser__img"
             />
@@ -537,6 +537,7 @@ const uploadImage = () => {
           const newToken = response.data.token;
           localStorage.setItem("token", newToken);
           msgUserImg.value = null;
+          window.location.reload();
         })
         .catch((error) => {
           console.error("Erro ao fazer upload da imagem:", error);
@@ -553,7 +554,7 @@ const uploadImage = () => {
 
 const getUserImageSrc = () => {
   if (userData.value) {
-    return `https://node-mysl-api.onrender.com/api/public${userData.value.imguser}`;
+    return `gs://pet-safe-102fa.appspot.com/${userData.value.imguser}`;
   }
   return ""; // Retorne uma imagem padrão ou uma string vazia, dependendo do que desejar
 };
@@ -816,7 +817,10 @@ function handleEditLembrete(petId) {
 
     // Faça uma solicitação HTTP para atualizar o lembrete do pet
     axios
-      .post(`https://node-mysl-api.onrender.com/pets/${petId}/update-lembrete`, updatedLembreteData)
+      .post(
+        `https://node-mysl-api.onrender.com/pets/${petId}/update-lembrete`,
+        updatedLembreteData
+      )
       .then((response) => {
         // Exiba uma mensagem de sucesso ou faça qualquer ação necessária após a atualização
         isLembreteEdit.value = true;
@@ -837,7 +841,9 @@ function handleEditLembrete(petId) {
 
 const handleRemoveAccount = async () => {
   try {
-    const response = await axios.delete("https://node-mysl-api.onrender.com/remover-conta");
+    const response = await axios.delete(
+      "https://node-mysl-api.onrender.com/remover-conta"
+    );
     if (response.status === 200) {
       localStorage.removeItem("token");
       window.location.reload();

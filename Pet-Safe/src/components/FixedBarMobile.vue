@@ -4,7 +4,7 @@
       <div class="fixed-bar-mobile__logo">
         <img
           v-if="userData && userData.imguser"
-          :src="getUserImageSrc()"
+          :src="userData.imguser"
           id="logo"
           alt="userimg"
         />
