@@ -46,7 +46,6 @@ import axios from "axios";
 const isMobile = ref(false);
 const userData = ref(null);
 const isUserLoggedIn = localStorage.getItem("token") !== null;
-
 const token = localStorage.getItem("token");
 if (token) {
   axios
