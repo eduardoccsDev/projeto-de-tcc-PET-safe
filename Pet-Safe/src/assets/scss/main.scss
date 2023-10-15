@@ -41,6 +41,11 @@ html {
             padding-inline-start: 5em;
             padding-bottom: 8em;
         }
+        @media(max-width:448px) {
+            padding-inline-start: 1em;
+            padding-bottom: 1em;
+            min-height: 100vh;
+        }
 
         .page {
             &__img-container {
@@ -185,6 +190,10 @@ html {
             .copyright {
                 font-size: 12px;
             }
+        }
+        @media(max-width:448px) {
+            padding-inline: 1em;
+            position: initial;
         }
     }
 }
