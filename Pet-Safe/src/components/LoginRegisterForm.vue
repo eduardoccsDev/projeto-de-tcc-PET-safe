@@ -210,10 +210,7 @@ const handleLogin = async () => {
     if (!formData.emailuser || !formData.passworduser) {
       throw new Error("Por favor, preencha todos os campos.");
     }
-    const response = await axios.post(
-      "https://node-mysl-api.onrender.com/login",
-      formData
-    );
+    const response = await axios.post("http://localhost:3000/login", formData);
 
     if (!response.data.token) {
       throw new Error("Erro ao fazer login. Verifique os dados inseridos.");
