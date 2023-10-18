@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from '../views/Home.vue'
+import Home from '../views/HomePage.vue'
 import { createStore } from 'vuex';
 
 const store = createStore({
@@ -34,12 +34,12 @@ const router = createRouter({
     {
       path: '/sobre',
       name: 'about',
-      component: () => import('../views/About.vue')
+      component: () => import('../views/AboutPage.vue')
     },
     {
       path: '/perfil',
       name: 'profile',
-      component: () => import('../views/Profile.vue'),
+      component: () => import('../views/ProfilePage.vue'),
       meta: { requiresAuth: true }
     },
     {

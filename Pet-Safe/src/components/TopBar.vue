@@ -7,14 +7,6 @@
         </span>
         <span class="text"> Clínicas próximas </span>
       </router-link>
-      <!-- <router-link v-if="isUserLoggedIn" to="/perfil" class="buttonLink">
-                <span class="icons">
-                    <i class="fa-regular fa-address-card"></i>
-                </span>
-                <span class="text">
-                    Perfil
-                </span>
-            </router-link> -->
       <LoginLogoutBtns />
     </div>
   </section>
@@ -23,7 +15,6 @@
 import axios from "axios";
 import { ref } from "vue";
 import LoginLogoutBtns from "./LoginLogoutBtns.vue";
-const isUserLoggedIn = localStorage.getItem("token") !== null;
 const userData = ref(null);
 
 // Recupere o token do localStorage
@@ -54,15 +45,24 @@ if (!token) {
   justify-content: flex-end;
   background-color: var(--dark-alt);
   padding: 10px;
+
+  @media (max-width: 668px) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
   .btns {
     display: flex;
     gap: 8px;
   }
+
   .info {
     p {
       color: #fff;
     }
   }
+
   a {
     text-decoration: none;
     background-color: var(--primary);
@@ -70,6 +70,7 @@ if (!token) {
     padding: 5px 10px;
     border-radius: 5px;
     transition: 0.5s;
+
     &:hover {
       transform: scale(1.05);
     }

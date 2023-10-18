@@ -1,117 +1,116 @@
 <template>
-    <div :class="teamCardClasses">
-        <p class="member-name">
-            <i class="fa-solid fa-user-large"></i> - {{ memberName }}
-            <button @click="handleExpanded" v-if="isMobile"></button>
-        </p>
-        <hr>
-        <p class="member-description">
-            {{ memberDescription }}
-        </p>
-    </div>
+  <div :class="teamCardClasses">
+    <p class="member-name">
+      <i class="fa-solid fa-user-large"></i> - {{ memberName }}
+      <button @click="handleExpanded" v-if="isMobile"></button>
+    </p>
+    <hr />
+    <p class="member-description">
+      {{ memberDescription }}
+    </p>
+  </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
+import { ref, onBeforeUnmount, computed } from "vue";
 
 defineProps({
-    memberName: {
-        type: String,
-        default: "{ Nome }"
-    },
-    memberDescription: {
-        type: String,
-        default: "{ Descrição }"
-    }
+  memberName: {
+    type: String,
+    default: "{ Nome }",
+  },
+  memberDescription: {
+    type: String,
+    default: "{ Descrição }",
+  },
 });
 
 const isMobile = ref(false);
 const isExpanded = ref(false);
 
 const updateIsMobile = (mediaQuery) => {
-    isMobile.value = mediaQuery.matches;
+  isMobile.value = mediaQuery.matches;
 };
 
 const mobileMediaQuery = window.matchMedia("(max-width: 668px)");
-mobileMediaQuery.addEventListener('change', updateIsMobile);
+mobileMediaQuery.addEventListener("change", updateIsMobile);
 updateIsMobile(mobileMediaQuery);
 
 onBeforeUnmount(() => {
-    mobileMediaQuery.removeEventListener('change', updateIsMobile);
+  mobileMediaQuery.removeEventListener("change", updateIsMobile);
 });
 
 function handleExpanded() {
-    isExpanded.value = !isExpanded.value;
-};
+  isExpanded.value = !isExpanded.value;
+}
 
 const teamCardClasses = computed(() => {
-    return {
-        'team-card': true,
-        'mobile-card': isMobile.value,
-        'card-expanded': isExpanded.value
-    };
+  return {
+    "team-card": true,
+    "mobile-card": isMobile.value,
+    "card-expanded": isExpanded.value,
+  };
 });
 </script>
 
 <style scoped lang="scss">
 .team-card {
-    background-color: var(--primary);
-    padding: 1em;
-    border-radius: 10px;
-    border: solid 2px #fff;
-    width: 100%;
-    height: 200px;
-    box-shadow: 0px 0px 10px 0px #00000036;
-    transition: .5s;
-    &:hover{
-        transform: scale(1.05);
+  background-color: var(--primary);
+  padding: 1em;
+  border-radius: 10px;
+  border: solid 2px #fff;
+  width: 100%;
+  height: 200px;
+  box-shadow: 0px 0px 10px 0px #00000036;
+  transition: 0.5s;
+  &:hover {
+    transform: scale(1.05);
+  }
+
+  &.mobile-card {
+    height: 55px;
+    overflow: hidden;
+    transition: 0.5s;
+    &:hover {
+      transform: scale(1);
     }
 
-    &.mobile-card {
-        height: 55px;
-        overflow: hidden;
-        transition: .5s;
-        &:hover{
-            transform: scale(1);
+    &.card-expanded {
+      height: 200px;
+
+      .member-name {
+        button {
+          &::after {
+            content: "Exibir -";
+            padding-inline-end: 1px;
+          }
         }
-
-        &.card-expanded {
-            height: 200px;
-
-            .member-name {
-                button {
-                    &::after {
-                        content: "Exibir -";
-                        padding-inline-end:1px;
-                    }
-                }
-            }
-        }
-
-        .member-name {
-            button {
-                &::after {
-                    content: "Exibir +";
-                }
-
-                display: block;
-                float: inline-end;
-                background-color: var(--dark);
-                color: #fff;
-                padding: .1em .5em;
-                border-radius: 10px;
-                cursor: pointer;
-            }
-        }
+      }
     }
 
-    i {
+    .member-name {
+      button {
+        &::after {
+          content: "Exibir +";
+        }
+
+        display: block;
+        float: inline-end;
         background-color: var(--dark);
         color: #fff;
-        padding: 5px;
-        text-align: center;
-        border-radius: 100%;
-
+        padding: 0.1em 0.5em;
+        border-radius: 10px;
+        cursor: pointer;
+      }
     }
+  }
+
+  i {
+    background-color: var(--dark);
+    color: #fff;
+    padding: 5px;
+    text-align: center;
+    border-radius: 100%;
+  }
 }
 </style>

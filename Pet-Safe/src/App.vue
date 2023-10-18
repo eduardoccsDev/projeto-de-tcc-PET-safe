@@ -1,33 +1,19 @@
 <script setup>
-import { RouterView } from 'vue-router';
-import Footer from './components/Footer.vue';
-import Message from './components/Message.vue';
-import Sidebar from './components/Sidebar.vue';
-
-import { ref } from 'vue';
-import TopBar from './components/TopBar.vue';
-const showMessage = ref(true);
-
-function closeMessage() {
-  showMessage.value = false;
-}
-
+import { RouterView } from "vue-router";
+import Footer from "./components/FooterGeneral.vue";
+import Sidebar from "./components/SidebarComponent.vue";
+import TopBar from "./components/TopBar.vue";
 </script>
 
 <template>
   <div id="side-content">
     <Sidebar />
     <div id="page-container">
-      <TopBar/>
-      <Message msg-text="Apenas um teste." :is-action="true" action-link="#teste" @close="closeMessage" />
+      <TopBar />
       <div id="content-wrap">
-        <!-- all other page content -->
         <RouterView />
       </div>
       <Footer />
     </div>
   </div>
 </template>
-
-
-

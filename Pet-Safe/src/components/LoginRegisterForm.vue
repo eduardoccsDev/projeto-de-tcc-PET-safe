@@ -129,13 +129,10 @@
 <script setup>
 import { ref } from "vue";
 import axios from "axios";
-import { useRouter } from "vue-router";
 
 const registrationError = ref(null);
 const registrationSuccess = ref(null);
 const loginError = ref(null);
-
-const router = useRouter();
 const isRegister = ref(false);
 const formData = {
   nomeuser: "",
@@ -202,7 +199,7 @@ const handleRegistration = async () => {
   }
 };
 
-const emit = defineEmits();
+const emit = defineEmits(["user-logged-in"]);
 const handleLogin = async () => {
   // Limpe os erros anteriores
   loginError.value = null;

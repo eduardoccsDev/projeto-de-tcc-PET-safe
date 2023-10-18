@@ -267,13 +267,8 @@
           </form>
           <p v-if="msgPetInfo" class="msgUserInfo">{{ msgPetInfo }}</p>
           <p v-if="msgPetInfoError" class="msgUserInfo error">{{ msgPetInfoError }}</p>
-          <div class="petCardsContainer">
-            <div
-              v-if="userPets"
-              v-for="pet in userPets"
-              :key="pet.idpets"
-              class="petCard"
-            >
+          <div class="petCardsContainer" v-if="userPets != null">
+            <div v-for="pet in userPets" :key="pet.idpets" class="petCard">
               <div class="petPrimaryInfo">
                 <div class="petInfoContainer">
                   <i
@@ -361,16 +356,13 @@
                 ><i class="fa-solid fa-message"></i> Anotações:
               </label>
               <p class="dica">Cada linha separada por vírgula.</p>
-              <div class="lembretesContainer">
-                <p
-                  class="atividade"
-                  v-if="pet.atividade"
-                  v-for="part in pet.atividade.split(',')"
-                  :key="part"
-                >
+              <div class="lembretesContainer" v-if="pet.atividade">
+                <p class="atividade" v-for="part in pet.atividade.split(',')" :key="part">
                   {{ part.trim() }}
                 </p>
-                <p v-else class="atividade">Adicione anotações e atividades.</p>
+              </div>
+              <div class="lembretesContainer" v-else>
+                <p class="atividade">Adicione anotações e atividades.</p>
               </div>
               <textarea
                 v-if="pet.isLembreteEdit"
@@ -379,8 +371,7 @@
                 id="atividade"
                 name="atividade"
                 placeholder="Anotações, atividades, etc..."
-                >{{ editedPetLembrete.atividade }}</textarea
-              >
+              ></textarea>
               <div class="btnLembreteContainer">
                 <button
                   class="salvarAtividade"
@@ -552,13 +543,6 @@ const uploadImage = () => {
   }
 };
 
-const getUserImageSrc = () => {
-  if (userData.value) {
-    return `gs://pet-safe-102fa.appspot.com/${userData.value.imguser}`;
-  }
-  return ""; // Retorne uma imagem padrão ou uma string vazia, dependendo do que desejar
-};
-
 const handleUpdateUserInfo = () => {
   // Verifique se os campos de edição não estão desabilitados
   if (!isDisabled.value) {
@@ -690,7 +674,7 @@ const handleAddPet = () => {
         Authorization: `Bearer ${token}`,
       },
     })
-    .then((response) => {
+    .then(() => {
       petData.nomepet = "";
       petData.especiepet = "";
       petData.sexopet = "";
@@ -786,7 +770,7 @@ const editPetInfo = (pet) => {
         `https://prickly-robe-eel.cyclic.cloud/pets/${editPetData.idpets}/update-petinfo`,
         editPetData
       )
-      .then((response) => {
+      .then(() => {
         // Exiba uma mensagem de sucesso ou faça qualquer ação necessária após a atualização
         isEditPet.value = false;
         msgPetInfo.value = "Informações do pet atualizadas!!";
@@ -821,7 +805,7 @@ function handleEditLembrete(petId) {
         `https://prickly-robe-eel.cyclic.cloud/pets/${petId}/update-lembrete`,
         updatedLembreteData
       )
-      .then((response) => {
+      .then(() => {
         // Exiba uma mensagem de sucesso ou faça qualquer ação necessária após a atualização
         isLembreteEdit.value = true;
         msgPetInfo.value = "Lembrete atualizado com sucesso!";

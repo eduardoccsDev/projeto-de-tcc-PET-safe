@@ -129,8 +129,8 @@ const getAddressFromCoordinates = async (lat, lng) => {
   }
 };
 
-if (userData && userData.addressuser) {
-  userAddress.value = userData.addressuser;
+if (userData.value && userData.value.addressuser) {
+  userAddress.value = userData.value.addressuser;
   searchVeterinariesNearby();
 }
 

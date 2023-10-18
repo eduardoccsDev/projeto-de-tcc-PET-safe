@@ -42,7 +42,6 @@
         </span>
         <span class="text"> SOS Pets </span>
       </router-link>
-      <!-- DEMAIS LINKS SEGUEM O MESMO PADRÃO -->
     </div>
     <div class="flex"></div>
     <div class="menu">
@@ -62,10 +61,7 @@
 <script setup>
 import { ref } from "vue";
 import axios from "axios";
-import { useRouter } from "vue-router";
 const userData = ref(null);
-const router = useRouter();
-// Verifique se o usuário está logado com base na presença do token no localStorage
 const isUserLoggedIn = localStorage.getItem("token") !== null;
 const is_expanded = ref(localStorage.getItem("is_expanded") === "true");
 const ToggleMenu = () => {
@@ -87,12 +83,6 @@ if (token) {
       console.error("Erro ao acessar o endpoint protegido:", error);
     });
 }
-const getUserImageSrc = () => {
-  if (userData.value) {
-    return `https://prickly-robe-eel.cyclic.cloud/api/public${userData.value.imguser}`;
-  }
-  return ""; // Retorne uma imagem padrão ou uma string vazia, dependendo do que desejar
-};
 </script>
 
 <style lang="scss" scoped>

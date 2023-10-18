@@ -41,7 +41,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount, computed } from "vue";
+import { ref, onBeforeUnmount, computed } from "vue";
 import axios from "axios";
 const isMobile = ref(false);
 const userData = ref(null);
@@ -61,12 +61,6 @@ if (token) {
       console.error("Erro ao acessar o endpoint protegido:", error);
     });
 }
-const getUserImageSrc = () => {
-  if (userData.value) {
-    return `https://prickly-robe-eel.cyclic.cloud/api/public${userData.value.imguser}`;
-  }
-  return ""; // Retorne uma imagem padrão ou uma string vazia, dependendo do que desejar
-};
 const updateIsMobile = (mediaQuery) => {
   isMobile.value = mediaQuery.matches;
 };
