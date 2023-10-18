@@ -1,15 +1,13 @@
 <template>
-    <section class="topbar">
-        <div class="btns">
-            <router-link to="/clinicas" class="buttonLink">
-                <span class="icons">
-                    <i class="fa-solid fa-hospital"></i>
-                </span>
-                <span class="text">
-                    Clínicas próximas
-                </span>
-            </router-link>
-            <!-- <router-link v-if="isUserLoggedIn" to="/perfil" class="buttonLink">
+  <section class="topbar">
+    <div class="btns">
+      <router-link to="/clinicas" class="buttonLink">
+        <span class="icons">
+          <i class="fa-solid fa-hospital"></i>
+        </span>
+        <span class="text"> Clínicas próximas </span>
+      </router-link>
+      <!-- <router-link v-if="isUserLoggedIn" to="/perfil" class="buttonLink">
                 <span class="icons">
                     <i class="fa-regular fa-address-card"></i>
                 </span>
@@ -17,63 +15,64 @@
                     Perfil
                 </span>
             </router-link> -->
-            <LoginLogoutBtns />
-        </div>
-    </section>
+      <LoginLogoutBtns />
+    </div>
+  </section>
 </template>
 <script setup>
-import axios from 'axios';
-import { ref } from 'vue';
-import LoginLogoutBtns from './LoginLogoutBtns.vue';
+import axios from "axios";
+import { ref } from "vue";
+import LoginLogoutBtns from "./LoginLogoutBtns.vue";
 const isUserLoggedIn = localStorage.getItem("token") !== null;
 const userData = ref(null);
 
 // Recupere o token do localStorage
-const token = localStorage.getItem('token');
+const token = localStorage.getItem("token");
 
 if (!token) {
-    console.log("SEM TOKEN");
+  console.log("SEM TOKEN");
 } else {
-    axios.get('https://node-mysl-api.onrender.com/protegido', {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
+  axios
+    .get("https://prickly-robe-eel.cyclic.cloud/protegido", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     })
-        .then((response) => {
-            userData.value = response.data.user;
-            // console.log('Dados do usuário:', response.data.user);
-        })
-        .catch((error) => {
-            console.error('Erro ao acessar o endpoint protegido:', error);
-        });
+    .then((response) => {
+      userData.value = response.data.user;
+      // console.log('Dados do usuário:', response.data.user);
+    })
+    .catch((error) => {
+      console.error("Erro ao acessar o endpoint protegido:", error);
+    });
 }
 </script>
 <style scoped lang="scss">
 .topbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  background-color: var(--dark-alt);
+  padding: 10px;
+  .btns {
     display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    background-color: var(--dark-alt);
-    padding:10px;
-    .btns{
-        display: flex;
-        gap: 8px;
+    gap: 8px;
+  }
+  .info {
+    p {
+      color: #fff;
     }
-    .info{
-        p{
-            color: #fff;
-        }
+  }
+  a {
+    text-decoration: none;
+    background-color: var(--primary);
+    color: var(--dark);
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: 0.5s;
+    &:hover {
+      transform: scale(1.05);
     }
-    a{
-        text-decoration: none;
-        background-color: var(--primary);
-        color: var(--dark);
-        padding: 5px 10px;
-        border-radius: 5px;
-        transition: .5s;
-        &:hover{
-            transform: scale(1.05);
-        }
-    }
+  }
 }
 </style>

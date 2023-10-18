@@ -494,7 +494,7 @@ function handleEditUserImage() {
 const updateUserProfileData = () => {
   if (token) {
     axios
-      .get("https://node-mysl-api.onrender.com/protegido", {
+      .get("https://prickly-robe-eel.cyclic.cloud/protegido", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -530,7 +530,7 @@ const uploadImage = () => {
 
       // Enviar a imagem para a rota de upload no servidor
       axios
-        .post("https://node-mysl-api.onrender.com/upload-image", formData)
+        .post("https://prickly-robe-eel.cyclic.cloud/upload-image", formData)
         .then((response) => {
           const imagePath = response.data.imagePath;
           userData.value.imguser = imagePath;
@@ -571,7 +571,7 @@ const handleUpdateUserInfo = () => {
       cepuser: editedUserInfo.cepuser,
     };
     axios
-      .post("https://node-mysl-api.onrender.com/atualizar-usuario", updatedUserInfo, {
+      .post("https://prickly-robe-eel.cyclic.cloud/atualizar-usuario", updatedUserInfo, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -624,7 +624,7 @@ const handleUpdateUserPassword = () => {
     }, 3000);
   } else {
     axios
-      .post("https://node-mysl-api.onrender.com/atualizar-senha", newPasswordData, {
+      .post("https://prickly-robe-eel.cyclic.cloud/atualizar-senha", newPasswordData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -685,7 +685,7 @@ const handleAddPet = () => {
   // Agora você pode acessar userData e petData com segurança
   petData.idtutor = userData.value.userId; // Defina o idtutor como o ID do usuário logado
   axios
-    .post("https://node-mysl-api.onrender.com/adicionar-pet", petData, {
+    .post("https://prickly-robe-eel.cyclic.cloud/adicionar-pet", petData, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -712,7 +712,7 @@ const handleAddPet = () => {
 const fetchUserPets = () => {
   if (token) {
     axios
-      .get("https://node-mysl-api.onrender.com/pets", {
+      .get("https://prickly-robe-eel.cyclic.cloud/pets", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -728,7 +728,7 @@ const fetchUserPets = () => {
 
 const handleRemovePet = (petToRemove) => {
   axios
-    .delete(`https://node-mysl-api.onrender.com/remover-pet/${petToRemove.idpets}`, {
+    .delete(`https://prickly-robe-eel.cyclic.cloud/remover-pet/${petToRemove.idpets}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -783,7 +783,7 @@ const editPetInfo = (pet) => {
     // Faça uma solicitação HTTP para atualizar o lembrete do pet
     axios
       .post(
-        `https://node-mysl-api.onrender.com/pets/${editPetData.idpets}/update-petinfo`,
+        `https://prickly-robe-eel.cyclic.cloud/pets/${editPetData.idpets}/update-petinfo`,
         editPetData
       )
       .then((response) => {
@@ -818,7 +818,7 @@ function handleEditLembrete(petId) {
     // Faça uma solicitação HTTP para atualizar o lembrete do pet
     axios
       .post(
-        `https://node-mysl-api.onrender.com/pets/${petId}/update-lembrete`,
+        `https://prickly-robe-eel.cyclic.cloud/pets/${petId}/update-lembrete`,
         updatedLembreteData
       )
       .then((response) => {
@@ -842,7 +842,7 @@ function handleEditLembrete(petId) {
 const handleRemoveAccount = async () => {
   try {
     const response = await axios.delete(
-      "https://node-mysl-api.onrender.com/remover-conta"
+      "https://prickly-robe-eel.cyclic.cloud/remover-conta"
     );
     if (response.status === 200) {
       localStorage.removeItem("token");

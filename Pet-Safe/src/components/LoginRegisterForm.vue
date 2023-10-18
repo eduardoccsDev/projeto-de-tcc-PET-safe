@@ -171,7 +171,7 @@ const handleRegistration = async () => {
       throw new Error("As senhas não coincidem.");
     }
     // Envie os dados do formulário para o servidor ou a API usando uma solicitação POST
-    const response = await fetch("https://node-mysl-api.onrender.com/register", {
+    const response = await fetch("https://prickly-robe-eel.cyclic.cloud/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -211,7 +211,7 @@ const handleLogin = async () => {
       throw new Error("Por favor, preencha todos os campos.");
     }
     const response = await axios.post(
-      "https://node-mysl-api.onrender.com/login",
+      "https://prickly-robe-eel.cyclic.cloud/login",
       formData
     );
 

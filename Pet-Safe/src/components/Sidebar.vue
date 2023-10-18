@@ -75,7 +75,7 @@ const ToggleMenu = () => {
 const token = localStorage.getItem("token");
 if (token) {
   axios
-    .get("https://node-mysl-api.onrender.com/protegido", {
+    .get("https://prickly-robe-eel.cyclic.cloud/protegido", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -89,7 +89,7 @@ if (token) {
 }
 const getUserImageSrc = () => {
   if (userData.value) {
-    return `https://node-mysl-api.onrender.com/api/public${userData.value.imguser}`;
+    return `https://prickly-robe-eel.cyclic.cloud/api/public${userData.value.imguser}`;
   }
   return ""; // Retorne uma imagem padrão ou uma string vazia, dependendo do que desejar
 };

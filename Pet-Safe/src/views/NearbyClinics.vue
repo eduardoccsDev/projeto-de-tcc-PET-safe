@@ -77,7 +77,7 @@ const token = localStorage.getItem("token");
 
 if (token) {
   axios
-    .get("https://node-mysl-api.onrender.com/protegido", {
+    .get("https://prickly-robe-eel.cyclic.cloud/protegido", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -144,7 +144,7 @@ const searchVeterinariesNearby = async () => {
   }
 
   // Use a rota de proxy no seu servidor para acessar a API do Google Maps
-  const proxyUrl = "https://node-mysl-api.onrender.com/google-maps-proxy";
+  const proxyUrl = "https://prickly-robe-eel.cyclic.cloud/google-maps-proxy";
   const query = `veterinary+clinic+near+${userAddress.value}`;
 
   try {
