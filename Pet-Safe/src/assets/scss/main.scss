@@ -49,6 +49,13 @@ html {
         }
 
         .page {
+            &__lista-destaque{
+                background-color: var(--primary-opacity);
+                border: solid 2px var(--primary);
+                border-radius: 5px;
+                padding: 10px 20px;
+                font-size: 14px;
+            }
             &__icon-content {
                 background-color: #fff;
                 border: solid 2px var(--primary);
@@ -115,6 +122,15 @@ html {
                 width: 100%;
                 flex-direction: column;
                 margin-bottom: 20px;
+
+                &.column-format{
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    p{
+                        text-align: center;
+                    }
+                }
 
                 &.list-format {
                     align-items: center !important;
@@ -192,6 +208,11 @@ html {
             &__destaque {
                 color: var(--primary-alt);
                 font-weight: bold;
+                @media(max-width:668px){
+                    &.center{
+                        text-align:center;
+                    }
+                }
             }
         }
     }

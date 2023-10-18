@@ -53,6 +53,12 @@
       <div class="accordion" id="accordionExample">
         <HomeAccordionContent />
       </div>
+      <FixedAlert
+        :have-icon="true"
+        icon="fa-solid fa-user-nurse"
+        alert-tittle="Pet Safe"
+        alert-text="O projeto procura auxiliar os tutores a entenderem e administrarem os primeiros socorros básicos em casos de intoxicação, envenenamento, desmaios, vômitos, febres, dores e traumas, até que o atendimento veterinário profissional possa ser obtido. O sistema não substitui a importância de buscar ajuda de um veterinário, mas atua como uma ferramenta para instruir os responsáveis sobre como agir em situações básicas."
+      />
     </section>
   </div>
 </template>
