@@ -5,9 +5,12 @@
       <button @click="handleExpanded" v-if="isMobile"></button>
     </p>
     <hr />
-    <p class="member-description">
-      {{ memberDescription }}
-    </p>
+    <div class="member-informations">
+      <p class="member-description">
+        {{ memberDescription }}
+      </p>
+      <p class="member-function">Função: Lorem ipsum</p>
+    </div>
   </div>
 </template>
 
@@ -63,14 +66,32 @@ const teamCardClasses = computed(() => {
   height: 200px;
   box-shadow: 0px 0px 10px 0px #00000036;
   transition: 0.5s;
+
   &:hover {
     transform: scale(1.05);
+  }
+  .member-informations {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .member-description {
+    font-size: 14px;
+    margin-bottom: 0px !important;
+  }
+
+  .member-function {
+    font-style: italic;
+    font-size: 14px;
+    margin-bottom: 0px !important;
   }
 
   &.mobile-card {
     height: 55px;
     overflow: hidden;
     transition: 0.5s;
+
     &:hover {
       transform: scale(1);
     }
