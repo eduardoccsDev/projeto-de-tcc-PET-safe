@@ -2,7 +2,10 @@
   <footer>
     <div class="container">
       <section class="content__footer">
-        <p>Lorem ipsum dolor lorem - Lorem ipsum dolor lorem - Lorem ipsum dolor lorem</p>
+        <p>
+          O sistema Pet Safe disponibiliza informações de primeiros socorros e dicas de
+          como adaptar sua residencia para receber seu pet.
+        </p>
       </section>
       <section class="copyright">Todos os direitos © reservados - Pet Safe</section>
     </div>

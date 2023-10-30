@@ -9,7 +9,7 @@
       <p class="member-description">
         {{ memberDescription }}
       </p>
-      <p class="member-function">Função: Lorem ipsum</p>
+      <!-- <p class="member-function">Função: Lorem ipsum</p> -->
     </div>
   </div>
 </template>

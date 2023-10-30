@@ -6,7 +6,7 @@
     <hr />
     <HeroSection
       hero-tittle="Bem vindos ao Pet Safe"
-      hero-description="Lorem ipsum dolor, lorem ipsum dolor"
+      hero-description="Aplicação para tutores e não tutores."
       hero-btn-text="Saiba mais"
       hero-btn-link="/sobre"
     />

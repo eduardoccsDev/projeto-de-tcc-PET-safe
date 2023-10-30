@@ -49,12 +49,6 @@ const teamMembersArray = [
     description:
       "Estudante do curso de graduação ciência da computação na Universidade Estácio de Sá.",
   },
-  {
-    id: 4,
-    name: "Renan Lacerda",
-    description:
-      "Estudante do curso de graduação ciência da computação na Universidade Estácio de Sá.",
-  },
 ];
 </script>
 

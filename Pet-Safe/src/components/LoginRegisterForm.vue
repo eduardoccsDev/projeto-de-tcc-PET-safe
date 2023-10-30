@@ -12,7 +12,7 @@
           <i class="fa-solid fa-right-to-bracket"></i> LOGIN
         </p>
         <p class="forms__headerDescription">
-          Lorem ipsum dolor, lorem ipsum dolor lorem ipsim dolor.
+          Preencha os campos abaixo para efetuar o login.
         </p>
       </div>
       <form @submit.prevent="handleLogin" class="login">
@@ -50,7 +50,7 @@
         />
         <p class="forms__headerTittle"><i class="fa-solid fa-user-plus"></i> REGISTRO</p>
         <p class="forms__headerDescription">
-          Lorem ipsum dolor, lorem ipsum dolor lorem ipsim dolor.
+          Preencha os campos abaixo para efetuar o registro.
         </p>
       </div>
       <form @submit.prevent="handleRegistration" class="register">
