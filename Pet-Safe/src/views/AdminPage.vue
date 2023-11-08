@@ -4,9 +4,7 @@
       <h1>Usuários cadastrados</h1>
     </section>
     <hr />
-    {{ console.log(userData) }}
     <section class="page__content">
-      {{ console.log("teste: ", userData) }}
       <div class="accordion" id="accordionExample">
         <div class="accordion-item" v-for="user in userData" :key="user.idusers">
           <h2 class="accordion-header" :id="user.idusers">
@@ -113,7 +111,7 @@ const getUsers = async () => {
 const handleRemoveAccount = async (user) => {
   try {
     const response = await axios.delete(
-      `https://prickly-robe-eel.cyclic.cloud/remover-conta:${user.idusers}`
+      `https://prickly-robe-eel.cyclic.cloud/remover-user/${user.idusers}`
     );
     if (response.status === 200) {
       window.location.reload();
