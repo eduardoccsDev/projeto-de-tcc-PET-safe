@@ -423,7 +423,7 @@ router.post('/pets/:petId/update-petinfo', async (req, res) => {
   }
 });
 
-// Rota para remover uma conta de usuário
+// Rota para remover uma conta de usuário por ID
 router.delete('/remover-conta', verifyToken, async (req, res) => {
   try {
     const fileExtension = 'jpeg'; // Obtém a extensão do arquivo
@@ -469,42 +469,71 @@ router.delete('/remover-conta', verifyToken, async (req, res) => {
             }
           });
         }
+        // Execute uma consulta SQL para remover o usuário
+        const deleteUserQuery = 'DELETE FROM users WHERE idusers = ?';
+        db.query(deleteUserQuery, [userId], async (deleteUserErr, deleteUserResults) => {
+          if (deleteUserErr) {
+            console.error('Erro ao remover usuário:', deleteUserErr);
+            res.status(500).json({ error: 'Erro interno do servidor' });
+          } else {
+            console.log('Usuário removido com sucesso');
+            res.json({ message: 'Usuário removido com sucesso' });
+          }
+        });
+      }
+    });
+  } catch (error) {
+    console.error('Erro ao remover a conta de usuário:', error);
+    res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+});
 
-        // // Execute uma consulta SQL para obter a URL do arquivo de imagem do usuário
-        // const selectUserImageQuery = 'SELECT imguser FROM users WHERE idusers = ?';
-        // db.query(selectUserImageQuery, [userId], async (selectUserImageErr, selectUserImageResults) => {
-        //   if (selectUserImageErr) {
-        //     console.error('Erro ao buscar imagem de perfil do usuário:', selectUserImageErr);
-        //     res.status(500).json({ error: 'Erro interno do servidor' });
-        //   } else {
-        //     // Obtenha a URL da imagem do usuário a partir do banco de dados
-        //     const userImageURL = selectUserImageResults[0].imguser;
+// Rota para remover uma conta de usuário
+router.delete('/remover-conta:userId', verifyToken, async (req, res) => {
+  try {
+    const fileExtension = 'jpeg'; // Obtém a extensão do arquivo
+    const userId = req.user.userId;
+    const userName = req.user.nomeuser;
+    // Remova espaços em branco e substitua por hífens, e converta para letras minúsculas
+    const sanitizedUserName = userName.replace(/ /g, '-').toLowerCase();
+    const customFileName = `${sanitizedUserName}-${userId}.${fileExtension}`;
 
-        //     if (userImageURL) {
-        //       // Extrair o nome do arquivo da URL
-        //       const fileName = userImageURL.split('/').pop();
+    // Defina o caminho do arquivo
+    const imagePath = 'uploads/' + customFileName;
+    const bucket = storage.bucket(bucketName); // Substitua "bucketName" pelo nome do seu bucket 
 
-        //       // Extrair o ID do usuário do nome do arquivo
-        //       const userIdFromFileName = fileName.split('-').pop().split('.')[0];
+    // Exclua o arquivo no Firebase Storage
+    const file = bucket.file(imagePath);
+    file.delete()
+      .then(() => {
+        console.log('Imagem de perfil do usuário excluída com sucesso no Firebase Storage');
+      })
+      .catch((err) => {
+        console.error('Erro ao excluir imagem de perfil do usuário no Firebase Storage:', err);
+      });
 
-        //       if (userIdFromFileName === userId) {
-        //         // O ID do usuário no nome do arquivo corresponde ao usuário logado
-        //         // Exclua o arquivo no Firebase Storage
-        //         const file = storage.bucket(bucketName).file(fileName);
-        //         file.delete()
-        //           .then(() => {
-        //             console.log('Imagem de perfil do usuário excluída com sucesso no Firebase Storage');
-        //           })
-        //           .catch((err) => {
-        //             console.error('Erro ao excluir imagem de perfil do usuário no Firebase Storage:', err);
-        //           });
-        //       } else {
-        //         console.error('Tentativa de excluir uma imagem de perfil que não corresponde ao usuário logado.');
-        //       }
-        //     }
-        //   }
-        // });
+    // Execute uma consulta SQL para buscar os pets do usuário
+    const selectPetsQuery = 'SELECT idpets FROM pets WHERE idtutor = ?';
+    db.query(selectPetsQuery, [userId], async (selectPetsErr, selectPetsResults) => {
+      if (selectPetsErr) {
+        console.error('Erro ao buscar pets do usuário:', selectPetsErr);
+        res.status(500).json({ error: 'Erro interno do servidor' });
+      } else {
+        // Preencha o array de petIds com os IDs dos pets do usuário
+        const petIds = selectPetsResults.map((pet) => pet.idpets);
 
+        if (petIds.length > 0) {
+          // Execute uma consulta SQL para remover os pets do usuário apenas se houver pets para excluir
+          const deletePetsQuery = 'DELETE FROM pets WHERE idpets IN (?)';
+          db.query(deletePetsQuery, [petIds], async (deletePetsErr, deletePetsResults) => {
+            if (deletePetsErr) {
+              console.error('Erro ao remover pets do usuário:', deletePetsErr);
+              res.status(500).json({ error: 'Erro interno do servidor' });
+            } else {
+              console.log('Pets removidos com sucesso');
+            }
+          });
+        }
         // Execute uma consulta SQL para remover o usuário
         const deleteUserQuery = 'DELETE FROM users WHERE idusers = ?';
         db.query(deleteUserQuery, [userId], async (deleteUserErr, deleteUserResults) => {

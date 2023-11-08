@@ -46,14 +46,16 @@
     <div class="flex"></div>
     <div class="menu">
       <!-- APENAS SE PRECISAR -->
-      <!-- <router-link to="/configurações" class="buttonLink">
-                <span class="icons">
-                    <i class="fa-solid fa-gear"></i>
-                </span>
-                <span class="text">
-                    Configurações
-                </span>
-            </router-link> -->
+      <router-link
+        v-if="isUserLoggedIn && userData && userData.emailuser === 'admin@petsafe.com'"
+        to="/configuracoes"
+        class="buttonLink"
+      >
+        <span class="icons">
+          <i class="fa-solid fa-gear"></i>
+        </span>
+        <span class="text"> Admin </span>
+      </router-link>
     </div>
   </aside>
 </template>
@@ -97,6 +99,7 @@ aside {
   color: var(--light);
   transition: 0.2s ease-out;
   z-index: 1;
+
   @media (max-width: 448px) {
     display: none;
   }

@@ -48,6 +48,12 @@ const router = createRouter({
       component: () => import('../views/NearbyClinics.vue'),
     },
     {
+      path: '/configuracoes',
+      name: 'admin',
+      component: () => import('../views/AdminPage.vue'),
+      meta: { requiresAuth: true }
+    },
+    {
       path: '/primeiros-socorros',
       name: 'SosPet',
       component: () => import('../views/SosPet.vue'),
