@@ -78,7 +78,7 @@
                 <button v-else class="btn__save">
                   <i class="fa-solid fa-floppy-disk"></i> Salvar
                 </button>
-                <button @click="handleRemoveAccount(user.idusers)" class="btn__delete">
+                <button @click="handleRemoveAccount(user)" class="btn__delete">
                   <i class="fa-solid fa-trash"></i> Excluir
                 </button>
               </div>
@@ -110,10 +110,10 @@ const getUsers = async () => {
   }
 };
 
-const handleRemoveAccount = async (userId) => {
+const handleRemoveAccount = async (user) => {
   try {
     const response = await axios.delete(
-      `https://prickly-robe-eel.cyclic.cloud/remover-conta:${userId}`
+      `https://prickly-robe-eel.cyclic.cloud/remover-conta:${user.idusers}`
     );
     if (response.status === 200) {
       window.location.reload();

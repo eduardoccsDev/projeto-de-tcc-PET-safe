@@ -489,29 +489,10 @@ router.delete('/remover-conta', verifyToken, async (req, res) => {
 });
 
 // Rota para remover uma conta de usuário
-router.delete('/remover-conta:userId', verifyToken, async (req, res) => {
+router.delete('/remover-user/:id', verifyToken, async (req, res) => {
   try {
-    const fileExtension = 'jpeg'; // Obtém a extensão do arquivo
-    const userId = req.user.userId;
-    const userName = req.user.nomeuser;
-    // Remova espaços em branco e substitua por hífens, e converta para letras minúsculas
-    const sanitizedUserName = userName.replace(/ /g, '-').toLowerCase();
-    const customFileName = `${sanitizedUserName}-${userId}.${fileExtension}`;
-
-    // Defina o caminho do arquivo
-    const imagePath = 'uploads/' + customFileName;
-    const bucket = storage.bucket(bucketName); // Substitua "bucketName" pelo nome do seu bucket 
-
-    // Exclua o arquivo no Firebase Storage
-    const file = bucket.file(imagePath);
-    file.delete()
-      .then(() => {
-        console.log('Imagem de perfil do usuário excluída com sucesso no Firebase Storage');
-      })
-      .catch((err) => {
-        console.error('Erro ao excluir imagem de perfil do usuário no Firebase Storage:', err);
-      });
-
+    const userId = req.params.id; // Para obter o valor do parâmetro "id"
+    console.log(userId);
     // Execute uma consulta SQL para buscar os pets do usuário
     const selectPetsQuery = 'SELECT idpets FROM pets WHERE idtutor = ?';
     db.query(selectPetsQuery, [userId], async (selectPetsErr, selectPetsResults) => {
