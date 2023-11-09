@@ -39,6 +39,26 @@ router.get('/users', (req, res) => {
   });
 });
 
+// Rota para atualizar informações do usuário
+router.post('/atualizar-usuario/:userId', verifyToken, async (req, res) => {
+  const userId = req.params.userId; // Obtenha o ID do usuário da URL
+  const updatedUserInfo = req.body; // Obtenha as informações atualizadas do corpo da solicitação
+
+  // Execute a lógica de atualização no banco de dados
+  db.query('UPDATE users SET ? WHERE idusers = ?', [updatedUserInfo, userId], (err, results) => {
+    if (err) {
+      console.error('Erro na atualização do usuário:', err);
+      res.status(500).json({ error: 'Erro interno do servidor' });
+    } else {
+      if (results.affectedRows > 0) {
+        res.status(200).json({ message: 'Informações do usuário atualizadas com sucesso' });
+      } else {
+        res.status(404).json({ error: 'Usuário não encontrado' });
+      }
+    }
+  });
+});
+
 router.post('/register', (req, res) => {
   const { nomeuser, emailuser, passworduser, addressuser, residenciauser, cepuser } = req.body;
 

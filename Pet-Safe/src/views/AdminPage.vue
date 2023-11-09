@@ -64,7 +64,7 @@
                 required
               />
               <label for="residenciauser">Residência:</label>
-              <select v-model="user.residenciauser">
+              <select :disabled="!isEdit" v-model="user.residenciauser">
                 <option selected disabled value="">Selecione o tipo de residência</option>
                 <option value="Casa">Casa</option>
                 <option value="Apartamento">Apartamento</option>
@@ -73,7 +73,7 @@
                 <button @click="handleIsEdit" v-if="!isEdit" class="btn__edit">
                   <i class="fa-solid fa-pen-to-square"></i> Editar
                 </button>
-                <button v-else class="btn__save">
+                <button @click="handleEditInfos(user)" v-else class="btn__save">
                   <i class="fa-solid fa-floppy-disk"></i> Salvar
                 </button>
                 <button @click="handleRemoveAccount(user)" class="btn__delete">
@@ -92,21 +92,27 @@
 import { ref } from "vue";
 import axios from "axios";
 
+const editedUsers = ref({});
 const userData = ref(null);
 const isEdit = ref(false);
-
-function handleIsEdit() {
-  isEdit.value = !isEdit.value;
-}
 
 const getUsers = async () => {
   try {
     const response = await axios.get("https://prickly-robe-eel.cyclic.cloud/users");
     userData.value = response.data;
+
+    // Inicializar editedUsers e isEditing para cada usuário
+    userData.value.forEach((user) => {
+      editedUsers.value[user.idusers] = { ...user };
+    });
   } catch (error) {
     console.error("Erro na solicitação Axios:", error);
   }
 };
+
+function handleIsEdit() {
+  isEdit.value = !isEdit.value;
+}
 
 const handleRemoveAccount = async (user) => {
   try {
@@ -123,8 +129,37 @@ const handleRemoveAccount = async (user) => {
   }
 };
 
+const handleEditInfos = async (user) => {
+  // Verifique se os campos de edição estão habilitados
+  if (isEdit.value) {
+    // Crie um objeto com as informações atualizadas do usuário
+    const updatedUserInfo = {
+      nomeuser: user.nomeuser,
+      emailuser: user.emailuser,
+      addressuser: user.addressuser,
+      residenciauser: user.residenciauser,
+      cepuser: user.cepuser,
+    };
+
+    try {
+      const response = await axios.post(
+        `https://prickly-robe-eel.cyclic.cloud/atualizar-usuario/${user.idusers}`,
+        updatedUserInfo
+      );
+      if (response.status === 200) {
+        isEdit.value = false; // Desativar o modo de edição após uma atualização bem-sucedida
+      } else {
+        console.error("Erro ao atualizar as informações do usuário");
+      }
+    } catch (error) {
+      console.error("Erro ao atualizar as informações do usuário:", error);
+    }
+  }
+};
+
 getUsers(); // Chamada inicial para buscar os dados quando o componente é montado
 </script>
+
 <style scoped lang="scss">
 label {
   width: 10%;
