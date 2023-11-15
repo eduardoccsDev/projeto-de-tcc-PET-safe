@@ -77,7 +77,11 @@
                   <i class="fa-solid fa-floppy-disk"></i> Salvar
                 </button>
                 <button
-                  v-if="userData && userData.emailuser !== 'admin@petsafe.com'"
+                  v-if="
+                    user.nomeuser !== 'Admin Pet Safe' &&
+                    userDataAdmin &&
+                    userDataAdmin.emailuser !== 'admin@petsafe.com'
+                  "
                   @click="handleRemoveAccount(user)"
                   class="btn__delete"
                 >
@@ -98,7 +102,24 @@ import axios from "axios";
 
 const editedUsers = ref({});
 const userData = ref(null);
+const userDataAdmin = ref(null);
 const isEdit = ref(false);
+
+const token = localStorage.getItem("token");
+if (token) {
+  axios
+    .get("https://prickly-robe-eel.cyclic.cloud/protegido", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then((response) => {
+      userDataAdmin.value = response.data.user;
+    })
+    .catch((error) => {
+      console.error("Erro ao acessar o endpoint protegido:", error);
+    });
+}
 
 const getUsers = async () => {
   try {
