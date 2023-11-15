@@ -30,7 +30,7 @@
             data-bs-parent="#accordionExample"
           >
             <div class="accordion-body">
-              <form>
+              <form @submit.prevent="handleEditInfos(user)">
                 <p>Id: {{ user.idusers }}</p>
                 <label for="nomeuser">Nome:</label>
                 <input
@@ -80,7 +80,7 @@
                   <button @click="handleIsEdit" v-if="!isEdit" class="btn__edit">
                     <i class="fa-solid fa-pen-to-square"></i> Editar
                   </button>
-                  <button @click="handleEditInfos(user)" v-else class="btn__save">
+                  <button type="submit" v-else class="btn__save">
                     <i class="fa-solid fa-floppy-disk"></i> Salvar
                   </button>
                   <button @click="handleRemoveAccount(user)" class="btn__delete">
