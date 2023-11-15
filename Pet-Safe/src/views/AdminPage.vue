@@ -30,60 +30,64 @@
             data-bs-parent="#accordionExample"
           >
             <div class="accordion-body">
-              <p>Id: {{ user.idusers }}</p>
-              <label for="nomeuser">Nome:</label>
-              <input
-                id="nomeuser"
-                :disabled="!isEdit"
-                type="text"
-                v-model="user.nomeuser"
-                placeholder="Digite o nome do usuário"
-                required
-              />
-              <label for="emailuser">E-mail:</label>
-              <input
-                id="emailuser"
-                :disabled="!isEdit"
-                type="email"
-                v-model="user.emailuser"
-                placeholder="Digite o e-mail do usuário"
-                required
-              />
-              <label for="addressuser">Endereço:</label>
-              <input
-                id="addressuser"
-                :disabled="!isEdit"
-                type="text"
-                v-model="user.addressuser"
-                placeholder="Digite o endereço do usuário"
-                required
-              />
-              <label for="cepuser">CEP:</label>
-              <input
-                id="cepuser"
-                :disabled="!isEdit"
-                type="number"
-                v-model="user.cepuser"
-                placeholder="Digite o CEP do usuário"
-                required
-              />
-              <label for="residenciauser">Residência:</label>
-              <select :disabled="!isEdit" v-model="user.residenciauser">
-                <option selected disabled value="">Selecione o tipo de residência</option>
-                <option value="Casa">Casa</option>
-                <option value="Apartamento">Apartamento</option>
-              </select>
-              <div class="btnContainer">
-                <button @click="handleIsEdit" v-if="!isEdit" class="btn__edit">
-                  <i class="fa-solid fa-pen-to-square"></i> Editar
-                </button>
-                <button @click="handleEditInfos(user)" v-else class="btn__save">
-                  <i class="fa-solid fa-floppy-disk"></i> Salvar
-                </button>
-                <button @click="handleRemoveAccount(user)" class="btn__delete">
-                  <i class="fa-solid fa-trash"></i> Excluir
-                </button>
-              </div>
+              <form>
+                <p>Id: {{ user.idusers }}</p>
+                <label for="nomeuser">Nome:</label>
+                <input
+                  id="nomeuser"
+                  :disabled="!isEdit"
+                  type="text"
+                  v-model="user.nomeuser"
+                  placeholder="Digite o nome do usuário"
+                  required
+                />
+                <label for="emailuser">E-mail:</label>
+                <input
+                  id="emailuser"
+                  :disabled="!isEdit"
+                  type="email"
+                  v-model="user.emailuser"
+                  placeholder="Digite o e-mail do usuário"
+                  required
+                />
+                <label for="addressuser">Endereço:</label>
+                <input
+                  id="addressuser"
+                  :disabled="!isEdit"
+                  type="text"
+                  v-model="user.addressuser"
+                  placeholder="Digite o endereço do usuário"
+                  required
+                />
+                <label for="cepuser">CEP:</label>
+                <input
+                  id="cepuser"
+                  :disabled="!isEdit"
+                  type="number"
+                  v-model="user.cepuser"
+                  placeholder="Digite o CEP do usuário"
+                  required
+                />
+                <label for="residenciauser">Residência:</label>
+                <select :disabled="!isEdit" v-model="user.residenciauser">
+                  <option selected disabled value="">
+                    Selecione o tipo de residência
+                  </option>
+                  <option value="Casa">Casa</option>
+                  <option value="Apartamento">Apartamento</option>
+                </select>
+                <div class="btnContainer">
+                  <button @click="handleIsEdit" v-if="!isEdit" class="btn__edit">
+                    <i class="fa-solid fa-pen-to-square"></i> Editar
+                  </button>
+                  <button @click="handleEditInfos(user)" v-else class="btn__save">
+                    <i class="fa-solid fa-floppy-disk"></i> Salvar
+                  </button>
+                  <button @click="handleRemoveAccount(user)" class="btn__delete">
+                    <i class="fa-solid fa-trash"></i> Excluir
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         </div>
@@ -168,10 +172,12 @@ getUsers(); // Chamada inicial para buscar os dados quando o componente é monta
 .id-9 {
   display: none;
 }
+
 label {
   width: 10%;
   margin-bottom: 10px;
 }
+
 input,
 select {
   width: 90%;
@@ -180,6 +186,7 @@ select {
   border-radius: 10px;
   border: solid 1px var(--dark);
 }
+
 .btnContainer {
   display: flex;
   gap: 10px;
