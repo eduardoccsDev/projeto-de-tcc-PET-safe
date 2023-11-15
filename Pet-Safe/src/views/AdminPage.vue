@@ -40,7 +40,7 @@
               <input
                 id="emailuser"
                 :disabled="!isEdit"
-                type="text"
+                type="email"
                 v-model="user.emailuser"
                 placeholder="Digite o e-mail do usuário"
                 required
@@ -58,7 +58,7 @@
               <input
                 id="cepuser"
                 :disabled="!isEdit"
-                type="text"
+                type="number"
                 v-model="user.cepuser"
                 placeholder="Digite o CEP do usuário"
                 required
@@ -76,7 +76,11 @@
                 <button @click="handleEditInfos(user)" v-else class="btn__save">
                   <i class="fa-solid fa-floppy-disk"></i> Salvar
                 </button>
-                <button @click="handleRemoveAccount(user)" class="btn__delete">
+                <button
+                  v-if="userData && userData.emailuser !== 'admin@petsafe.com'"
+                  @click="handleRemoveAccount(user)"
+                  class="btn__delete"
+                >
                   <i class="fa-solid fa-trash"></i> Excluir
                 </button>
               </div>
