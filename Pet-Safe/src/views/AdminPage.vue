@@ -6,7 +6,11 @@
     <hr />
     <section class="page__content">
       <div class="accordion" id="accordionExample">
-        <div class="accordion-item" v-for="user in userData" :key="user.idusers">
+        <div
+          :class="'accordion-item id-' + user.idusers"
+          v-for="user in userData"
+          :key="user.idusers"
+        >
           <h2 class="accordion-header" :id="user.idusers">
             <button
               class="accordion-button collapsed"
@@ -76,15 +80,7 @@
                 <button @click="handleEditInfos(user)" v-else class="btn__save">
                   <i class="fa-solid fa-floppy-disk"></i> Salvar
                 </button>
-                <button
-                  v-if="
-                    user.nomeuser !== 'Admin Pet Safe' &&
-                    userDataAdmin &&
-                    userDataAdmin.emailuser !== 'admin@petsafe.com'
-                  "
-                  @click="handleRemoveAccount(user)"
-                  class="btn__delete"
-                >
+                <button @click="handleRemoveAccount(user)" class="btn__delete">
                   <i class="fa-solid fa-trash"></i> Excluir
                 </button>
               </div>
@@ -102,24 +98,7 @@ import axios from "axios";
 
 const editedUsers = ref({});
 const userData = ref(null);
-const userDataAdmin = ref(null);
 const isEdit = ref(false);
-
-const token = localStorage.getItem("token");
-if (token) {
-  axios
-    .get("https://prickly-robe-eel.cyclic.cloud/protegido", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-    .then((response) => {
-      userDataAdmin.value = response.data.user;
-    })
-    .catch((error) => {
-      console.error("Erro ao acessar o endpoint protegido:", error);
-    });
-}
 
 const getUsers = async () => {
   try {
@@ -186,6 +165,9 @@ getUsers(); // Chamada inicial para buscar os dados quando o componente é monta
 </script>
 
 <style scoped lang="scss">
+.id-9 {
+  display: none;
+}
 label {
   width: 10%;
   margin-bottom: 10px;
