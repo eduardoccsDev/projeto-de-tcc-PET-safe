@@ -20,7 +20,9 @@
               aria-expanded="false"
               :aria-controls="'id-' + user.idusers"
             >
-              <i class="fa-solid fa-user"></i> {{ user.nomeuser }}
+              <img v-if="user && user.imguser" class="accordion-user-img" :alt="user.nomeuser" :src="user.imguser" width="45" height="45">
+              <img v-else src="../assets/images/logo.png" class="accordion-user-img" alt="pet-safe-logo" id="logo" />
+               {{ user.nomeuser }} <span class="accordion-user-id">ID: {{ user.idusers }}</span>
             </button>
           </h2>
           <div
@@ -31,8 +33,7 @@
           >
             <div class="accordion-body">
               <form @submit.prevent="handleEditInfos(user)">
-                <p>Id: {{ user.idusers }}</p>
-                <label for="nomeuser">Nome:</label>
+                <label for="nomeuser"><i class="fa-solid fa-user"></i> Nome:</label>
                 <input
                   id="nomeuser"
                   :disabled="!isEdit"
@@ -41,7 +42,7 @@
                   placeholder="Digite o nome do usuário"
                   required
                 />
-                <label for="emailuser">E-mail:</label>
+                <label for="emailuser"><i class="fa-solid fa-envelope"></i> E-mail:</label>
                 <input
                   id="emailuser"
                   :disabled="!isEdit"
@@ -50,7 +51,7 @@
                   placeholder="Digite o e-mail do usuário"
                   required
                 />
-                <label for="addressuser">Endereço:</label>
+                <label for="addressuser"><i class="fa-solid fa-map-location"></i> Endereço:</label>
                 <input
                   id="addressuser"
                   :disabled="!isEdit"
@@ -59,7 +60,7 @@
                   placeholder="Digite o endereço do usuário"
                   required
                 />
-                <label for="cepuser">CEP:</label>
+                <label for="cepuser"><i class="fa-solid fa-address-card"></i> CEP:</label>
                 <input
                   id="cepuser"
                   :disabled="!isEdit"
@@ -68,7 +69,7 @@
                   placeholder="Digite o CEP do usuário"
                   required
                 />
-                <label for="residenciauser">Residência:</label>
+                <label for="residenciauser"><i class="fa-solid fa-house"></i> Residência:</label>
                 <select :disabled="!isEdit" v-model="user.residenciauser">
                   <option selected disabled value="">
                     Selecione o tipo de residência
@@ -106,7 +107,7 @@ const isEdit = ref(false);
 
 const getUsers = async () => {
   try {
-    const response = await axios.get("https://prickly-robe-eel.cyclic.cloud/users");
+    const response = await axios.get("http://localhost:3000/users");
     userData.value = response.data;
 
     // Inicializar editedUsers e isEditing para cada usuário
@@ -125,7 +126,7 @@ function handleIsEdit() {
 const handleRemoveAccount = async (user) => {
   try {
     const response = await axios.delete(
-      `https://prickly-robe-eel.cyclic.cloud/remover-user/${user.idusers}`
+      `http://localhost:3000/remover-user/${user.idusers}`
     );
     if (response.status === 200) {
       window.location.reload();
@@ -151,7 +152,7 @@ const handleEditInfos = async (user) => {
 
     try {
       const response = await axios.post(
-        `https://prickly-robe-eel.cyclic.cloud/atualizar-usuario/${user.idusers}`,
+        `http://localhost:3000/atualizar-usuario/${user.idusers}`,
         updatedUserInfo
       );
       if (response.status === 200) {
@@ -169,13 +170,14 @@ getUsers(); // Chamada inicial para buscar os dados quando o componente é monta
 </script>
 
 <style scoped lang="scss">
-.id-9 {
+.id-36 {
   display: none;
 }
 
 label {
   width: 10%;
   margin-bottom: 10px;
+  color:#484C4B;
 }
 
 input,
@@ -184,7 +186,12 @@ select {
   margin-bottom: 10px;
   padding: 5px 10px;
   border-radius: 10px;
-  border: solid 1px var(--dark);
+  border: solid 2px var(--secondary);
+  background: #fff;
+}
+input:disabled, select:disabled {
+  color: #acacac;
+  border-color: #acacac;
 }
 
 .btnContainer {
@@ -206,8 +213,8 @@ select {
   .btn {
     &__edit,
     &__save {
-      background-color: var(--primary);
-      color: var(--dark);
+      background-color: var(--secondary);
+      color: var(--secondary-dark);
     }
 
     &__delete {
@@ -215,5 +222,37 @@ select {
       color: #fff;
     }
   }
+}
+.accordion-header{
+  .accordion-user-img{
+    border-radius: 100%;
+    border: solid 2px var(--secondary-dark);
+    margin-right: 5px;
+  }
+}
+.accordion-button::after{
+  background-color: var(--secondary);
+  border-radius: 100%;
+  background-position: center;
+  width: 1.50rem;
+  height: 1.50rem;
+}
+.accordion-user-id{
+  margin-left: 10px;
+  background-color: var(--secondary);
+  color: #484C4B;
+  padding: 5px;
+  border-radius: 5px;
+}
+.accordion-item{
+  border-radius: 10px;
+  border: none;
+  &::after {
+  content: "";
+  border-bottom: solid 2px #e5e4e1;
+  width: 100%;
+  padding: 1px;
+  display: block;
+} 
 }
 </style>

@@ -16,7 +16,6 @@
         </span>
       </button>
     </div>
-    <h3>Menu</h3>
     <div class="menu">
       <router-link to="/" class="buttonLink">
         <span class="icons">
@@ -32,13 +31,13 @@
       </router-link>
       <router-link to="/sobre" class="buttonLink">
         <span class="icons">
-          <i class="fa-solid fa-users"></i>
+          <i class="fa-solid fa-circle-info"></i>
         </span>
         <span class="text"> Sobre </span>
       </router-link>
       <router-link to="/guia-de-racas" class="buttonLink">
         <span class="icons">
-          <i class="fa-solid fa-kit-medical"></i>
+          <i class="fa-solid fa-paw"></i>
         </span>
         <span class="text"> Guia </span>
       </router-link>
@@ -46,7 +45,7 @@
         <span class="icons">
           <i class="fa-solid fa-kit-medical"></i>
         </span>
-        <span class="text"> SOS Pets </span>
+        <span class="text"> SOS </span>
       </router-link>
     </div>
     <div class="flex"></div>
@@ -97,9 +96,9 @@ if (token) {
 aside {
   display: flex;
   flex-direction: column;
-  width: calc(2rem + 32px);
+  width: calc(2rem + 33px);
   min-height: 100vh;
-  overflow: hidden;
+  //overflow: hidden;
   padding: 1rem;
   background-color: var(--primary-dark);
   color: var(--light);
@@ -122,6 +121,7 @@ aside {
       width: 2.5rem;
       background-color: var(--light);
       border-radius: 100%;
+      border: solid 2px var(--secondary);
     }
 
     .currentName {
@@ -176,22 +176,36 @@ aside {
 
   .menu {
     margin: 0 -1rem;
+    position: sticky;
+    top: 10px;
 
     .buttonLink {
       display: flex;
       align-items: center;
       text-decoration: none;
-      padding: 0.5rem 1rem;
+      padding: 0.3rem 0.4rem;
       transition: 0.2s ease-out;
+      background-color: var(--light);
+      margin-inline: 14px;
+      border-radius: 10px;
+      border: solid 3px var(--secondary);
+      color: var(--primary);
+      margin-bottom: 10px;
+      justify-content: flex-start;
+
+      .icons{
+        display: flex;
+        align-items: center;
+      }
 
       .icons i {
         font-size: 1rem;
-        color: var(--light);
+        color: var(--primary);
         transition: 0.2s ease-out;
       }
 
       .text {
-        color: var(--light);
+        color: var(--primary);
         transition: 0.2s ease-out;
         font-size: 14px;
       }
@@ -204,10 +218,6 @@ aside {
         .text {
           color: var(--light);
         }
-      }
-
-      &.router-link-exact-active {
-        border-right: 3px solid var(--primary-light);
       }
     }
 

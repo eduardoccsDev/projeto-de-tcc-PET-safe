@@ -151,10 +151,10 @@ router.get('/protegido', verifyToken, (req, res) => {
 
 const { Storage } = require('@google-cloud/storage');
 const storage = new Storage({
-  projectId: 'pet-safe-102fa',
-  keyFilename: './pet-safe-102fa-firebase-adminsdk-8ho7y-9621d34569.json',
+  projectId: 'pet-safe-1d0eb',
+  keyFilename: './pet-safe-1d0eb-firebase-adminsdk-tpa1r-471edf06b4.json',
 });
-const bucketName = 'pet-safe-102fa.appspot.com'; // Nome do seu bucket no Firebase Storage
+const bucketName = 'pet-safe-1d0eb.appspot.com'; // Nome do seu bucket no Firebase Storage
 const upload = multer();
 
 // Rota para upload de imagem

@@ -181,7 +181,7 @@ html {
             }
 
             &__title {
-                margin-bottom: 1em;
+                margin-block: 1em;
 
                 h1 {
                     &::before {
@@ -265,6 +265,7 @@ html {
 
 body {
     background-color: #FAF9F7;
+    color: #484c4b;
 }
 
 button {
@@ -275,7 +276,8 @@ button {
 
 hr {
     margin-block: 10px;
-    border: solid 1px #0000000e;
+    border: solid 1px rgb(170, 167, 162);
+    margin-bottom: 20px;
 }
 
 h3 {
@@ -293,10 +295,11 @@ h1 {
 }
 
 .accordion-button:not(.collapsed) {
-    color: var(--dark);
-    background-color: var(--primary-opacity);
+    color: var(--light);
+    background-color: var(--primary-light);
 }
 
 .accordion-button:focus {
     border-color: var(--primary);
-}
+    box-shadow: none;
+  }

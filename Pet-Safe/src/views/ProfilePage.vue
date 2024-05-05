@@ -485,7 +485,7 @@ function handleEditUserImage() {
 const updateUserProfileData = () => {
   if (token) {
     axios
-      .get("https://prickly-robe-eel.cyclic.cloud/protegido", {
+      .get("http://localhost:3000/protegido", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -521,7 +521,7 @@ const uploadImage = () => {
 
       // Enviar a imagem para a rota de upload no servidor
       axios
-        .post("https://prickly-robe-eel.cyclic.cloud/upload-image", formData)
+        .post("http://localhost:3000/upload-image", formData)
         .then((response) => {
           const imagePath = response.data.imagePath;
           userData.value.imguser = imagePath;
@@ -555,7 +555,7 @@ const handleUpdateUserInfo = () => {
       cepuser: editedUserInfo.cepuser,
     };
     axios
-      .post("https://prickly-robe-eel.cyclic.cloud/atualizar-usuario", updatedUserInfo, {
+      .post("http://localhost:3000/atualizar-usuario", updatedUserInfo, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -608,7 +608,7 @@ const handleUpdateUserPassword = () => {
     }, 3000);
   } else {
     axios
-      .post("https://prickly-robe-eel.cyclic.cloud/atualizar-senha", newPasswordData, {
+      .post("http://localhost:3000/atualizar-senha", newPasswordData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -669,7 +669,7 @@ const handleAddPet = () => {
   // Agora você pode acessar userData e petData com segurança
   petData.idtutor = userData.value.userId; // Defina o idtutor como o ID do usuário logado
   axios
-    .post("https://prickly-robe-eel.cyclic.cloud/adicionar-pet", petData, {
+    .post("http://localhost:3000/adicionar-pet", petData, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -696,7 +696,7 @@ const handleAddPet = () => {
 const fetchUserPets = () => {
   if (token) {
     axios
-      .get("https://prickly-robe-eel.cyclic.cloud/pets", {
+      .get("http://localhost:3000/pets", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -712,7 +712,7 @@ const fetchUserPets = () => {
 
 const handleRemovePet = (petToRemove) => {
   axios
-    .delete(`https://prickly-robe-eel.cyclic.cloud/remover-pet/${petToRemove.idpets}`, {
+    .delete(`http://localhost:3000/remover-pet/${petToRemove.idpets}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -767,7 +767,7 @@ const editPetInfo = (pet) => {
     // Faça uma solicitação HTTP para atualizar o lembrete do pet
     axios
       .post(
-        `https://prickly-robe-eel.cyclic.cloud/pets/${editPetData.idpets}/update-petinfo`,
+        `http://localhost:3000/pets/${editPetData.idpets}/update-petinfo`,
         editPetData
       )
       .then(() => {
@@ -802,7 +802,7 @@ function handleEditLembrete(petId) {
     // Faça uma solicitação HTTP para atualizar o lembrete do pet
     axios
       .post(
-        `https://prickly-robe-eel.cyclic.cloud/pets/${petId}/update-lembrete`,
+        `http://localhost:3000/pets/${petId}/update-lembrete`,
         updatedLembreteData
       )
       .then(() => {
@@ -826,7 +826,7 @@ function handleEditLembrete(petId) {
 const handleRemoveAccount = async () => {
   try {
     const response = await axios.delete(
-      "https://prickly-robe-eel.cyclic.cloud/remover-conta"
+      "http://localhost:3000/remover-conta"
     );
     if (response.status === 200) {
       localStorage.removeItem("token");
