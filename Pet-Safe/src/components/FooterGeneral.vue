@@ -19,7 +19,7 @@ import FixedBarMobile from "./FixedBarMobile.vue";
 
 <style scoped lang="scss">
 footer {
-  background-color: var(--dark-alt);
+  background-color: #F2EEEB;
   text-align: center;
   display: flex;
   padding-block: 20px;
@@ -30,11 +30,11 @@ footer {
     align-items: center;
     .content {
       &__footer {
-        color: #fff;
+        color: #aaa7a2;
       }
     }
     .copyright {
-      color: var(--primary);
+      color: #aaa7a2;
     }
   }
 }

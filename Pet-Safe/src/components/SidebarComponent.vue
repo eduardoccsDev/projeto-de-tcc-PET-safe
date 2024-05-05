@@ -36,6 +36,12 @@
         </span>
         <span class="text"> Sobre </span>
       </router-link>
+      <router-link to="/guia-de-racas" class="buttonLink">
+        <span class="icons">
+          <i class="fa-solid fa-kit-medical"></i>
+        </span>
+        <span class="text"> Guia </span>
+      </router-link>
       <router-link to="/primeiros-socorros" class="buttonLink">
         <span class="icons">
           <i class="fa-solid fa-kit-medical"></i>
@@ -95,7 +101,7 @@ aside {
   min-height: 100vh;
   overflow: hidden;
   padding: 1rem;
-  background-color: var(--dark);
+  background-color: var(--primary-dark);
   color: var(--light);
   transition: 0.2s ease-out;
   z-index: 1;
@@ -139,16 +145,16 @@ aside {
 
       .icons i {
         font-size: 1.1rem;
-        background-color: var(--gray);
+        background-color: var(--light);
         padding: 0.1em 0.3em;
         border-radius: 100%;
-        color: var(--light);
+        color: var(--primary-dark);
         transition: 0.2s ease-out;
       }
 
       &:hover {
         .icons i {
-          color: var(--primary);
+          color: var(--primary-dark);
           transform: translateX(0.5rem);
         }
       }
@@ -162,7 +168,7 @@ aside {
   }
 
   h3 {
-    color: var(--gray);
+    color: var(--light);
     font-size: 0.875rem;
     margin-bottom: 0.5rem;
     text-transform: uppercase;
@@ -192,16 +198,16 @@ aside {
 
       &:hover,
       &.router-link-exact-active {
-        background-color: var(--dark-alt);
+        background-color: var(--primary);
 
         .icons i,
         .text {
-          color: var(--primary);
+          color: var(--light);
         }
       }
 
       &.router-link-exact-active {
-        border-right: 3px solid var(--primary);
+        border-right: 3px solid var(--primary-light);
       }
     }
 

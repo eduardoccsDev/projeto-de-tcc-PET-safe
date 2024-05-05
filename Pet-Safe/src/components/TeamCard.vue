@@ -58,17 +58,17 @@ const teamCardClasses = computed(() => {
 
 <style scoped lang="scss">
 .team-card {
-  background-color: var(--primary);
+  background-color: #FAF9F7;
   padding: 1em;
   border-radius: 10px;
-  border: solid 2px #fff;
+  border: solid 4px var(--secondary);
   width: 100%;
   height: 200px;
-  box-shadow: 0px 0px 10px 0px #00000036;
   transition: 0.5s;
 
   &:hover {
     transform: scale(1.05);
+    box-shadow: 0px 0px 10px 0px #00000020;
   }
   .member-informations {
     display: flex;

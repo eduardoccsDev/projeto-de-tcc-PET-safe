@@ -1,12 +1,12 @@
 <template>
   <section class="topbar">
     <div class="btns">
-      <router-link to="/clinicas" class="buttonLink">
+      <!-- <router-link to="/clinicas" class="buttonLink">
         <span class="icons">
           <i class="fa-solid fa-hospital"></i>
         </span>
         <span class="text"> Clínicas próximas </span>
-      </router-link>
+      </router-link> -->
       <LoginLogoutBtns />
     </div>
   </section>
@@ -43,7 +43,7 @@ if (!token) {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  background-color: var(--dark-alt);
+  background-color: #F2EEEB;
   padding: 10px;
 
   @media (max-width: 668px) {
@@ -59,7 +59,7 @@ if (!token) {
 
   .info {
     p {
-      color: #fff;
+      color: #aaa7a2;
     }
   }
 

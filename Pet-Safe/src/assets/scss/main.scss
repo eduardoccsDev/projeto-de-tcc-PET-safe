@@ -1,7 +1,11 @@
 /*VARIAVEIS DO CSS*/
 :root {
-    --primary: #2be5a7;
+    --primary-dark: #18604A;
+    --primary: #257157;
+    --primary-light: #6AB29C;
     --primary-opacity: #2be5a72f;
+    --secondary: #E5D5C6;
+    --secondary-dark: #95877A;
     --primary-alt: #1fa478;
     --gray: #737373;
     --dark: #222;
@@ -260,7 +264,7 @@ html {
 }
 
 body {
-    background-color: #f1f1f1;
+    background-color: #FAF9F7;
 }
 
 button {

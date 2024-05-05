@@ -42,11 +42,11 @@ const router = createRouter({
       component: () => import('../views/ProfilePage.vue'),
       meta: { requiresAuth: true }
     },
-    {
-      path: '/clinicas',
-      name: 'NearbyClinics',
-      component: () => import('../views/NearbyClinics.vue'),
-    },
+    // {
+    //   path: '/clinicas',
+    //   name: 'NearbyClinics',
+    //   component: () => import('../views/NearbyClinics.vue'),
+    // },
     {
       path: '/configuracoes',
       name: 'admin',
@@ -57,6 +57,11 @@ const router = createRouter({
       path: '/primeiros-socorros',
       name: 'SosPet',
       component: () => import('../views/SosPet.vue'),
+    },
+    {
+      path: '/guia-de-racas',
+      name: 'BreedGuide',
+      component: () => import('../views/BreedGuide.vue'),
     }
   ]
 });
